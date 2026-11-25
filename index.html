@@ -20,7 +20,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="勉クエ">
+<meta name="apple-mobile-web-app-title" content="べんクエ">
+<script>window.BENKUE_BASE = './'; window.BENKUE_ART = 'art/';</script>
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
 <title>ベンキョウクエスト（勉クエ）</title>
@@ -131,6 +132,7 @@ html, body {
   border-radius: 20px; padding: 12px 14px; margin-bottom: 12px;
   border: 3px solid #facc15; box-shadow: 0 8px 20px rgba(30,58,138,0.28);
   color: #fff; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, rgba(30,58,138,0.82) 0%, rgba(37,99,235,0.55) 55%, rgba(14,165,233,0.3) 100%), var(--theme-bg, none) center / cover no-repeat, linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
 }
 .title-banner-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .title-logo-svg { width: 220px; height: auto; display: block; }
@@ -177,7 +179,8 @@ html, body {
   border-bottom: 4px solid #cbd5e1; transition: transform 0.1s;
 }
 .subject-card:active { transform: translateY(2px); }
-.subject-card .s-icon { font-size: 28px; display: block; margin-bottom: 4px; }
+.subject-card .s-icon { font-size: 28px; display: block; margin-bottom: 4px; height: 52px; }
+.subject-card .s-icon img.art { width: 52px; height: 52px; margin: 0; }
 .subject-card .s-title { font-size: 14px; font-weight: 900; color: var(--text); display: block; }
 .subject-card .s-sub { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; line-height: 1.3; }
 .subject-card .s-tag {
@@ -198,9 +201,11 @@ html, body {
   padding: 10px 12px; margin-bottom: 10px; color: #fff;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
-.battle-stage.is-boss { background: linear-gradient(180deg, #451a03 0%, #78350f 65%, #b45309 100%); }
+.battle-stage { background: linear-gradient(180deg, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.55) 100%), var(--theme-bg, none) center / cover no-repeat, linear-gradient(180deg, #1e293b 0%, #334155 60%, #475569 100%); }
+.battle-stage.is-boss { background: linear-gradient(180deg, rgba(69,26,3,0.55) 0%, rgba(120,53,15,0.7) 100%), var(--theme-bg, none) center / cover no-repeat, linear-gradient(180deg, #451a03 0%, #78350f 65%, #b45309 100%); }
+.battle-mid { background: rgba(15,23,42,0.55); border-radius: 12px; padding: 6px 8px; }
 .battle-actor { display: flex; flex-direction: column; align-items: center; width: 92px; }
-.battle-actor-svg { width: 70px; height: 70px; transition: transform 0.18s; }
+.battle-actor-svg { width: 80px; height: 80px; transition: transform 0.18s; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35)); }
 .battle-actor-svg.attack { animation: lunge 0.32s ease; }
 .battle-actor-svg.hit { animation: shakeHit 0.35s ease; }
 @keyframes lunge { 0%,100% { transform: translateX(0); } 45% { transform: translateX(26px) scale(1.1); } }
@@ -381,6 +386,113 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 180; }
 .hidden { display: none !important; }
 
+/* レベル・ミッション・タイムアタック */
+.lv-bar { height: 5px; background: rgba(15,23,42,0.6); border-radius: 999px; overflow: hidden; margin-top: 4px; }
+.lv-fill { height: 100%; width: 0; background: linear-gradient(90deg, #fde047, #f59e0b); }
+.lv-next { font-size: 9px; color: #e0f2fe; margin-top: 2px; }
+.mission-card { padding: 12px 14px; }
+.mission-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; font-size: 13px; font-weight: 800; }
+.mission-row:last-of-type { border-bottom: none; }
+.mission-row .m-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #cbd5e1; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+.mission-row.done .m-check { background: #10b981; border-color: #10b981; color: #fff; }
+.mission-row.done .m-text { color: var(--muted); text-decoration: line-through; }
+.mission-row .m-text { flex: 1; }
+.mission-row .m-num { font-size: 11px; color: var(--primary); }
+.mission-foot { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 11px; font-weight: 800; color: var(--muted); margin-top: 6px; }
+.ta-card { width: 100%; display: flex; align-items: center; gap: 12px; margin-top: 12px; text-align: left; cursor: pointer;
+  background: linear-gradient(135deg, #ecfeff, #e0e7ff); border: 2.5px solid #6366f1; border-radius: var(--radius); padding: 12px 14px; color: #312e81; box-shadow: var(--shadow); font-family: inherit; }
+.ta-card .ta-ico { font-size: 30px; }
+.credit-line { text-align: center; font-size: 10px; color: var(--muted); margin: 2px 0 6px; }
+.credit-line a { color: var(--muted); }
+
+/* ひっさつわざ・こえ */
+.skill-bar { display: flex; align-items: center; gap: 8px; margin: -4px 0 10px; }
+.skill-btn { border: 2px solid #cbd5e1; background: #f1f5f9; color: var(--muted); border-radius: 12px; padding: 6px 10px; font-weight: 900; font-size: 12px; display: flex; gap: 6px; align-items: center; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+.skill-btn.ready { background: linear-gradient(135deg, #fde047, #f97316); color: #451a03; border-color: #ea580c; animation: skillPulse 1s ease-in-out infinite; }
+@keyframes skillPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.sk-gauge { letter-spacing: 1px; color: #f59e0b; }
+.skill-btn.ready .sk-gauge { color: #7c2d12; }
+.sk-desc { font-size: 10px; font-weight: 700; color: var(--muted); line-height: 1.3; }
+.choice-btn.gone { opacity: 0.15; }
+.voice-row { display: flex; justify-content: center; margin-top: 10px; }
+.voice-btn { border: 2px solid #ec4899; background: #fdf2f8; color: #9d174d; border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 900; cursor: pointer; font-family: inherit; }
+.voice-btn.listening { background: #ec4899; color: #fff; animation: skillPulse 0.8s ease-in-out infinite; }
+.hint-bubble { margin: 8px auto 0; text-align: center; font-size: 13px; font-weight: 900; color: #7c2d12; background: #ffedd5; border: 2px dashed #fb923c; border-radius: 12px; padding: 6px 10px; }
+.battle-stage.is-stage-boss { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.25); }
+.battle-stage.is-stage-boss #battle-monster-svg { transform: scale(1.22); }
+
+/* かきじゅん */
+.kanji-stroke-guide { position: absolute; inset: 0; pointer-events: none; }
+.ks-svg { width: 100%; height: 100%; display: block; }
+.ks-svg path.ks { fill: none; stroke: rgba(148,163,184,0.38); stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; }
+.ks-svg path.ks.done { stroke: rgba(148,163,184,0.18); }
+.ks-svg path.ks.next { stroke: rgba(245,158,11,0.55); }
+.ks-svg.only-next path.ks:not(.next) { stroke: transparent; }
+.ks-svg.only-next .ks-nums { display: none; }
+.ks-svg .ks-nums text { font-size: 6.5px; font-weight: 900; fill: #64748b; font-family: sans-serif; }
+.ks-svg .ks-start { fill: #ef4444; }
+.ks-svg path.ks-anim { fill: none; stroke: #ef4444; stroke-width: 5.5; stroke-linecap: round; stroke-linejoin: round; }
+.kanji-judge { margin-top: 10px; border-radius: 14px; padding: 10px; border: 2px solid; }
+.kanji-judge.ok { background: #dcfce7; border-color: #10b981; }
+.kanji-judge.ng { background: #fff7ed; border-color: #fb923c; }
+.kj-row { display: flex; align-items: center; gap: 10px; }
+.kj-row .compare-user-img { width: 84px; height: 84px; flex-shrink: 0; }
+.kj-msg { font-size: 14px; font-weight: 900; line-height: 1.4; }
+.kj-actions { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+.kj-actions .btn-sm { width: 100%; }
+
+/* ステージ */
+.stage-head { display: flex; align-items: center; gap: 12px; background: #f8fafc; border-radius: 14px; padding: 8px 10px; margin-bottom: 10px; }
+.stage-head .sh-mon img.art { width: 64px; height: 64px; }
+.sh-stars { font-size: 18px; font-weight: 900; color: #b45309; }
+.sh-sub { font-size: 11px; color: var(--muted); font-weight: 700; }
+.stage-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+.stage-node { border: 2px solid var(--border); background: #fff; border-radius: 14px; padding: 7px 2px; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; font-family: inherit; min-height: 74px; }
+.stage-node .sn-num { font-size: 18px; font-weight: 900; color: var(--primary-dark); }
+.stage-node .sn-label { font-size: 9px; font-weight: 800; color: var(--muted); text-align: center; line-height: 1.2; min-height: 22px; word-break: break-all; }
+.stage-node .sn-stars { font-size: 12px; color: #f59e0b; letter-spacing: -1px; }
+.stage-node .off, .res-stars .off { color: #e2e8f0; }
+.stage-node.cleared { background: #fffbeb; border-color: #f59e0b; }
+.stage-node.boss { border-color: #ef4444; background: #fef2f2; }
+.stage-node.locked { opacity: 0.45; cursor: default; }
+.res-stars { font-size: 34px; color: #f59e0b; letter-spacing: 2px; }
+.res-extra { font-size: 12px; font-weight: 800; color: #92400e; margin-bottom: 10px; line-height: 1.6; }
+
+/* マスターひょう・ランキング */
+.mtabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.mtab { border: 2px solid var(--border); background: #fff; border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 900; cursor: pointer; font-family: inherit; color: var(--text); }
+.mtab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.m-grid { display: grid; gap: 4px; }
+.m-cell { border-radius: 8px; background: #f1f5f9; border: 1.5px solid #e2e8f0; text-align: center; font-size: 13px; font-weight: 900; padding: 5px 1px 3px; line-height: 1.1; min-height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.m-cell.kj { font-size: 20px; font-family: "Yu Mincho", "Hiragino Mincho ProN", serif; }
+.m-cell.en { font-size: 11px; }
+.m-cell.m1 { background: #e0f2fe; border-color: #7dd3fc; }
+.m-cell.m2 { background: #bae6fd; border-color: #38bdf8; }
+.m-cell.m3 { background: linear-gradient(135deg, #fef08a, #fbbf24); border-color: #d97706; color: #78350f; }
+.m-dots { font-size: 7px; color: #0284c7; letter-spacing: 1px; }
+.m-rowhead { font-size: 10px; font-weight: 900; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.m-sum { font-size: 13px; font-weight: 900; margin-bottom: 8px; }
+.m-reward { font-size: 11px; font-weight: 800; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.rank-row { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 12px; border: 1.5px solid var(--border); margin-bottom: 8px; background: #fff; }
+.rank-row.me { border-color: var(--primary); background: #eff6ff; }
+.rank-medal { font-size: 24px; width: 30px; text-align: center; }
+.rank-face { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #dbeafe; flex-shrink: 0; }
+.rank-face img.art { width: 40px; height: 40px; }
+.rank-name { flex: 1; font-weight: 900; font-size: 14px; }
+.rank-sub { font-size: 10px; color: var(--muted); font-weight: 800; }
+.rank-num { font-size: 18px; font-weight: 900; color: var(--primary); }
+.kakera-cell img.art { filter: grayscale(1) brightness(1.15); opacity: 0.7; }
+.kakera-cell:disabled { opacity: 0.5; }
+
+/* Blender で作った絵 */
+img.art { display: block; object-fit: contain; -webkit-user-drag: none; user-select: none; margin: 0 auto; max-width: 100%; height: auto; }
+img.art.face { transform: scale(1.75) translateY(17%); }
+img.art.theme-thumb { width: 84px; height: 35px; object-fit: cover; border-radius: 8px; border: 1.5px solid rgba(15,23,42,0.15); }
+.sticker-cell .st-emoji img.art { width: 46px; height: 46px; }
+.capsule-orb img.art { width: 110px; height: 110px; }
+.splash-chars img.art { filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4)); }
+.guide-char-box img.art, #res-char img.art { width: 100%; height: 100%; }
+
 /* ゲームセンターへのリンク */
 .gc-card {
   display: flex; align-items: center; gap: 12px; margin-top: 14px;
@@ -410,10 +522,10 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     </defs>
     <text x="180" y="54" text-anchor="middle" font-size="38" font-weight="900" fill="url(#spGold)" stroke="#451a03" stroke-width="7" paint-order="stroke" letter-spacing="2">ベンキョウクエスト</text>
     <rect x="118" y="64" width="124" height="24" rx="12" fill="#ef4444" stroke="#fef08a" stroke-width="2.5"/>
-    <text x="180" y="81" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" letter-spacing="4">★ 勉クエ ★</text>
+    <text x="180" y="81" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" letter-spacing="4">★ べんクエ ★</text>
   </svg>
-  <div class="splash-sub">ひらめきと ちしきで お宝をゲットせよ！</div>
-  <div class="splash-tap">タップで冒険をはじめる</div>
+  <div class="splash-sub">ひらめきと ちしきで おたからを ゲットせよ！</div>
+  <div class="splash-tap">タップで ぼうけんを はじめる</div>
 </div>
 
 <canvas id="confetti-canvas"></canvas>
@@ -422,16 +534,16 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 <div class="app-shell">
   <!-- Header -->
   <header class="app-header">
-    <button id="btn-profile-switch" class="profile-pill" title="勇者をきりかえる">
+    <button id="btn-profile-switch" class="profile-pill" title="ゆうしゃを きりかえる">
       <span id="hdr-avatar" class="profile-avatar"></span>
       <span class="profile-meta">
         <span id="hdr-name" class="profile-name">たろう</span>
-        <span id="hdr-grade" class="profile-grade">小2 勇者 ▾</span>
+        <span id="hdr-grade" class="profile-grade">2ねんせい ▾</span>
       </span>
     </button>
     <div class="header-right">
       <div class="gold-pill">🪙 <span id="hdr-coin">0</span>G</div>
-      <button id="btn-sound-toggle" class="icon-btn" title="こうか音">🔊</button>
+      <button id="btn-sound-toggle" class="icon-btn" title="こうかおん">🔊</button>
       <button id="btn-parent" class="icon-btn">🔒 おとな</button>
     </div>
   </header>
@@ -447,11 +559,13 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
             </linearGradient>
           </defs>
           <text x="4" y="32" font-size="27" font-weight="900" fill="url(#hmGold)" stroke="#451a03" stroke-width="5.5" paint-order="stroke">ベンキョウクエスト</text>
-          <text x="6" y="49" font-size="11" font-weight="900" fill="#bae6fd" letter-spacing="2">BENKYOU QUEST ── 勉クエ</text>
+          <text x="6" y="49" font-size="11" font-weight="900" fill="#bae6fd" letter-spacing="2">BENKYOU QUEST ── べんクエ</text>
         </svg>
         <div class="hero-lv-badge">
           <div class="lv">Lv.<span id="home-hero-lv">1</span></div>
-          <div class="st" id="home-hero-rank">みならい勇者</div>
+          <div class="st" id="home-hero-rank">みならい ゆうしゃ</div>
+          <div class="lv-bar"><div id="home-lv-fill" class="lv-fill"></div></div>
+          <div class="lv-next" id="home-lv-next"></div>
         </div>
       </div>
       <div class="guide-bubble-row">
@@ -463,70 +577,78 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     <div class="card">
       <div class="hero-bar">
         <div class="mini-stat">
-          <div class="num">🔥 <span id="home-streak">0</span>日</div>
-          <div class="lbl">れんぞく冒険</div>
+          <div class="num">🔥 <span id="home-streak">0</span>にち</div>
+          <div class="lbl">れんぞく ぼうけん</div>
         </div>
         <div class="mini-stat">
-          <div class="num"><span id="home-today-count">0</span>体</div>
-          <div class="lbl">きょうの討伐</div>
+          <div class="num"><span id="home-today-count">0</span>たい</div>
+          <div class="lbl">きょう たおした かず</div>
         </div>
-        <select id="home-grade-select" class="grade-select" aria-label="学年">
-          <option value="1">1年生</option>
-          <option value="2">2年生</option>
-          <option value="3">3年生</option>
-          <option value="4">4年生</option>
-          <option value="5">5年生</option>
-          <option value="6">6年生</option>
+        <select id="home-grade-select" class="grade-select" aria-label="がくねん">
+          <option value="1">1ねんせい</option>
+          <option value="2">2ねんせい</option>
+          <option value="3">3ねんせい</option>
+          <option value="4">4ねんせい</option>
+          <option value="5">5ねんせい</option>
+          <option value="6">6ねんせい</option>
         </select>
       </div>
     </div>
 
+    <div id="home-missions" class="card mission-card"></div>
+
     <button id="btn-revenge-card" class="revenge-banner">
       <div>
-        <div style="font-size:14px;font-weight:900;">👑 おうごんボス討伐（G 2倍！）</div>
-        <div style="font-size:11px;margin-top:2px;">まちがえた強敵にリベンジしよう</div>
+        <div style="font-size:14px;font-weight:900;">👑 おうごんボスに リベンジ（Gが 2ばい！）</div>
+        <div style="font-size:11px;margin-top:2px;">まちがえた もんだいに もういちど ちょうせん</div>
       </div>
-      <span id="revenge-count-badge" class="revenge-badge">0体</span>
+      <span id="revenge-count-badge" class="revenge-badge">0たい</span>
     </button>
 
     <div class="subject-grid">
       <button class="subject-card c-math" data-subject="math">
-        <span class="s-tag">メモ付き</span>
+        <span class="s-tag">メモつき</span>
         <span class="s-icon">⚔️</span>
-        <span class="s-title">さんすう草原</span>
-        <span class="s-sub">学年別の計算＆ひっ算メモ</span>
+        <span class="s-title">さんすう そうげん</span>
+        <span class="s-sub">がくねんべつの けいさん＆ひっさんメモ</span>
       </button>
       <button class="subject-card c-kuku" data-subject="kuku">
-        <span class="s-tag">段えらび</span>
+        <span class="s-tag">だんえらび</span>
         <span class="s-icon">🛡️</span>
-        <span class="s-title">九九のとりで</span>
-        <span class="s-sub">好きな段をえらんで特訓</span>
+        <span class="s-title">くくの とりで</span>
+        <span class="s-sub">すきな だんを えらんで とっくん</span>
       </button>
       <button class="subject-card c-clock" data-subject="clock">
         <span class="s-tag">とけい</span>
         <span class="s-icon">⏳</span>
-        <span class="s-title">時のしんでん</span>
-        <span class="s-sub">アナログ時計のよみ・計算</span>
+        <span class="s-title">ときの しんでん</span>
+        <span class="s-sub">とけいの よみかた・けいさん</span>
       </button>
       <button class="subject-card c-kread" data-subject="kanji_read">
-        <span class="s-tag">1〜6年</span>
+        <span class="s-tag">1〜6ねん</span>
         <span class="s-icon">📜</span>
-        <span class="s-title">かんじの遺跡</span>
-        <span class="s-sub">古代文字（漢字）をよみとけ</span>
+        <span class="s-title">かんじの いせき</span>
+        <span class="s-sub">かんじの よみかたを とけ</span>
       </button>
       <button class="subject-card c-kwrite" data-subject="kanji_write">
-        <span class="s-tag">手書き</span>
+        <span class="s-tag">てがき</span>
         <span class="s-icon">🖌️</span>
-        <span class="s-title">ふで書き道場</span>
-        <span class="s-sub">なぞりガイド付き漢字練習</span>
+        <span class="s-title">ふでがき どうじょう</span>
+        <span class="s-sub">なぞって かんじを れんしゅう</span>
       </button>
       <button class="subject-card c-eng" data-subject="english">
-        <span class="s-tag">🔊発音</span>
+        <span class="s-tag">🔊はつおん</span>
         <span class="s-icon">🔤</span>
-        <span class="s-title">えいごの塔</span>
-        <span class="s-sub">ネイティブ音声でじゅもん習得</span>
+        <span class="s-title">えいごの とう</span>
+        <span class="s-sub">ほんものの はつおんで えいごを おぼえる</span>
       </button>
     </div>
+
+    <button id="btn-ta-card" class="ta-card">
+      <span class="ta-ico">⏱️</span>
+      <span class="gc-text"><strong>タイムアタック</strong><span id="ta-card-best">60びょうで なんもん とける？</span></span>
+      <span class="gc-arrow">›</span>
+    </button>
 
     <a class="gc-card" href="https://hamcheese-jp.github.io/" target="_top">
       <span class="gc-ico">🕹️</span>
@@ -537,13 +659,14 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       <a href="https://hamcheese-jp.github.io/" target="_top">🕹️ ゲームセンター</a>
       <a href="https://hamcheese-jp.github.io/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>
     </div>
+    <div class="credit-line">かきじゅんの データ：<a href="https://kanjivg.tagaini.net/" target="_blank" rel="noopener">KanjiVG</a>（© Ulrich Apel・CC BY-SA 3.0）</div>
   </main>
 
   <!-- QUIZ VIEW -->
   <section id="view-quiz" class="view">
     <div class="quiz-top">
       <div style="display:flex;gap:6px;align-items:center;">
-        <span id="quiz-subject-badge" class="badge">さんすう草原</span>
+        <span id="quiz-subject-badge" class="badge">さんすう そうげん</span>
         <span id="quiz-combo-badge" class="badge combo hidden">🔥 2れんげき</span>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -562,46 +685,54 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       </div>
       <div class="battle-actor"><div id="battle-monster-svg" class="battle-actor-svg"></div></div>
     </div>
+    <div id="skill-bar" class="skill-bar hidden"></div>
 
     <div id="quiz-card" class="card quiz-card">
       <div id="quiz-question-area"></div>
       <div id="quiz-choices-area" class="choices-grid"></div>
+      <div id="voice-row" class="voice-row hidden"><button id="btn-voice" class="voice-btn">🎤 こえで こたえる</button></div>
 
       <div id="quiz-kanji-write-area" class="hidden">
         <div class="pad-toolbar" style="border-radius:12px;margin-top:8px;">
           <div class="pad-tools-left">
-            <button id="btn-kanji-guide" class="tool-mini-btn active">👀 お手本:ON</button>
-            <button id="btn-kanji-thick" class="tool-mini-btn">太さ:ふつう</button>
+            <button id="btn-kanji-guide" class="tool-mini-btn active">👀 おてほん:ON</button>
+            <button id="btn-kanji-play" class="tool-mini-btn">▶ かきじゅん</button>
+            <button id="btn-kanji-thick" class="tool-mini-btn">ふとさ:ふつう</button>
           </div>
           <div class="pad-tools-right">
-            <span id="kanji-stroke-count" style="font-size:11px;font-weight:800;color:var(--muted);">0画</span>
-            <button id="btn-kanji-undo" class="tool-mini-btn">↩ 1画もどす</button>
+            <span id="kanji-stroke-count" style="font-size:11px;font-weight:800;color:var(--muted);">0かく</span>
+            <button id="btn-kanji-undo" class="tool-mini-btn">↩ 1かく もどす</button>
             <button id="btn-kanji-clear" class="tool-mini-btn">🗑 けす</button>
           </div>
         </div>
         <div class="canvas-stage kanji-bg" id="kanji-stage">
           <div class="kanji-crosshair"></div>
           <div id="kanji-guide-char" class="kanji-guide-overlay">山</div>
+          <div id="kanji-stroke-guide" class="kanji-stroke-guide hidden"></div>
           <canvas id="kanji-canvas" class="draw-canvas"></canvas>
         </div>
         <button id="btn-kanji-check" class="btn btn-primary">できた！こたえあわせ</button>
+        <div id="kanji-judge-box" class="kanji-judge hidden">
+          <div class="kj-row"><img id="kanji-judge-img" class="compare-user-img" alt="じぶんの じ"><div id="kanji-judge-msg" class="kj-msg"></div></div>
+          <div id="kanji-judge-actions" class="kj-actions"></div>
+        </div>
 
         <div id="kanji-compare-box" class="hidden">
           <div class="kanji-compare">
             <div class="compare-box">
-              <div class="lbl">じぶんの字（<span id="compare-strokes">0</span>画）</div>
-              <img id="kanji-user-preview" class="compare-user-img" alt="自分の字">
+              <div class="lbl">じぶんの じ（<span id="compare-strokes">0</span>かく）</div>
+              <img id="kanji-user-preview" class="compare-user-img" alt="じぶんの じ">
             </div>
             <div class="compare-box">
-              <div class="lbl">おてほん（<span id="compare-model-strokes">0</span>画）</div>
+              <div class="lbl">おてほん（<span id="compare-model-strokes">0</span>かく）</div>
               <div id="kanji-model-char" class="compare-model-char">山</div>
             </div>
           </div>
           <div style="text-align:center;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px;">
-            とめ・はね・画数を見くらべて判定しよう！
+            とめ・はね・かくすうを みくらべて はんていしよう！
           </div>
           <div class="judge-row">
-            <button id="btn-kanji-ng" class="btn btn-danger">もう一回修行する</button>
+            <button id="btn-kanji-ng" class="btn btn-danger">もういっかい しゅぎょうする</button>
             <button id="btn-kanji-ok" class="btn btn-success">バッチリ！こうげき！</button>
           </div>
         </div>
@@ -610,7 +741,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       <div id="quiz-memo-wrapper" class="memo-section">
         <div class="memo-toggle-bar">
           <button id="btn-toggle-memo" class="memo-toggle-btn">✏️ けいさんメモをひらく</button>
-          <span style="font-size:11px;color:var(--muted);font-weight:700;">指でひっ算メモOK</span>
+          <span style="font-size:11px;color:var(--muted);font-weight:700;">ゆびで ひっさんメモ OK</span>
         </div>
         <div id="memo-pad-area" class="memo-box hidden">
           <div class="pad-toolbar">
@@ -622,7 +753,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
             </div>
             <div class="pad-tools-right">
               <button id="btn-memo-undo" class="tool-mini-btn">↩ もどす</button>
-              <button id="btn-memo-clear" class="tool-mini-btn">🗑 全消し</button>
+              <button id="btn-memo-clear" class="tool-mini-btn">🗑 ぜんぶけす</button>
             </div>
           </div>
           <div class="canvas-stage grid-bg" id="memo-stage">
@@ -638,9 +769,9 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   <!-- SHOP VIEW -->
   <section id="view-shop" class="view">
     <div class="subtabs" id="shop-subtabs">
-      <button class="subtab-btn active" data-sub="tickets">🎟 お宝引換券</button>
-      <button class="subtab-btn" data-sub="gacha">🔮 宝箱ガチャ</button>
-      <button class="subtab-btn" data-sub="customize">🛡️ なかま＆世界</button>
+      <button class="subtab-btn active" data-sub="tickets">🎟 ひきかえけん</button>
+      <button class="subtab-btn" data-sub="gacha">🔮 たからばこガチャ</button>
+      <button class="subtab-btn" data-sub="customize">🛡️ なかま＆せかい</button>
     </div>
     <div id="shop-content"></div>
   </section>
@@ -649,33 +780,27 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   <section id="view-bag" class="view">
     <div class="subtabs" id="bag-subtabs">
       <button class="subtab-btn active" data-sub="tickets">🎟 チケット</button>
-      <button class="subtab-btn" data-sub="stickers">✨ お宝図鑑</button>
-      <button class="subtab-btn" data-sub="customize">🛡️ そうび変更</button>
+      <button class="subtab-btn" data-sub="stickers">✨ おたから ずかん</button>
+      <button class="subtab-btn" data-sub="customize">🛡️ そうび へんこう</button>
     </div>
     <div id="bag-content"></div>
   </section>
 
   <!-- STATS VIEW -->
   <section id="view-stats" class="view">
-    <div class="card">
-      <h3 class="section-title">📊 さいきん7日間の討伐数</h3>
-      <div id="stats-chart" class="bar-chart"></div>
+    <div class="subtabs" id="stats-subtabs">
+      <button class="subtab-btn active" data-sub="log">📜 きろく</button>
+      <button class="subtab-btn" data-sub="master">🏅 マスター</button>
+      <button class="subtab-btn" data-sub="rank">👑 ランキング</button>
     </div>
-    <div class="card">
-      <h3 class="section-title">🏆 ぼうけんのきろく</h3>
-      <div id="stats-summary"></div>
-    </div>
-    <div class="card">
-      <h3 class="section-title">🎯 エリア別のしょうり率</h3>
-      <div id="stats-subjects"></div>
-    </div>
+    <div id="stats-content"></div>
   </section>
 </div>
 
 <!-- Bottom Navigation -->
 <nav class="bottom-nav">
   <button class="nav-btn active" data-tab="home"><span class="n-ico">⚔️</span>クエスト</button>
-  <button class="nav-btn" data-tab="shop"><span class="n-ico">🏪</span>どうぐ屋</button>
+  <button class="nav-btn" data-tab="shop"><span class="n-ico">🏪</span>どうぐや</button>
   <button class="nav-btn" data-tab="bag"><span class="n-ico">🎒</span>もちもの</button>
   <button class="nav-btn" data-tab="stats"><span class="n-ico">📜</span>きろく</button>
 </nav>
@@ -683,15 +808,32 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 <!-- Modals -->
 <div id="modal-profile" class="modal-backdrop">
   <div class="modal-card">
-    <div class="modal-header"><h3>⚔️ だれが冒険にでる？</h3><button class="close-x" data-close="modal-profile">✕</button></div>
+    <div class="modal-header"><h3>⚔️ だれが ぼうけんに でる？</h3><button class="close-x" data-close="modal-profile">✕</button></div>
     <div id="profile-list" class="item-list"></div>
-    <p style="font-size:11px;color:var(--muted);margin:12px 0 0;">※きょうだいの追加・編集は「🔒 おとな」からできます。</p>
+    <p style="font-size:11px;color:var(--muted);margin:12px 0 0;">※きょうだいを ふやすときは、おうちの ひとに「🔒 おとな」から してもらってね。</p>
+  </div>
+</div>
+
+<div id="modal-stage" class="modal-backdrop">
+  <div class="modal-card">
+    <div class="modal-header"><h3 id="stage-title">ステージ</h3><button class="close-x" data-close="modal-stage">✕</button></div>
+    <div id="stage-head" class="stage-head"></div>
+    <div id="stage-grid" class="stage-grid"></div>
+    <button id="btn-stage-free" class="btn btn-ghost" style="margin-top:12px;">🎲 じゆうに れんしゅう（★は つかないよ）</button>
+  </div>
+</div>
+
+<div id="modal-ta" class="modal-backdrop">
+  <div class="modal-card">
+    <div class="modal-header"><h3>⏱️ タイムアタック</h3><button class="close-x" data-close="modal-ta">✕</button></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:0;">60びょうで なんもん せいかい できるかな？ じこベストを こえると +30G！</p>
+    <div class="item-list" id="ta-list"></div>
   </div>
 </div>
 
 <div id="modal-kuku" class="modal-backdrop">
   <div class="modal-card">
-    <div class="modal-header"><h3>🛡️ 九九のとりで（段えらび）</h3><button class="close-x" data-close="modal-kuku">✕</button></div>
+    <div class="modal-header"><h3>🛡️ くくの とりで（だんえらび）</h3><button class="close-x" data-close="modal-kuku">✕</button></div>
     <div style="display:flex;gap:6px;margin-bottom:8px;">
       <button class="tool-mini-btn" id="kuku-preset-all">ぜんぶ</button>
       <button class="tool-mini-btn" id="kuku-preset-hard">6〜9のだん</button>
@@ -701,8 +843,8 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     <div class="form-row" style="margin-top:10px;">
       <label>バトルのしかた</label>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="kuku-chip selected" data-kuku-order="random">🎲 ランダム（5体）</button>
-        <button class="kuku-chip" data-kuku-order="asc">🔢 じゅんばん（9体）</button>
+        <button class="kuku-chip selected" data-kuku-order="random">🎲 ランダム（5たい）</button>
+        <button class="kuku-chip" data-kuku-order="asc">🔢 じゅんばん（9たい）</button>
       </div>
     </div>
     <button id="btn-kuku-start" class="btn btn-primary" style="margin-top:10px;">いざ、しゅつじん！</button>
@@ -711,11 +853,11 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
 <div id="modal-clock" class="modal-backdrop">
   <div class="modal-card">
-    <div class="modal-header"><h3>⏳ 時のしんでん（レベル選択）</h3><button class="close-x" data-close="modal-clock">✕</button></div>
+    <div class="modal-header"><h3>⏳ ときの しんでん（レベルを えらぶ）</h3><button class="close-x" data-close="modal-clock">✕</button></div>
     <div class="item-list">
-      <button class="btn btn-success" data-clock-level="easy">🌱 しょきゅう（ちょうど・15分・30分）</button>
-      <button class="btn btn-primary" data-clock-level="normal">⭐ ちゅうきゅう（5分きざみ）</button>
-      <button class="btn btn-accent" data-clock-level="hard">🔥 じょうきゅう（1分きざみ・○分あと/まえ）</button>
+      <button class="btn btn-success" data-clock-level="easy">🌱 しょきゅう（ちょうど・15ふん・30ぷん）</button>
+      <button class="btn btn-primary" data-clock-level="normal">⭐ ちゅうきゅう（5ふん きざみ）</button>
+      <button class="btn btn-accent" data-clock-level="hard">🔥 じょうきゅう（1ぷん きざみ・○ふん あと/まえ）</button>
     </div>
   </div>
 </div>
@@ -724,15 +866,18 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   <div class="modal-card" style="text-align:center;">
     <div id="res-char" style="width:96px;height:96px;margin:0 auto;"></div>
     <h2 id="res-title" style="margin:6px 0;">クエストクリア！</h2>
-    <div id="res-detail" style="font-size:13px;color:var(--muted);margin-bottom:12px;"></div>
+    <div id="res-stars"></div>
+    <div id="res-detail" style="font-size:13px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="res-extra" class="res-extra"></div>
     <div style="background:#fef9c3;border:2px solid #f59e0b;border-radius:16px;padding:12px;margin-bottom:14px;">
       <div style="font-size:12px;font-weight:800;color:#92400e;">てにいれたゴールド</div>
       <div style="font-size:32px;font-weight:900;color:#b45309;">+🪙 <span id="res-coins">0</span>G</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
       <button id="btn-res-home" class="btn btn-ghost">まちへもどる</button>
-      <button id="btn-res-retry" class="btn btn-primary">もう1回いどむ！</button>
+      <button id="btn-res-retry" class="btn btn-primary">もう1かい いどむ！</button>
     </div>
+    <button id="btn-res-next" class="btn btn-accent hidden" style="margin-top:8px;">つぎの ステージへ ▶</button>
     <div class="foot-links" style="margin-top:12px;"><a href="https://hamcheese-jp.github.io/" target="_top">🕹️ ゲームセンターへ</a></div>
   </div>
 </div>
@@ -746,7 +891,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
 <div id="modal-ticket-use" class="modal-backdrop">
   <div class="modal-card" style="text-align:center;">
-    <div class="modal-header"><h3>🎟 お宝チケットをつかう</h3><button class="close-x" data-close="modal-ticket-use">✕</button></div>
+    <div class="modal-header"><h3>🎟 チケットを つかう</h3><button class="close-x" data-close="modal-ticket-use">✕</button></div>
     <div id="ticket-use-body"></div>
     <div id="ticket-stamp" class="stamp-overlay">
       <span>つかったよ！</span>
@@ -788,6 +933,160 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
 <script>
 /* =========================================================
+   ベンキョウクエスト：もんだいのデータ
+   - かんじ：[字, よみ（例の文の中での読み）, 例の文, ヒント（ひらがな）]
+     例の文の ほかの漢字は、その学年までに習う字だけにする
+   - えいご：[英語, 日本語（ひらがな・カタカナ）, レベル, 声で答えたときに うけつける ほかの書き方]
+   - STROKE_COUNT は tools/kanji/fetch-strokes.js が書きかえる（画数。KanjiVG から）
+   ========================================================= */
+window.BQ_DATA = {
+  kanji: {
+    1: [
+      ['一','いち','一ばん','かずの はじめ'], ['右','みぎ','右の て','ひだりの はんたい'], ['雨','あめ','雨が ふる','かさを さす'],
+      ['円','えん','十円','おかねの たんい'], ['王','おう','王さま','くにで いちばん えらい ひと'], ['音','おと','音が する','みみで きく'],
+      ['下','した','木の下','うえの はんたい'], ['火','ひ','火が もえる','あつくて あかい'], ['花','はな','花が さく','きれいに さく'],
+      ['貝','かい','貝がら','うみで ひろう'], ['学','がっ','学校へ いく','まなぶ'], ['気','き','気もち','こころの ようす'],
+      ['九','きゅう','九さい','はちの つぎ'], ['休','やす','休みの日','がっこうが ない'], ['玉','たま','玉いれ','うんどうかいの きょうぎ'],
+      ['金','きん','金メダル','いちばんの いろ'], ['空','そら','あおい空','うえに ひろがる'], ['月','つき','まるい月','よるに ひかる'],
+      ['犬','いぬ','犬と さんぽ','ワンと なく'], ['見','み','テレビを見る','めを つかう'], ['五','ご','五ひき','よんの つぎ'],
+      ['口','くち','大きな口','たべものを いれる'], ['校','こう','学校','べんきょうする ばしょ'], ['左','ひだり','左がわ','みぎの はんたい'],
+      ['三','さん','三かく','にの つぎ'], ['山','やま','山に のぼる','たかい ところ'], ['子','こ','子ねこ','ちいさい こども'],
+      ['四','よん','四ほん','さんの つぎ'], ['糸','いと','糸で ぬう','はりに とおす'], ['字','じ','字を かく','もじ'],
+      ['耳','みみ','耳で きく','おとを きく ところ'], ['七','なな','七つ','ろくの つぎ'], ['車','くるま','あかい車','タイヤで はしる'],
+      ['手','て','手を あらう','ゆびが ある'], ['十','じゅう','十にん','きゅうの つぎ'], ['出','で','そとに出る','なかの はんたい'],
+      ['女','おんな','女の子','おとこの はんたい'], ['小','ちい','小さい','おおきいの はんたい'], ['上','うえ','つくえの上','したの はんたい'],
+      ['森','もり','森の なか','きが たくさん'], ['人','ひと','しらない人','わたしたち'], ['水','みず','水を のむ','すきとおった のみもの'],
+      ['正','しょう','正月','としの はじめ'], ['生','せい','先生','がっこうで おしえる'], ['青','あお','青い そら','そらの いろ'],
+      ['夕','ゆう','夕がた','ひが しずむ ころ'], ['石','いし','石を なげる','かたい つぶ'], ['赤','あか','赤い りんご','りんごの いろ'],
+      ['千','せん','千えん','ひゃくが じゅう'], ['川','かわ','川で あそぶ','みずが ながれる'], ['先','さき','先に いく','まえの ほう'],
+      ['早','はや','早おき','あさ はやく'], ['草','くさ','草むら','みどりの はっぱ'], ['足','あし','足が はやい','あるく ところ'],
+      ['村','むら','小さな村','いなかの まち'], ['大','おお','大きい','ちいさいの はんたい'], ['男','おとこ','男の子','おんなの はんたい'],
+      ['竹','たけ','竹とんぼ','パンダが たべる'], ['中','なか','はこの中','そとの はんたい'], ['虫','むし','虫とり','かぶとむし など'],
+      ['町','まち','町の こうえん','ひとが すむ ところ'], ['天','てん','天気','はれや あめ'], ['田','た','田んぼ','おこめを つくる'],
+      ['土','つち','土を ほる','みみずが すむ'], ['二','に','二かい','いちの つぎ'], ['日','ひ','日が のぼる','おひさま'],
+      ['入','はい','へやに入る','でるの はんたい'], ['年','とし','年上','おにいさんや おねえさん'], ['白','しろ','白い くも','ゆきの いろ'],
+      ['八','はち','八さい','ななの つぎ'], ['百','ひゃく','百てん','まんてん'], ['文','ぶん','文を かく','ことばの つながり'],
+      ['木','き','木に のぼる','えだと はっぱ'], ['本','ほん','本を よむ','ページが ある'], ['名','な','名まえ','よばれる ことば'],
+      ['目','め','目を とじる','ものを みる'], ['立','た','立ちあがる','すわるの はんたい'], ['力','ちから','力もち','つよさ'],
+      ['林','はやし','林の みち','きが ならぶ'], ['六','ろく','六こ','ごの つぎ']
+    ],
+    2: [
+      ['春','はる','春が くる','さくらの きせつ'], ['夏','なつ','夏やすみ','あつい きせつ'], ['秋','あき','秋の はっぱ','もみじの きせつ'],
+      ['冬','ふゆ','冬の ゆき','さむい きせつ'], ['星','ほし','夜空の星','きらきら ひかる'], ['海','うみ','海で およぐ','しょっぱい みず'],
+      ['風','かぜ','つよい風','ビューと ふく'], ['雲','くも','しろい雲','そらに うかぶ'], ['魚','さかな','魚を つる','みずの なかで およぐ'],
+      ['鳥','とり','鳥が とぶ','つばさが ある'], ['友','とも','友だち','なかよし'], ['絵','え','絵を かく','クレヨンで かく'],
+      ['歌','うた','歌を うたう','メロディーに あわせる'], ['家','いえ','家に かえる','すんでいる ところ'], ['国','くに','ひろい国','にほんや アメリカ'],
+      ['読','よ','本を読む','もじを こえに だす'], ['書','か','字を書く','えんぴつを つかう'], ['話','はなし','お話を きく','ものがたり'],
+      ['聞','き','音を聞く','みみを すます'], ['食','た','ごはんを食べる','くちに いれる'], ['買','か','パンを買う','おみせで おかねを はらう'],
+      ['歩','ある','みちを歩く','あしで すすむ'], ['走','はし','いそいで走る','あしを はやく うごかす'], ['朝','あさ','朝ごはん','おきた ころ'],
+      ['昼','ひる','昼やすみ','おひさまが たかい'], ['夜','よる','夜に ねる','くらい じかん'], ['父','ちち','父の日','おとうさん'],
+      ['母','はは','母の日','おかあさん'], ['兄','あに','兄と あそぶ','おにいさん'], ['姉','あね','姉の ふく','おねえさん'],
+      ['弟','おとうと','弟が なく','としした の おとこのこ'], ['妹','いもうと','妹と あそぶ','としした の おんなのこ'], ['牛','うし','牛の ミルク','モーと なく'],
+      ['馬','うま','馬に のる','ヒヒーンと なく'], ['電','でん','電車','でんきで はしる'], ['道','みち','ひろい道','あるく ところ'],
+      ['船','ふね','船に のる','うみを すすむ'], ['雪','ゆき','雪だるま','さむいと ふる'], ['晴','は','晴れの日','くもが ない'],
+      ['米','こめ','お米を たく','ごはんの もと']
+    ],
+    3: [
+      ['駅','えき','駅で まつ','でんしゃが とまる'], ['橋','はし','橋を わたる','かわの うえに かける'], ['薬','くすり','薬を のむ','びょうきを なおす'],
+      ['銀','ぎん','銀メダル','2ばんめの いろ'], ['祭','まつ','夏祭り','たいこや やたい'], ['暑','あつ','暑い日','きおんが たかい'],
+      ['寒','さむ','寒い冬','きおんが ひくい'], ['深','ふか','深い海','そこが とおい'], ['速','はや','足が速い','スピードが ある'],
+      ['登','のぼ','山に登る','うえへ すすむ'], ['泳','およ','プールで泳ぐ','みずの なかを すすむ'], ['遊','あそ','公園で遊ぶ','たのしく すごす'],
+      ['島','しま','小さな島','うみに かこまれた りく'], ['湖','みずうみ','湖で ボート','ひろい いけ'], ['笛','ふえ','笛を ふく','ピーと なる'],
+      ['鼻','はな','鼻を かむ','においを かぐ'], ['歯','は','歯を みがく','かむ ところ'], ['箱','はこ','箱を あける','ものを いれる'],
+      ['羊','ひつじ','羊の け','メーと なく'], ['豆','まめ','豆まき','せつぶんに まく'], ['葉','は','木の葉','えだに つく'],
+      ['緑','みどり','緑の 草','はっぱの いろ'], ['坂','さか','坂を のぼる','ななめの みち'], ['皿','さら','お皿を あらう','りょうりを のせる'],
+      ['氷','こおり','氷が とける','つめたくて かたい'], ['旅','たび','旅に でる','とおくへ でかける'], ['飲','の','水を飲む','のどが かわいたら'],
+      ['始','はじ','じゅぎょうが始まる','スタート'], ['終','お','えいがが終わる','おしまい'], ['持','も','にもつを持つ','てで かかえる'],
+      ['拾','ひろ','ごみを拾う','おちている ものを とる'], ['投','な','ボールを投げる','てで とばす'], ['打','う','ボールを打つ','バットで あてる'],
+      ['住','す','町に住む','くらす'], ['球','きゅう','野球','ボールの スポーツ'], ['鉄','てつ','鉄ぼう','かたい きんぞく'],
+      ['写','しゃ','写真','カメラで とる'], ['部','ぶ','部かつ','クラブの かつどう'], ['宿','しゅく','宿だい','いえで する べんきょう'],
+      ['勉','べん','勉強','まなぶ こと']
+    ],
+    4: [
+      ['鏡','かがみ','鏡を みる','かおが うつる'], ['牧','ぼく','牧場','うしを そだてる'], ['芽','め','芽が でる','たねから でる'],
+      ['勇','ゆう','勇気','こわがらない こころ'], ['静','しず','静かに する','おとが しない'], ['飛','と','空を飛ぶ','つばさで そらへ'],
+      ['祝','いわ','たんじょう日を祝う','おめでとう'], ['満','まん','満点','いっぱい'], ['望','のぞ','未来を望む','ねがう'],
+      ['選','えら','色を選ぶ','どれに するか きめる'], ['泣','な','赤ちゃんが泣く','なみだが でる'], ['笑','わら','にっこり笑う','うれしい かお'],
+      ['冷','つめ','冷たい 水','ひんやり'], ['焼','や','パンを焼く','ひで あぶる'], ['塩','しお','塩を ふる','しょっぱい あじ'],
+      ['梅','うめ','梅ぼし','すっぱい み'], ['松','まつ','松の 木','はりの ような は'], ['菜','な','菜の花','きいろい はなの はたけ'],
+      ['巣','す','鳥の巣','とりの いえ'], ['旗','はた','旗を ふる','ぬのの しるし'], ['鹿','しか','鹿せんべい','つのが ある どうぶつ'],
+      ['熊','くま','熊の 子','おおきな どうぶつ'], ['願','ねが','お願い','たのむ こと'], ['好','す','好きな 食べもの','だいすき'],
+      ['初','はじ','初めて','さいしょ'], ['季','き','季せつ','はるなつあきふゆ'], ['節','せつ','節分','まめまきの ひ'],
+      ['協','きょう','協力','みんなで たすけあう'], ['競','きょう','競争','はやさを くらべる'], ['灯','とう','電灯','あかり'],
+      ['輪','わ','輪ゴム','まるい かたち'], ['浴','あ','シャワーを浴びる','からだに かける'], ['折','お','紙を折る','まげて かさねる'],
+      ['働','はたら','みんなで働く','しごとを する'], ['続','つづ','あめが続く','やまない'], ['残','のこ','残りもの','あまる'],
+      ['試','し','試合','しょうぶ'], ['便','びん','便せん','てがみの かみ'], ['札','さつ','お札','かみの おかね'],
+      ['卒','そつ','卒業','がっこうを おえる']
+    ],
+    5: [
+      ['桜','さくら','桜が さく','はるの はな'], ['護','ご','自然を保護する','まもる こと'], ['夢','ゆめ','しょうらいの夢','なりたい もの'],
+      ['豊','ゆた','豊かな 自然','たっぷり ある'], ['技','わざ','とくいな技','うでまえ'], ['測','はか','長さを測る','じょうぎなどで しらべる'],
+      ['燃','も','火が燃える','メラメラ する'], ['築','きず','しんらいを築く','つくりあげる'], ['衛','えい','人工衛星','まもる・めぐる'],
+      ['賞','しょう','金賞','ほめられる'], ['飼','か','犬を飼う','ペットを そだてる'], ['枝','えだ','木の枝','きの てや うで'],
+      ['銅','どう','銅メダル','3ばんめの いろ'], ['喜','よろこ','みんなで喜ぶ','うれしがる'], ['救','きゅう','救急車','けがを した ときに よぶ'],
+      ['迷','まよ','道に迷う','わからなく なる'], ['貯','ちょ','貯金','おかねを ためる'], ['険','けわ','険しい山','のぼるのが たいへん'],
+      ['境','さかい','国の境','となりとの あいだ'], ['慣','な','新しい学校に慣れる','いつもの ことに なる'], ['移','うつ','席を移る','ばしょを かえる'],
+      ['増','ふ','数が増える','おおく なる'], ['減','へ','お金が減る','すくなく なる'], ['示','しめ','道を示す','ゆびで おしえる'],
+      ['似','に','親に似る','そっくり'], ['布','ぬの','布で ふく','きれ'], ['粉','こな','小麦粉','こまかい つぶ'],
+      ['綿','わた','綿あめ','ふわふわ'], ['墓','はか','お墓まいり','ごせんぞさまの いる ところ'], ['河','が','銀河','ほしの あつまり'],
+      ['演','えん','演そう','がっきを ひく'], ['絶','ぜっ','絶対','かならず'], ['職','しょく','職員室','せんせいの へや'],
+      ['武','ぶ','武士','むかしの さむらい'], ['犯','はん','犯人','わるい ことを した ひと'], ['破','やぶ','紙が破れる','さける'],
+      ['再','さい','再生','もういちど'], ['暴','あば','暴れる','ばたばた する'], ['酸','す','酸っぱい','レモンの あじ'],
+      ['複','ふく','複数','ふたつ いじょう']
+    ],
+    6: [
+      ['源','みなもと','川の源','はじまりの ばしょ'], ['敬','うやま','年上の人を敬う','たいせつに おもう'], ['泉','いずみ','きれいな泉','みずが わく ところ'],
+      ['宙','ちゅう','宇宙','ほしの ある くうかん'], ['宝','たから','宝物','だいじな もの'], ['窓','まど','窓を あける','ひかりや かぜが はいる'],
+      ['朗','ほが','朗らかな人','あかるく すなお'], ['鋼','はがね','鋼の つよさ','かたい てつ'], ['樹','じゅ','樹木','たちき'],
+      ['誠','まこと','誠の 心','うその ない きもち'], ['卵','たまご','卵やき','ニワトリが うむ'], ['乳','にゅう','牛乳','うしの ミルク'],
+      ['机','つくえ','机の 上','べんきょうする だい'], ['忘','わす','宿題を忘れる','おもいだせない'], ['届','とど','手紙が届く','あいてに つく'],
+      ['背','せ','背が 高い','からだの たかさ'], ['骨','ほね','骨が おれる','からだを ささえる'], ['胸','むね','胸を はる','からだの まえ'],
+      ['腹','はら','腹が へる','おなか'], ['脳','のう','頭脳','かんがえる ところ'], ['誕','たん','誕生日','うまれた ひ'],
+      ['若','わか','若い 木','あたらしくて げんき'], ['捨','す','ごみを捨てる','いらない ものを なげる'], ['洗','あら','手を洗う','みずで きれいに'],
+      ['探','さが','宝を探す','みつけようと する'], ['映','えい','映画','スクリーンで みる'], ['暖','あたた','暖かい へや','ぽかぽか'],
+      ['閉','し','ドアを閉める','あけるの はんたい'], ['晩','ばん','晩ごはん','よるの しょくじ'], ['秘','ひ','秘密','ないしょ'],
+      ['郵','ゆう','郵便','てがみを とどける'], ['幼','よう','幼ちえん','ちいさい こどもの がっこう'], ['片','かた','片手','ひとつの ほう'],
+      ['砂','すな','砂場','こまかい いし'], ['座','ざ','星座','ほしの ならび'], ['系','けい','太陽系','たいようと わくせい'],
+      ['針','はり','時計の針','とけいの ながい ぼう'], ['棒','ぼう','鉄棒','さかあがり'], ['蚕','かいこ','蚕の まゆ','きぬいとを つくる むし'],
+      ['簡','かん','簡単','やさしい']
+    ]
+  },
+  english: [
+    ['apple','りんご',1,'林檎'], ['dog','いぬ',1,'犬'], ['cat','ねこ',1,'猫'], ['sun','たいよう',1,'太陽'], ['star','ほし',1,'星'],
+    ['book','ほん',1,'本'], ['fish','さかな',1,'魚'], ['bird','とり',1,'鳥'], ['red','あか',1,'赤'], ['blue','あお',1,'青'],
+    ['milk','ぎゅうにゅう',1,'牛乳|ミルク'], ['cake','ケーキ',1,''], ['car','くるま',1,'車'], ['tree','き',1,'木'], ['egg','たまご',1,'卵|玉子'],
+    ['water','みず',1,'水'], ['bread','パン',1,''], ['banana','バナナ',1,''], ['orange','オレンジ',1,''], ['green','みどり',1,'緑'],
+    ['yellow','きいろ',1,'黄色'], ['white','しろ',1,'白'], ['black','くろ',1,'黒'], ['pink','ピンク',1,''], ['one','いち',1,'一|1'],
+    ['two','に',1,'二|2'], ['three','さん',1,'三|3'], ['four','よん',1,'四|4|し'], ['five','ご',1,'五|5'], ['ball','ボール',1,''],
+    ['bag','かばん',1,'鞄|バッグ'], ['hat','ぼうし',1,'帽子'], ['cup','カップ',1,'コップ'], ['pen','ペン',1,''], ['desk','つくえ',1,'机'],
+    ['chair','いす',1,'椅子'], ['bear','くま',1,'熊'], ['lion','ライオン',1,''], ['bus','バス',1,''], ['moon','つき',1,'月'],
+    ['rain','あめ',1,'雨'], ['snow','ゆき',1,'雪'], ['hand','て',1,'手'], ['eye','め',1,'目'], ['nose','はな',1,'鼻'],
+    ['mouth','くち',1,'口'], ['ear','みみ',1,'耳'], ['pig','ぶた',1,'豚'], ['cow','うし',1,'牛'], ['door','ドア',1,'とびら|扉'],
+    ['school','がっこう',2,'学校'], ['friend','ともだち',2,'友達|友だち'], ['music','おんがく',2,'音楽'], ['flower','はな',2,'花'],
+    ['summer','なつ',2,'夏'], ['winter','ふゆ',2,'冬'], ['spring','はる',2,'春'], ['fall','あき',2,'秋'], ['rabbit','うさぎ',2,'兎'],
+    ['pencil','えんぴつ',2,'鉛筆'], ['station','えき',2,'駅'], ['happy','うれしい',2,'嬉しい|しあわせ|幸せ'], ['morning','あさ',2,'朝'],
+    ['animal','どうぶつ',2,'動物'], ['teacher','せんせい',2,'先生'], ['mother','おかあさん',2,'お母さん|母'], ['father','おとうさん',2,'お父さん|父'],
+    ['family','かぞく',2,'家族'], ['house','いえ',2,'家'], ['park','こうえん',2,'公園'], ['river','かわ',2,'川'], ['sea','うみ',2,'海'],
+    ['sky','そら',2,'空'], ['birthday','たんじょうび',2,'誕生日'], ['soccer','サッカー',2,''], ['swim','およぐ',2,'泳ぐ'], ['run','はしる',2,'走る'],
+    ['eat','たべる',2,'食べる'], ['sleep','ねる',2,'寝る'], ['big','おおきい',2,'大きい'], ['small','ちいさい',2,'小さい'], ['hot','あつい',2,'暑い|熱い'],
+    ['cold','さむい',2,'寒い|つめたい|冷たい'], ['monkey','さる',2,'猿'], ['elephant','ぞう',2,'象'], ['tomato','トマト',2,''], ['juice','ジュース',2,''],
+    ['library','としょかん',3,'図書館'], ['science','りか',3,'理科|かがく|科学'], ['mountain','やま',3,'山'], ['breakfast','あさごはん',3,'朝ご飯|朝御飯|朝食'],
+    ['umbrella','かさ',3,'傘'], ['favorite','おきにいり',3,'お気に入り'], ['hospital','びょういん',3,'病院'], ['tomorrow','あした',3,'明日'],
+    ['delicious','おいしい',3,'美味しい'], ['dream','ゆめ',3,'夢'], ['earth','ちきゅう',3,'地球'], ['future','みらい',3,'未来'],
+    ['yesterday','きのう',3,'昨日'], ['weather','てんき',3,'天気'], ['island','しま',3,'島'], ['country','くに',3,'国'], ['history','れきし',3,'歴史'],
+    ['question','しつもん',3,'質問'], ['answer','こたえ',3,'答え'], ['holiday','やすみ',3,'休み'], ['festival','まつり',3,'祭り|お祭り'],
+    ['museum','はくぶつかん',3,'博物館'], ['airport','くうこう',3,'空港'], ['kitchen','だいどころ',3,'台所|キッチン'], ['vegetable','やさい',3,'野菜'],
+    ['important','たいせつ',3,'大切|だいじ|大事'], ['interesting','おもしろい',3,'面白い'], ['beautiful','うつくしい',3,'美しい|きれい|綺麗'],
+    ['difficult','むずかしい',3,'難しい'], ['together','いっしょに',3,'一緒に|いっしょ'], ['dinner','ばんごはん',3,'晩ご飯|夕ご飯|夕食']
+  ]
+};
+/* STROKE_COUNT_BEGIN */
+window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"下":3,"火":4,"花":7,"貝":7,"学":8,"気":6,"九":2,"休":6,"玉":5,"金":8,"空":8,"月":4,"犬":4,"見":7,"五":4,"口":3,"校":10,"左":5,"三":3,"山":3,"子":3,"四":5,"糸":6,"字":6,"耳":6,"七":2,"車":7,"手":4,"十":2,"出":5,"女":3,"小":3,"上":3,"森":12,"人":2,"水":4,"正":5,"生":5,"青":8,"夕":3,"石":5,"赤":7,"千":3,"川":3,"先":6,"早":6,"草":9,"足":7,"村":7,"大":3,"男":7,"竹":6,"中":4,"虫":6,"町":7,"天":4,"田":5,"土":3,"二":2,"日":4,"入":2,"年":6,"白":5,"八":2,"百":6,"文":4,"木":4,"本":5,"名":6,"目":5,"立":5,"力":2,"林":8,"六":4,"春":9,"夏":10,"秋":9,"冬":5,"星":9,"海":9,"風":9,"雲":12,"魚":11,"鳥":11,"友":4,"絵":12,"歌":14,"家":10,"国":8,"読":14,"書":10,"話":13,"聞":14,"食":9,"買":12,"歩":8,"走":7,"朝":12,"昼":9,"夜":8,"父":4,"母":5,"兄":5,"姉":8,"弟":7,"妹":8,"牛":4,"馬":10,"電":13,"道":12,"船":11,"雪":11,"晴":12,"米":6,"駅":14,"橋":16,"薬":16,"銀":14,"祭":11,"暑":12,"寒":12,"深":11,"速":10,"登":12,"泳":8,"遊":12,"島":10,"湖":12,"笛":11,"鼻":14,"歯":12,"箱":15,"羊":6,"豆":7,"葉":12,"緑":14,"坂":7,"皿":5,"氷":5,"旅":10,"飲":12,"始":8,"終":11,"持":9,"拾":9,"投":7,"打":5,"住":7,"球":11,"鉄":13,"写":5,"部":11,"宿":11,"勉":10,"鏡":19,"牧":8,"芽":8,"勇":9,"静":14,"飛":9,"祝":9,"満":12,"望":11,"選":15,"泣":8,"笑":10,"冷":7,"焼":12,"塩":13,"梅":10,"松":8,"菜":11,"巣":11,"旗":14,"鹿":11,"熊":14,"願":19,"好":6,"初":7,"季":8,"節":13,"協":8,"競":20,"灯":6,"輪":15,"浴":10,"折":7,"働":13,"続":13,"残":10,"試":13,"便":9,"札":5,"卒":8,"桜":10,"護":20,"夢":13,"豊":13,"技":7,"測":12,"燃":16,"築":16,"衛":16,"賞":15,"飼":13,"枝":8,"銅":14,"喜":12,"救":11,"迷":9,"貯":12,"険":11,"境":14,"慣":14,"移":11,"増":14,"減":12,"示":5,"似":7,"布":5,"粉":10,"綿":14,"墓":13,"河":8,"演":14,"絶":12,"職":18,"武":8,"犯":5,"破":10,"再":6,"暴":15,"酸":14,"複":14,"源":13,"敬":12,"泉":9,"宙":8,"宝":8,"窓":11,"朗":10,"鋼":16,"樹":16,"誠":13,"卵":7,"乳":8,"机":6,"忘":7,"届":8,"背":9,"骨":10,"胸":10,"腹":13,"脳":11,"誕":15,"若":8,"捨":11,"洗":9,"探":11,"映":9,"暖":13,"閉":11,"晩":12,"秘":10,"郵":11,"幼":5,"片":4,"砂":9,"座":10,"系":7,"針":10,"棒":12,"蚕":10,"簡":18};
+/* STROKE_COUNT_END */
+</script>
+
+<script>
+/* =========================================================
    ベンキョウクエスト（勉クエ） - GAS完全対応版
    ========================================================= */
 (() => {
@@ -803,15 +1102,25 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
   // ---------------- オリジナルキャラクター SVG ----------------
   const HERO_CHARS = [
-    { id: 'penta', name: '勇者ペンタ', role: 'えんぴつ剣の勇者', price: 0 },
-    { id: 'kirari', name: 'まほう使いキラリ', role: 'ひらめき魔法使い', price: 0 },
-    { id: 'keshimaru', name: '精霊ケシマル', role: 'まちがい消しの相棒', price: 80 },
-    { id: 'kabuto', name: '騎士カブト丸', role: 'じょうぎ刀の武者', price: 120 },
-    { id: 'mike', name: 'くのいちミケ', role: 'はやときネコ忍者', price: 150 },
-    { id: 'dorago', name: 'ちび竜ドラゴ', role: 'ちしきの守護竜', price: 220 }
+    { id: 'penta', name: 'ゆうしゃペンタ', role: 'えんぴつけんの ゆうしゃ', price: 0 },
+    { id: 'kirari', name: 'まほうつかいキラリ', role: 'ひらめき まほうつかい', price: 0 },
+    { id: 'keshimaru', name: 'せいれいケシマル', role: 'まちがいけしの あいぼう', price: 80 },
+    { id: 'kabuto', name: 'きしカブトまる', role: 'じょうぎがたなの むしゃ', price: 120 },
+    { id: 'mike', name: 'くのいちミケ', role: 'はやときネコにんじゃ', price: 150 },
+    { id: 'dorago', name: 'ちびりゅうドラゴ', role: 'ちしきの まもりりゅう', price: 220 }
   ];
 
   function renderHeroSVG(id, size = 64) {
+    const ch = HERO_CHARS.find(c => c.id === id) || HERO_CHARS[0];
+    return artImg(`hero_${ch.id}.webp`, size, ch.name, `h_${ch.id}_${size}`, heroSVG(ch.id, size));
+  }
+  // 顔のアップ（ヘッダーの丸いアイコンなど）
+  function renderHeroFace(id, size = 34) {
+    const ch = HERO_CHARS.find(c => c.id === id) || HERO_CHARS[0];
+    return artImg(`hero_${ch.id}.webp`, size, ch.name, `hf_${ch.id}_${size}`, heroSVG(ch.id, size), size, 'face');
+  }
+
+  function heroSVG(id, size = 64) {
     const s = `width="${size}" height="${size}" viewBox="0 0 120 120"`;
     switch (id) {
       case 'kirari':
@@ -901,7 +1210,18 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   }
 
   // ---------------- オリジナルモンスター SVG（エリアごとの「べんきょうモンスター」） ----------------
-  function renderMonsterSVG(subject, isRevenge = false) {
+  function renderMonsterSVG(subject, isRevenge = false, size = 80) {
+    const key = isRevenge ? 'boss' : (subject === 'kanji_read' || subject === 'kanji_write' || subject === 'kuku' || subject === 'clock' || subject === 'english' ? subject : 'math');
+    return artImg(`mon_${key}.webp`, size, '', `m_${key}_${size}`, monsterSVG(subject, isRevenge).replace('width="70" height="70"', `width="${size}" height="${size}"`));
+  }
+  function itemArt(s, size) {
+    return artImg(`item_${s.id}.webp`, size, s.name, `i_${s.id}_${size}`, `<span style="font-size:${Math.round(size * 0.8)}px;line-height:1;">${s.emoji}</span>`);
+  }
+  function themeArt(th, w, h) {
+    return artImg(`bg_${th.id}.webp`, w, th.name, `t_${th.id}_${w}`, `<div style="font-size:28px;">${th.icon}</div>`, h, 'theme-thumb');
+  }
+
+  function monsterSVG(subject, isRevenge = false) {
     const s = 'width="70" height="70" viewBox="0 0 120 120"';
     if (isRevenge) {
       // キンピカトロフィー大王：トロフィーの体に、「？」マークのかんむり
@@ -1002,11 +1322,11 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
   // ---------------- マスタデータ ----------------
   const THEMES = [
-    { id: 'sky', cls: '', icon: '🏰', name: 'はじまりの草原', price: 0 },
-    { id: 'forest', cls: 'theme-forest', icon: '🌲', name: 'ささやきの森', price: 100 },
-    { id: 'ocean', cls: 'theme-ocean', icon: '🌊', name: '青き海の神殿', price: 120 },
-    { id: 'volcano', cls: 'theme-volcano', icon: '🌋', name: 'ほのおの火山', price: 150 },
-    { id: 'dungeon', cls: 'theme-dungeon', icon: '🌌', name: 'ほしぞら天文台', price: 180 }
+    { id: 'sky', cls: '', icon: '🏰', name: 'はじまりの そうげん', price: 0 },
+    { id: 'forest', cls: 'theme-forest', icon: '🌲', name: 'ささやきの もり', price: 100 },
+    { id: 'ocean', cls: 'theme-ocean', icon: '🌊', name: 'あおき うみの しんでん', price: 120 },
+    { id: 'volcano', cls: 'theme-volcano', icon: '🌋', name: 'ほのおの かざん', price: 150 },
+    { id: 'dungeon', cls: 'theme-dungeon', icon: '🌌', name: 'ほしぞら てんもんだい', price: 180 }
   ];
 
   const STICKERS = [
@@ -1015,12 +1335,12 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     { id: 's03', emoji: '🧪', name: 'ひらめきドリンク', rarity: 'N' },
     { id: 's04', emoji: '🧭', name: 'まなびコンパス', rarity: 'N' },
     { id: 's05', emoji: '🍎', name: 'ちえのリンゴ', rarity: 'N' },
-    { id: 's06', emoji: '🔑', name: 'ひみつ箱のカギ', rarity: 'N' },
+    { id: 's06', emoji: '🔑', name: 'ひみつばこの カギ', rarity: 'N' },
     { id: 's07', emoji: '📖', name: 'まほうのドリル', rarity: 'N' },
-    { id: 's08', emoji: '💡', name: 'はなまる電球', rarity: 'N' },
+    { id: 's08', emoji: '💡', name: 'はなまる でんきゅう', rarity: 'N' },
     { id: 's09', emoji: '⚡', name: 'ピカピカチョーク', rarity: 'R' },
-    { id: 's10', emoji: '🪁', name: 'そらとぶ凧', rarity: 'R' },
-    { id: 's11', emoji: '🔮', name: 'こたえの水晶', rarity: 'R' },
+    { id: 's10', emoji: '🪁', name: 'そらとぶ たこ', rarity: 'R' },
+    { id: 's11', emoji: '🔮', name: 'こたえの すいしょう', rarity: 'R' },
     { id: 's12', emoji: '🪙', name: 'ごほうびメダル', rarity: 'R' },
     { id: 's13', emoji: '🎯', name: 'まとあてダーツ', rarity: 'R' },
     { id: 's14', emoji: '💍', name: 'ひらめきリング', rarity: 'R' },
@@ -1028,126 +1348,44 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     { id: 's16', emoji: '🚀', name: 'ゆめロケット', rarity: 'R' },
     { id: 's17', emoji: '🦖', name: 'ちしきザウルス', rarity: 'SR' },
     { id: 's18', emoji: '🦄', name: 'にじいろユニコーン', rarity: 'SR' },
-    { id: 's19', emoji: '🔥', name: 'やる気のほのお', rarity: 'SR' },
+    { id: 's19', emoji: '🔥', name: 'やるきの ほのお', rarity: 'SR' },
     { id: 's20', emoji: '💮', name: 'でんせつのはなまる', rarity: 'SR' },
-    { id: 's21', emoji: '👑', name: '勉クエ大王冠', rarity: 'UR' },
+    { id: 's21', emoji: '👑', name: 'べんクエ だいおうかん', rarity: 'UR' },
     { id: 's22', emoji: '🐉', name: 'ドラゴのおまもり', rarity: 'UR' },
-    { id: 's23', emoji: '🌟', name: 'きせきの星石', rarity: 'UR' },
+    { id: 's23', emoji: '🌟', name: 'きせきの ほしいし', rarity: 'UR' },
     { id: 's24', emoji: '💎', name: 'レインボーダイヤ', rarity: 'UR' }
   ];
 
   const DEFAULT_TICKETS = [
-    { id: 't1', icon: '🍪', name: '好きなおやつ1こ券', price: 150, desc: 'おうちの人とえらぼう' },
-    { id: 't2', icon: '🎮', name: 'ゲーム15分えんちょう券', price: 200, desc: 'いつもより15分ながく遊べる' },
-    { id: 't3', icon: '🍛', name: 'ばんごはんリクエスト券', price: 300, desc: '好きなメニューをリクエスト！' },
-    { id: 't4', icon: '📺', name: 'YouTube 20分けん', price: 220, desc: '好きな動画を見られるよ' },
-    { id: 't5', icon: '🎡', name: 'おでかけリクエスト券', price: 600, desc: '休みの日に行きたい場所へ！' }
+    { id: 't1', icon: '🍪', name: 'すきな おやつ 1こけん', price: 150, desc: 'おうちの ひとと えらぼう' },
+    { id: 't2', icon: '🎮', name: 'ゲーム 15ふん えんちょうけん', price: 200, desc: 'いつもより 15ふん ながく あそべる' },
+    { id: 't3', icon: '🍛', name: 'ばんごはん リクエストけん', price: 300, desc: 'すきな メニューを リクエスト！' },
+    { id: 't4', icon: '📺', name: 'YouTube 20ぷんけん', price: 220, desc: 'すきな どうがを みられるよ' },
+    { id: 't5', icon: '🎡', name: 'おでかけ リクエストけん', price: 600, desc: 'やすみの ひに いきたい ばしょへ！' }
   ];
 
-  const KANJI_BANK = {
-    1: [
-      { char: '山', read: 'やま', word: '山にのぼる', hint: 'たかいところ', strokes: 3, d: ['かわ','うみ','もり'] },
-      { char: '川', read: 'かわ', word: '川であそぶ', hint: 'みずがながれる', strokes: 3, d: ['やま','いけ','たに'] },
-      { char: '森', read: 'もり', word: '森のなか', hint: '木がたくさん', strokes: 12, d: ['はやし','き','やま'] },
-      { char: '花', read: 'はな', word: '花がさく', hint: 'きれいにさく', strokes: 7, d: ['くさ','はっぱ','たね'] },
-      { char: '空', read: 'そら', word: 'あおい空', hint: 'うえにある', strokes: 8, d: ['くも','ほし','かぜ'] },
-      { char: '雨', read: 'あめ', word: '雨がふる', hint: 'かさをさす', strokes: 8, d: ['ゆき','くも','かぜ'] },
-      { char: '犬', read: 'いぬ', word: '犬とさんぽ', hint: 'ワンとなく', strokes: 4, d: ['ねこ','とり','うま'] },
-      { char: '虫', read: 'むし', word: '虫とりあみ', hint: 'かぶとなど', strokes: 6, d: ['とり','さかな','かめ'] },
-      { char: '車', read: 'くるま', word: 'あかい車', hint: 'タイヤではしる', strokes: 7, d: ['ふね','でんしゃ','うま'] },
-      { char: '校', read: 'こう', word: 'がっ校へいく', hint: 'べんきょうする場所', strokes: 10, d: ['きょう','せん','がく'] }
-    ],
-    2: [
-      { char: '春', read: 'はる', word: '春がきた', hint: 'あたたかい季節', strokes: 9, d: ['なつ','あき','ふゆ'] },
-      { char: '夏', read: 'なつ', word: '夏やすみ', hint: 'あつい季節', strokes: 10, d: ['はる','あき','ふゆ'] },
-      { char: '星', read: 'ほし', word: '夜空の星', hint: 'きらきら光る', strokes: 9, d: ['つき','たいよう','くも'] },
-      { char: '海', read: 'うみ', word: '海でおよぐ', hint: 'しょっぱい水', strokes: 9, d: ['かわ','いけ','みずうみ'] },
-      { char: '風', read: 'かぜ', word: 'つよい風', hint: 'ビューとふく', strokes: 9, d: ['あめ','くも','ゆき'] },
-      { char: '雲', read: 'くも', word: 'しろい雲', hint: '空にうかぶ', strokes: 12, d: ['あめ','そら','かぜ'] },
-      { char: '魚', read: 'さかな', word: '魚をつる', hint: '水の中で泳ぐ', strokes: 11, d: ['とり','むし','かに'] },
-      { char: '鳥', read: 'とり', word: '鳥がとぶ', hint: 'つばさがある', strokes: 11, d: ['さかな','うま','いぬ'] },
-      { char: '友', read: 'とも', word: '友だちと遊ぶ', hint: 'なかよし', strokes: 4, d: ['おや','あに','いもうと'] },
-      { char: '絵', read: 'え', word: '絵をかく', hint: 'クレヨンでかく', strokes: 12, d: ['じ','うた','ほん'] }
-    ],
-    3: [
-      { char: '駅', read: 'えき', word: '駅でまつ', hint: '電車がとまる', strokes: 14, d: ['みち','はし','みなと'] },
-      { char: '橋', read: 'はし', word: '橋をわたる', hint: '川の上にかける', strokes: 16, d: ['みち','いけ','えき'] },
-      { char: '薬', read: 'くすり', word: '薬をのむ', hint: 'びょうきをなおす', strokes: 16, d: ['みず','おちゃ','やさい'] },
-      { char: '銀', read: 'ぎん', word: '銀メダル', hint: '2ばんの色', strokes: 14, d: ['きん','どう','てつ'] },
-      { char: '祭', read: 'まつ', word: '夏祭りにいく', hint: 'たいこや屋台', strokes: 11, d: ['いわ','あそ','やす'] },
-      { char: '暑', read: 'あつ', word: '今日は暑い', hint: '気温が高い', strokes: 12, d: ['さむ','すず','あたた'] },
-      { char: '寒', read: 'さむ', word: '冬は寒い', hint: '気温が低い', strokes: 12, d: ['あつ','すず','ぬる'] },
-      { char: '深', read: 'ふか', word: '深い海', hint: 'そこが遠い', strokes: 11, d: ['あさ','ひろ','せま'] },
-      { char: '速', read: 'はや', word: '足が速い', hint: 'スピードがある', strokes: 10, d: ['おそ','とお','ちか'] },
-      { char: '登', read: 'のぼ', word: '山に登る', hint: '上へすすむ', strokes: 12, d: ['くだ','おり','はし'] }
-    ],
-    4: [
-      { char: '鏡', read: 'かがみ', word: '鏡をみる', hint: '顔がうつる', strokes: 19, d: ['まど','とけい','かぎ'] },
-      { char: '牧', read: 'ぼく', word: '牧場の牛', hint: 'うしを育てる', strokes: 8, d: ['のう','ばく','もく'] },
-      { char: '芽', read: 'め', word: '芽がでる', hint: 'たねから出る', strokes: 8, d: ['は','ね','み'] },
-      { char: '勇', read: 'ゆう', word: '勇気をだす', hint: 'こわがらない心', strokes: 9, d: ['げん','ほん','てん'] },
-      { char: '静', read: 'しず', word: '静かにする', hint: '音がしない', strokes: 14, d: ['うるさ','はや','やす'] },
-      { char: '飛', read: 'と', word: '空を飛ぶ', hint: '鳥や飛行機', strokes: 9, d: ['はし','およ','ある'] },
-      { char: '祝', read: 'いわ', word: '誕生日を祝う', hint: 'おめでとう', strokes: 9, d: ['ねが','いの','たの'] },
-      { char: '満', read: 'まん', word: '満点のテスト', hint: 'いっぱい', strokes: 12, d: ['はん','ぜん','かん'] },
-      { char: '望', read: 'のぞ', word: '未来を望む', hint: 'ねがい', strokes: 11, d: ['おも','し','み'] },
-      { char: '選', read: 'えら', word: '好きな色を選ぶ', hint: 'どれにするか決める', strokes: 15, d: ['はこ','すす','かえ'] }
-    ],
-    5: [
-      { char: '桜', read: 'さくら', word: '桜が満開だ', hint: '春の花', strokes: 10, d: ['うめ','もも','まつ'] },
-      { char: '護', read: 'ご', word: '自然を保護する', hint: 'まもること', strokes: 20, d: ['ほ','しゅ','ぼう'] },
-      { char: '夢', read: 'ゆめ', word: '将来の夢', hint: 'なりたいもの', strokes: 13, d: ['きぼう','こころ','みらい'] },
-      { char: '豊', read: 'ゆた', word: '豊かな自然', hint: 'たっぷりある', strokes: 13, d: ['しず','あざ','ひろ'] },
-      { char: '技', read: 'わざ', word: '得意な技', hint: 'うでまえ', strokes: 7, d: ['ちから','こつ','ゆめ'] },
-      { char: '測', read: 'はか', word: '長さを測る', hint: '定規などで調べる', strokes: 12, d: ['かぞ','しら','つく'] },
-      { char: '燃', read: 'も', word: '火が燃える', hint: 'メラメラする', strokes: 16, d: ['き','つ','ひか'] },
-      { char: '築', read: 'きず', word: '信頼を築く', hint: 'つくりあげる', strokes: 16, d: ['つく','た','まも'] },
-      { char: '衛', read: 'えい', word: '人工衛星', hint: 'まもる・めぐる', strokes: 16, d: ['せい','けい','てい'] },
-      { char: '賞', read: 'しょう', word: '金賞をとる', hint: 'ほめられる', strokes: 15, d: ['じょう','ちょう','りょう'] }
-    ],
-    6: [
-      { char: '源', read: 'みなもと', word: '川の源をたどる', hint: 'はじまりの場所', strokes: 13, d: ['ながれ','しずく','みず'] },
-      { char: '敬', read: 'うやま', word: '年上の人を敬う', hint: 'たいせつに思う', strokes: 12, d: ['した','たよ','いの'] },
-      { char: '泉', read: 'いずみ', word: 'きれいな泉', hint: '水がわく所', strokes: 9, d: ['たき','ぬま','かわ'] },
-      { char: '宙', read: 'ちゅう', word: '宇宙を旅する', hint: '星のある空間', strokes: 8, d: ['う','そら','かい'] },
-      { char: '宝', read: 'たから', word: '宝物をさがす', hint: '大事なもの', strokes: 8, d: ['かね','たま','いし'] },
-      { char: '窓', read: 'まど', word: '窓をあける', hint: '光や風が入る', strokes: 11, d: ['かべ','とびら','やね'] },
-      { char: '朗', read: 'ほが', word: '朗らかな性格', hint: '明るくすなお', strokes: 10, d: ['あき','やす','しず'] },
-      { char: '鋼', read: 'はがね', word: '鋼のように強い', hint: 'かたい鉄', strokes: 16, d: ['てつ','どう','ぎん'] },
-      { char: '樹', read: 'じゅ', word: '大きな樹木', hint: 'たちき', strokes: 16, d: ['もく','りん','しん'] },
-      { char: '誠', read: 'まこと', word: '誠の心', hint: 'うそのない気持ち', strokes: 13, d: ['こころ','ことば','ちかい'] }
-    ]
-  };
-
-  const ENGLISH_BANK = [
-    { en: 'apple', ja: 'りんご', lv: 1 }, { en: 'dog', ja: 'いぬ', lv: 1 },
-    { en: 'cat', ja: 'ねこ', lv: 1 }, { en: 'sun', ja: 'たいよう', lv: 1 },
-    { en: 'star', ja: 'ほし', lv: 1 }, { en: 'book', ja: 'ほん', lv: 1 },
-    { en: 'fish', ja: 'さかな', lv: 1 }, { en: 'bird', ja: 'とり', lv: 1 },
-    { en: 'red', ja: 'あか', lv: 1 }, { en: 'blue', ja: 'あお', lv: 1 },
-    { en: 'milk', ja: 'ぎゅうにゅう', lv: 1 }, { en: 'cake', ja: 'ケーキ', lv: 1 },
-    { en: 'car', ja: 'くるま', lv: 1 }, { en: 'tree', ja: 'き', lv: 1 },
-    { en: 'school', ja: 'がっこう', lv: 2 }, { en: 'friend', ja: 'ともだち', lv: 2 },
-    { en: 'music', ja: 'おんがく', lv: 2 }, { en: 'flower', ja: 'はな', lv: 2 },
-    { en: 'summer', ja: 'なつ', lv: 2 }, { en: 'winter', ja: 'ふゆ', lv: 2 },
-    { en: 'rabbit', ja: 'うさぎ', lv: 2 }, { en: 'pencil', ja: 'えんぴつ', lv: 2 },
-    { en: 'station', ja: 'えき', lv: 2 }, { en: 'happy', ja: 'うれしい・しあわせ', lv: 2 },
-    { en: 'morning', ja: 'あさ', lv: 2 }, { en: 'animal', ja: 'どうぶつ', lv: 2 },
-    { en: 'library', ja: 'としょかん', lv: 3 }, { en: 'science', ja: 'りか・かがく', lv: 3 },
-    { en: 'mountain', ja: 'やま', lv: 3 }, { en: 'breakfast', ja: 'あさごはん', lv: 3 },
-    { en: 'umbrella', ja: 'かさ', lv: 3 }, { en: 'favorite', ja: 'おきにいりの', lv: 3 },
-    { en: 'hospital', ja: 'びょういん', lv: 3 }, { en: 'tomorrow', ja: 'あした', lv: 3 },
-    { en: 'delicious', ja: 'おいしい', lv: 3 }, { en: 'dream', ja: 'ゆめ', lv: 3 },
-    { en: 'earth', ja: 'ちきゅう', lv: 3 }, { en: 'future', ja: 'みらい', lv: 3 }
-  ];
+  // ---------------- もんだいのデータ（data_js.html） ----------------
+  const BQD = window.BQ_DATA || { kanji: {}, english: [], strokeCount: {} };
+  const KANJI_BANK = {};
+  Object.entries(BQD.kanji).forEach(([g, rows]) => {
+    KANJI_BANK[g] = rows.map(([char, read, word, hint]) => ({ char, read, word, hint, strokes: (BQD.strokeCount || {})[char] || 0, grade: +g }));
+  });
+  // まちがいの せんたくし：おなじ学年の ほかの よみから、ながさが にている ものを えらぶ
+  function kanjiDistractors(k) {
+    const pick3 = (list) => shuffle([...new Set(list.filter(x => x.read !== k.read).map(x => x.read))].filter(r => Math.abs(r.length - k.read.length) <= 1));
+    let out = pick3(KANJI_BANK[k.grade] || []);
+    if (out.length < 3) out = [...new Set(out.concat(pick3(Object.values(KANJI_BANK).flat())))];
+    return out.slice(0, 3);
+  }
+  const ENGLISH_BANK = (BQD.english || []).map(([en, ja, lv, alt]) => ({ en, ja, lv, alt: alt ? alt.split('|') : [] }));
 
   const SUBJECT_META = {
-    math: { name: 'さんすう草原', icon: '⚔️', monster: 'プラマイだんご' },
-    kuku: { name: '九九のとりで', icon: '🛡️', monster: 'カケルバット' },
-    clock: { name: '時のしんでん', icon: '⏳', monster: 'チクタクロウ' },
-    kanji_read: { name: 'かんじの遺跡', icon: '📜', monster: 'マキモノン' },
-    kanji_write: { name: 'ふで書き道場', icon: '🖌️', monster: 'フデドン' },
-    english: { name: 'えいごの塔', icon: '🔤', monster: 'ブックン' }
+    math: { name: 'さんすう そうげん', icon: '⚔️', monster: 'プラマイだんご' },
+    kuku: { name: 'くくの とりで', icon: '🛡️', monster: 'カケルバット' },
+    clock: { name: 'ときの しんでん', icon: '⏳', monster: 'チクタクロウ' },
+    kanji_read: { name: 'かんじの いせき', icon: '📜', monster: 'マキモノン' },
+    kanji_write: { name: 'ふでがき どうじょう', icon: '🖌️', monster: 'フデドン' },
+    english: { name: 'えいごの とう', icon: '🔤', monster: 'ブックン' }
   };
 
   // ---------------- ユーティリティ ----------------
@@ -1168,6 +1406,16 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   };
   const uid = () => Math.random().toString(36).slice(2, 9);
+  // ---------------- Blender で作った絵（art/*.webp） ----------------
+  // アプリ版は同じ場所の art/、GAS版は公開しているアプリ版から読む。読めないときは前の手描きの絵を出す
+  const BASE = window.BENKUE_BASE || 'https://hamcheese-jp.github.io/benkyo-quest/';
+  const ART = window.BENKUE_ART || BASE + 'art/';
+  const ART_FALLBACK = {};
+  window.BQFallback = (img) => { img.onerror = null; const fb = ART_FALLBACK[img.dataset.fb]; if (fb) img.outerHTML = fb; };
+  function artImg(file, w, alt, fbKey, fbHtml, h = w, cls = '') {
+    if (fbHtml != null && !(fbKey in ART_FALLBACK)) ART_FALLBACK[fbKey] = fbHtml;
+    return `<img class="art ${cls}" src="${ART}${file}" width="${w}" height="${h}" alt="${esc(alt || '')}" draggable="false" decoding="async" data-fb="${fbKey}" onerror="BQFallback(this)">`;
+  }
   // おとなが入れた名前・チケット名などを画面に出すとき、< や & で表示がこわれないようにする
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -1219,7 +1467,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
     return {
       speakEn(text, rate = 0.95) {
-        if (!('speechSynthesis' in window)) return showToast('このブラウザは発音機能に非対応です');
+        if (!('speechSynthesis' in window)) return showToast('このブラウザでは はつおんが きけないよ');
         if (!enVoice) loadVoices();
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
@@ -1327,6 +1575,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       avatar: charId, theme: 'sky',
       ownedAvatars: ['penta', 'kirari'], ownedThemes: ['sky'],
       stickers: {}, tickets: [], revengeQueue: [], dailyLog: {},
+      mastery: {}, masterRewards: {}, stages: {}, missions: null, best: {}, gachaTickets: 0, kakera: 0,
       subjectStats: {
         math: { ok: 0, total: 0 }, kuku: { ok: 0, total: 0 }, clock: { ok: 0, total: 0 },
         kanji_read: { ok: 0, total: 0 }, kanji_write: { ok: 0, total: 0 }, english: { ok: 0, total: 0 }
@@ -1339,7 +1588,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     return {
       activeProfileId: p1.id, profiles: [p1, p2],
       shopTickets: JSON.parse(JSON.stringify(DEFAULT_TICKETS)), usedHistory: [],
-      settings: { passcode: '1234', sound: true, autoSpeakEn: true }
+      settings: { passcode: '1234', sound: true, autoSpeakEn: true, voice: true }
     };
   }
   // 古いセーブや復元ファイルに足りない項目があっても動くように、そろえる
@@ -1352,7 +1601,9 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       out.grade = Math.min(6, Math.max(1, parseInt(out.grade, 10) || 1));
       out.coins = Math.max(0, parseInt(out.coins, 10) || 0);
       ['ownedAvatars', 'ownedThemes', 'tickets', 'revengeQueue'].forEach(k => { if (!Array.isArray(out[k])) out[k] = blank[k]; });
-      ['stickers', 'dailyLog'].forEach(k => { if (!out[k] || typeof out[k] !== 'object') out[k] = {}; });
+      ['stickers', 'dailyLog', 'mastery', 'masterRewards', 'stages', 'best'].forEach(k => { if (!out[k] || typeof out[k] !== 'object' || Array.isArray(out[k])) out[k] = {}; });
+      out.gachaTickets = Math.max(0, parseInt(out.gachaTickets, 10) || 0);
+      out.kakera = Math.max(0, parseInt(out.kakera, 10) || 0);
       out.subjectStats = Object.assign(createProfile('', 1).subjectStats, out.subjectStats || {});
       if (!HERO_CHARS.some(c => c.id === out.avatar)) out.avatar = 'penta';
       if (!THEMES.some(t => t.id === out.theme)) out.theme = 'sky';
@@ -1361,6 +1612,12 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     if (!d.profiles.length) return null;
     if (!d.profiles.some(p => p.id === d.activeProfileId)) d.activeProfileId = d.profiles[0].id;
     if (!Array.isArray(d.shopTickets)) d.shopTickets = base.shopTickets;
+    // 前の版のまま変えていない引換券は、ひらがなの新しい名前にする
+    const OLD_TICKET_NAMES = { t1: '好きなおやつ1こ券', t2: 'ゲーム15分えんちょう券', t3: 'ばんごはんリクエスト券', t4: 'YouTube 20分けん', t5: 'おでかけリクエスト券' };
+    d.shopTickets.forEach(t => {
+      const now = DEFAULT_TICKETS.find(x => x.id === t.id);
+      if (now && OLD_TICKET_NAMES[t.id] === t.name) { t.name = now.name; t.desc = now.desc; }
+    });
     if (!Array.isArray(d.usedHistory)) d.usedHistory = [];
     d.settings = Object.assign(base.settings, d.settings || {});
     return d;
@@ -1372,10 +1629,290 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   const saveState = () => safeStorage.set(STORAGE_KEY, JSON.stringify(state));
   const curProfile = () => state.profiles.find(p => p.id === state.activeProfileId) || state.profiles[0];
 
+  // ---------------- レベル（つぎのレベルまでに いる正解の数が すこしずつ ふえる） ----------------
+  const expForLevel = (lv) => 5 * (lv - 1) + (lv - 1) * (lv - 2);
+  const RANKS = [[50, 'でんせつの だいゆうしゃ'], [40, 'ほしの えいゆう'], [30, 'おうごん きし'], [20, 'はがねの せんし'],
+    [12, 'ひらめき ぼうけんしゃ'], [7, 'いちにんまえ ゆうしゃ'], [3, 'かけだし ゆうしゃ'], [1, 'みならい ゆうしゃ']];
   function calcHeroLevel(p) {
-    const lv = Math.floor((p.exp || 0) / 5) + 1;
-    const rank = lv >= 20 ? 'でんせつの大勇者' : lv >= 12 ? 'おうごん騎士' : lv >= 7 ? 'ひらめき冒険者' : lv >= 3 ? 'かけだし勇者' : 'みならい勇者';
-    return { lv, rank };
+    const exp = p.exp || 0;
+    let lv = 1;
+    while (expForLevel(lv + 1) <= exp) lv++;
+    const rank = (RANKS.find(([n]) => lv >= n) || RANKS[RANKS.length - 1])[1];
+    return { lv, rank, cur: exp - expForLevel(lv), need: expForLevel(lv + 1) - expForLevel(lv) };
+  }
+  // レベルが上がったら ごほうび（Lv×10G、5レベルごとに ガチャけん）
+  function gainExp(p, n) {
+    const before = calcHeroLevel(p).lv;
+    p.exp = (p.exp || 0) + n;
+    const after = calcHeroLevel(p).lv, ups = [];
+    for (let lv = before + 1; lv <= after; lv++) {
+      const g = lv * 10;
+      p.coins += g;
+      let msg = `⭐ レベルアップ！ Lv.${lv}（+${g}G`;
+      if (lv % 5 === 0) { p.gachaTickets = (p.gachaTickets || 0) + 1; msg += '・ガチャけん'; }
+      ups.push(msg + '）');
+    }
+    ups.forEach(m => notify(m));
+    return ups;
+  }
+
+  // ---------------- おしらせ（じゅんばんに 出す） ----------------
+  const toastQueue = [];
+  function notify(msg) { toastQueue.push(msg); if (toastQueue.length === 1) runToast(); }
+  function runToast() {
+    if (!toastQueue.length) return;
+    showToast(toastQueue[0]);
+    setTimeout(() => { toastQueue.shift(); runToast(); }, 2300);
+  }
+
+  // ---------------- マスターひょう（べつの日に 3かい せいかいで マスター） ----------------
+  const MASTER_NEED = 3;
+  function recordMastery(p, key, ok) {
+    if (!key) return false;
+    const m = p.mastery[key] || (p.mastery[key] = { c: 0, d: '' });
+    if (m.c >= MASTER_NEED) return false;
+    const t = todayStr();
+    if (ok) {
+      if (m.d === t) return false;   // おなじ日は 1かいだけ
+      m.c++; m.d = t;
+      return m.c >= MASTER_NEED;
+    }
+    m.c = Math.max(0, m.c - 1);
+    return false;
+  }
+  const isMastered = (p, key) => ((p.mastery[key] || {}).c || 0) >= MASTER_NEED;
+  function masterGroups() {
+    const groups = [];
+    for (let a = 1; a <= 9; a++) groups.push({ id: 'kuku_' + a, name: `くくの ${a}のだん`, keys: Array.from({ length: 9 }, (_, i) => `q_${a}_${i + 1}`), gold: 100, ticket: 0 });
+    Object.entries(KANJI_BANK).forEach(([g, list]) => groups.push({ id: 'kanji_' + g, name: `${g}ねんせいの かんじ`, keys: list.map(k => 'k_' + k.char), gold: 300, ticket: 1 }));
+    [1, 2, 3].forEach(lv => groups.push({ id: 'eng_' + lv, name: `えいご レベル${lv}`, keys: ENGLISH_BANK.filter(w => w.lv === lv).map(w => 'e_' + w.en), gold: 200, ticket: 1 }));
+    return groups;
+  }
+  function checkMasterRewards(p) {
+    masterGroups().forEach(gr => {
+      if (p.masterRewards[gr.id] || !gr.keys.every(k => isMastered(p, k))) return;
+      p.masterRewards[gr.id] = todayStr();
+      p.coins += gr.gold;
+      if (gr.ticket) p.gachaTickets = (p.gachaTickets || 0) + gr.ticket;
+      notify(`🏅 ${gr.name} コンプリート！ +${gr.gold}G${gr.ticket ? '・ガチャけん' : ''}`);
+      SFX.fanfare();
+    });
+  }
+
+  // ---------------- まいにちミッション ----------------
+  const MISSIONS = [
+    { id: 'correct10', text: 'せいかいを 10こ', goal: 10 },
+    { id: 'areas2', text: '2つの エリアで あそぶ', goal: 2 },
+    { id: 'combo5', text: '5れんげきを だす', goal: 1 },
+    { id: 'perfect', text: 'ぜんもん せいかいを 1かい', goal: 1 },
+    { id: 'revenge', text: 'リベンジボスを 1たい たおす', goal: 1 },
+    { id: 'write3', text: 'かんじを 3もじ かく', goal: 3 },
+    { id: 'star3', text: 'ステージで ★3を とる', goal: 1 },
+    { id: 'time', text: 'タイムアタックに ちょうせん', goal: 1 },
+    { id: 'voice3', text: 'こえで 3もん こたえる', goal: 3, voice: true },
+    { id: 'master1', text: 'あたらしく 1こ マスターする', goal: 1 }
+  ];
+  const MISSION_GOLD = 30;
+  function todayMissions(p) {
+    const t = todayStr();
+    if (!p.missions || p.missions.date !== t) {
+      let seed = [...(t + p.id)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+      const rnd = () => (seed = (seed * 1103515245 + 12345) >>> 0) / 4294967296;
+      const pool = MISSIONS.filter(m => m.id !== 'correct10' && (!m.voice || (state.settings.voice && Voice.supported)));
+      const chosen = ['correct10'];
+      while (chosen.length < 3) { const m = pool[Math.floor(rnd() * pool.length)].id; if (!chosen.includes(m)) chosen.push(m); }
+      p.missions = { date: t, list: chosen.map(id => ({ id, n: 0, done: false })), areas: [], bonus: false };
+    }
+    return p.missions;
+  }
+  function missionProgress(id, amount = 1, setTo = null) {
+    const p = curProfile(), ms = todayMissions(p);
+    ms.list.forEach(m => {
+      if (m.id !== id || m.done) return;
+      const def = MISSIONS.find(x => x.id === id);
+      m.n = setTo != null ? Math.max(m.n, setTo) : m.n + amount;
+      if (m.n >= def.goal) { m.done = true; p.coins += MISSION_GOLD; notify(`📅 ミッション「${def.text}」たっせい！ +${MISSION_GOLD}G`); SFX.coin(); }
+    });
+    if (!ms.bonus && ms.list.every(m => m.done)) {
+      ms.bonus = true;
+      p.gachaTickets = (p.gachaTickets || 0) + 1;
+      notify('🎉 きょうの ミッション コンプリート！ ガチャけん ゲット！');
+    }
+  }
+  // れんぞく ぼうけんの ごほうび
+  const STREAK_REWARDS = { 3: 50, 7: 100, 14: 150, 21: 200, 30: 300 };
+  function streakReward(p) {
+    const g = STREAK_REWARDS[p.streak] || (p.streak > 30 && p.streak % 10 === 0 ? 300 : 0);
+    if (!g) return;
+    p.coins += g;
+    p.gachaTickets = (p.gachaTickets || 0) + 1;
+    notify(`🔥 ${p.streak}にち れんぞく！ +${g}G・ガチャけん`);
+  }
+  function nextStreakGoal(streak) {
+    const goals = Object.keys(STREAK_REWARDS).map(Number);
+    return goals.find(n => n > streak) || (Math.floor(streak / 10) + 1) * 10;
+  }
+
+  // ---------------- なかまの ひっさつわざ（せいかい 3かいで ゲージ まんたん） ----------------
+  const SKILLS = {
+    penta: { name: 'えんぴつスラッシュ', desc: 'つぎの せいかいで ゴールド 3ばい' },
+    kirari: { name: 'ひらめきマジック', desc: 'まちがいの こたえを 2つ けす（かんじは かきじゅんを みせる）' },
+    keshimaru: { name: 'まちがいけしゴム', desc: 'つぎに まちがえても 1かい やりなおせる' },
+    kabuto: { name: 'まもりの かまえ', desc: '3もんの あいだ まちがえても れんげきが きれない' },
+    mike: { name: 'ねこのて ヒント', desc: 'こたえの さいしょの もじを おしえる（かんじは つぎの 1かく）' },
+    dorago: { name: 'ドラゴンブレス', desc: 'この クエストで もらう ゴールドが 1.5ばい' }
+  };
+  const GAUGE_MAX = 3;
+
+  // ---------------- こえで こたえる（ブラウザの 音声認識） ----------------
+  const Voice = (() => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let rec = null;
+    return {
+      supported: !!SR,
+      busy: false,
+      listen(lang, onResult, onEnd) {
+        if (!SR || this.busy) return;
+        try {
+          rec = new SR();
+          rec.lang = lang; rec.interimResults = false; rec.maxAlternatives = 5; rec.continuous = false;
+          let got = false;
+          rec.onresult = (e) => { got = true; onResult(Array.from(e.results[0]).map(a => a.transcript)); };
+          rec.onerror = (e) => { this.busy = false; onEnd(e.error || 'error'); };
+          rec.onend = () => { const was = this.busy; this.busy = false; if (was) onEnd(got ? null : 'no-speech'); };
+          this.busy = true;
+          rec.start();
+        } catch (err) { this.busy = false; onEnd('not-allowed'); }
+      },
+      stop() { try { rec && rec.stop(); } catch (e) {} }
+    };
+  })();
+  const toHira = (s) => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  const normJa = (s) => toHira(String(s).normalize('NFKC').toLowerCase()).replace(/[\s、。・,.!?！？「」ー〜~]/g, '');
+  function kanjiNum(s) {
+    const d = { '〇': 0, '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+    const u = { '十': 10, '百': 100, '千': 1000 };
+    let total = 0, sect = 0, num = -1, any = false;
+    for (const c of s) {
+      if (c in d) { num = d[c]; any = true; }
+      else if (c in u) { sect += (num < 0 ? 1 : num) * u[c]; num = -1; any = true; }
+      else if (c === '万') { total += (sect + (num < 0 ? 0 : num)) * 10000; sect = 0; num = -1; any = true; }
+      else if (any) break;
+    }
+    return any ? total + sect + (num < 0 ? 0 : num) : null;
+  }
+  // 「12」「じゅうに」「十二」「さんてんご」などを 数に する
+  function parseJaNum(raw) {
+    let s = String(raw).normalize('NFKC').replace(/[,\s]/g, '');
+    const m = s.match(/\d+(\.\d+)?/);
+    if (m) return parseFloat(m[0]);
+    s = toHira(s);
+    const words = [['きゅう', '九'], ['じゅう', '十'], ['じゅっ', '十'], ['ひゃく', '百'], ['びゃく', '百'], ['ぴゃく', '百'], ['ぜん', '千'], ['せん', '千'],
+      ['まん', '万'], ['いち', '一'], ['いっ', '一'], ['さん', '三'], ['よん', '四'], ['ろく', '六'], ['ろっ', '六'], ['なな', '七'], ['しち', '七'],
+      ['はち', '八'], ['はっ', '八'], ['れい', '〇'], ['ぜろ', '〇'], ['に', '二'], ['ご', '五'], ['く', '九'], ['し', '四'], ['よ', '四']];
+    const parts = s.split(/てん|点/);
+    const toK = (x) => { let o = x; words.forEach(([h, k]) => { o = o.split(h).join(k); }); return o; };
+    const a = kanjiNum(toK(parts[0]));
+    if (a == null) return null;
+    if (parts.length > 1) { const b = kanjiNum(toK(parts[1])); if (b != null) return parseFloat(a + '.' + b); }
+    return a;
+  }
+  // 「3じ15ふん」「3時半」「三時ちょうど」など
+  function parseJaTime(raw) {
+    // 「じゅう」の「じ」を 時と まちがえないように、さきに 十に する
+    const s = toHira(String(raw).normalize('NFKC')).replace(/\s/g, '').replace(/じゅう|じゅっ/g, '十');
+    const m = s.match(/^(.*?)(?:時|じ)(.*)$/);
+    if (!m) return null;
+    const h = parseJaNum(m[1].slice(-4));
+    if (h == null) return null;
+    let mm = 0;
+    if (/半|はん/.test(m[2])) mm = 30;
+    else { const n = parseJaNum(m[2].replace(/(分|ふん|ぷん).*$/, '')); if (n != null) mm = n; }
+    return { h: Math.round(h), m: Math.round(mm) };
+  }
+  function voiceResolve(q, alts) {
+    const kind = q.voice || 'map';
+    for (const raw of alts) {
+      if (kind === 'num') {
+        const n = parseJaNum(raw);
+        if (n == null) continue;
+        const hit = q.choices.find(c => Math.abs(parseFloat(String(c).normalize('NFKC')) - n) < 1e-9);
+        if (hit) return { choice: hit, heard: raw };
+      } else if (kind === 'clock') {
+        const t = parseJaTime(raw);
+        if (!t) continue;
+        const hit = q.choices.find(c => { const u = parseJaTime(c); return u && u.h % 12 === t.h % 12 && u.m === t.m; });
+        if (hit) return { choice: hit, heard: raw };
+      } else if (kind === 'en') {
+        const w = raw.toLowerCase().replace(/[^a-z ]/g, '').trim();
+        const hit = q.choices.find(c => w === c || w.split(' ').includes(c));
+        if (hit) return { choice: hit, heard: raw };
+      } else {
+        const n = normJa(raw);
+        if (!n) continue;
+        const hit = q.choices.find(c => ((q.voiceMap && q.voiceMap[c]) || [c]).some(v => {
+          const nv = normJa(v);
+          return nv && (n === nv || (nv.length >= 2 && n.includes(nv)) || (/[一-鿿]/.test(v) && n.includes(nv)));
+        }));
+        if (hit) return { choice: hit, heard: raw };
+      }
+    }
+    return { choice: null, heard: alts[0] || '' };
+  }
+
+  // ---------------- かきじゅん（KanjiVG のデータ） ----------------
+  const Strokes = (() => {
+    let data = null, loading = null;
+    return {
+      load() {
+        if (data) return Promise.resolve(data);
+        if (!loading) loading = fetch(BASE + 'strokes.json').then(r => (r.ok ? r.json() : null)).then(d => (data = d)).catch(() => null);
+        return loading;
+      },
+      get(ch) { return (data && data[ch]) || null; }
+    };
+  })();
+  function resample(pts, n) {
+    if (pts.length < 2) return Array.from({ length: n }, () => ({ x: pts[0].x, y: pts[0].y }));
+    const L = [0];
+    for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+    const total = L[L.length - 1] || 1, out = [];
+    let j = 1;
+    for (let k = 0; k < n; k++) {
+      const t = total * k / (n - 1);
+      while (j < L.length - 1 && L[j] < t) j++;
+      const seg = (L[j] - L[j - 1]) || 1, r = Math.min(1, Math.max(0, (t - L[j - 1]) / seg));
+      out.push({ x: pts[j - 1].x + (pts[j].x - pts[j - 1].x) * r, y: pts[j - 1].y + (pts[j].y - pts[j - 1].y) * r });
+    }
+    return out;
+  }
+  function normalizeSet(strokes) {
+    const all = strokes.flat();
+    const x0 = Math.min(...all.map(p => p.x)), x1 = Math.max(...all.map(p => p.x));
+    const y0 = Math.min(...all.map(p => p.y)), y1 = Math.max(...all.map(p => p.y));
+    const s = Math.max(x1 - x0, y1 - y0) || 1, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    return strokes.map(st => st.map(p => ({ x: (p.x - cx) / s, y: (p.y - cy) / s })));
+  }
+  // 1かくずつ「ばしょ・むき・じゅんばん」を おてほんと くらべる
+  function judgeKanji(svg, userStrokes) {
+    const model = [...svg.querySelectorAll('path.ks')].map(pe => {
+      const L = pe.getTotalLength();
+      return Array.from({ length: 8 }, (_, i) => { const pt = pe.getPointAtLength(L * i / 7); return { x: pt.x, y: pt.y }; });
+    });
+    const user = userStrokes.map(s => resample(s.pts, 8));
+    if (user.length !== model.length) return { ok: false, msg: `かくすうが ちがうよ（おてほんは ${model.length}かく、いまは ${user.length}かく）` };
+    const nm = normalizeSet(model), nu = normalizeSet(user);
+    const dist = (a, b) => a.reduce((s, p, i) => s + Math.hypot(p.x - b[i].x, p.y - b[i].y), 0) / a.length;
+    const TH = 0.2;
+    for (let i = 0; i < nm.length; i++) {
+      if (dist(nu[i], nm[i]) <= TH) continue;
+      if (dist([...nu[i]].reverse(), nm[i]) <= TH) return { ok: false, msg: `${i + 1}かくめの むきが ぎゃくだよ`, stroke: i };
+      let best = -1, bd = 9;
+      nm.forEach((m, j) => { const d = Math.min(dist(nu[i], m), dist([...nu[i]].reverse(), m)); if (d < bd) { bd = d; best = j; } });
+      if (best !== i && bd <= TH) return { ok: false, msg: `${i + 1}かくめに ${best + 1}かくめを かいたみたい。かきじゅんを みてみよう`, stroke: i };
+      return { ok: false, msg: `${i + 1}かくめの ばしょや かたちが ちがうみたい`, stroke: i };
+    }
+    return { ok: true };
   }
 
   // ---------------- 問題生成 ----------------
@@ -1388,7 +1925,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
   }
 
   function generateMathQuestion(grade) {
-    let prompt = '', ans = 0, choices = null;
+    let prompt = '', ans = 0, choices = null, mkey = null;
     if (grade === 1) {
       if (Math.random() < 0.55) { const a = randInt(2, 12), b = randInt(2, 9); ans = a + b; prompt = `${a} ＋ ${b} ＝ ？`; }
       else { const a = randInt(7, 18), b = randInt(2, Math.min(9, a - 1)); ans = a - b; prompt = `${a} − ${b} ＝ ？`; }
@@ -1397,7 +1934,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       const r = Math.random();
       if (r < 0.4) { const a = randInt(14, 68), b = randInt(12, 39); ans = a + b; prompt = `${a} ＋ ${b} ＝ ？`; }
       else if (r < 0.75) { const a = randInt(35, 92), b = randInt(12, a - 5); ans = a - b; prompt = `${a} − ${b} ＝ ？`; }
-      else { const a = randInt(2, 9), b = randInt(2, 9); ans = a * b; prompt = `${a} × ${b} ＝ ？`; }
+      else { const a = randInt(2, 9), b = randInt(2, 9); ans = a * b; prompt = `${a} × ${b} ＝ ？`; mkey = `q_${a}_${b}`; }
       choices = makeNumChoices(ans, 1);
     } else if (grade === 3) {
       const r = Math.random();
@@ -1443,21 +1980,19 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
         choices = makeNumChoices(b * k, 1);
       }
     }
-    return { key: `math_${prompt}`, subject: 'math', type: 'choice', sub: `${grade}年生の計算バトル`, prompt, answer: String(ans), choices, explain: `せいかいは「${ans}」！`, allowMemo: true };
+    return { key: `math_${prompt}`, mkey, subject: 'math', type: 'choice', voice: 'num', sub: `${grade}ねんせいの けいさんバトル`, prompt, answer: String(ans), choices, explain: `せいかいは「${ans}」！`, allowMemo: true };
   }
 
-  function generateKukuQuestions(dans, order) {
+  function kukuQ(a, b, sub) {
+    const ans = a * b;
+    return { key: `kuku_${a}x${b}`, mkey: `q_${a}_${b}`, subject: 'kuku', type: 'choice', voice: 'num', sub, prompt: `${a} × ${b} ＝ ？`, answer: String(ans), choices: makeNumChoices(ans, 1), explain: `${a} × ${b} ＝ ${ans}`, allowMemo: true };
+  }
+  function generateKukuQuestions(dans, order, n = 5) {
     if (order === 'asc') {
       const dan = dans[0];
-      return Array.from({ length: 9 }, (_, i) => {
-        const b = i + 1, ans = dan * b;
-        return { key: `kuku_${dan}x${b}`, subject: 'kuku', type: 'choice', sub: `${dan}のだん（じゅんばん）`, prompt: `${dan} × ${b} ＝ ？`, answer: String(ans), choices: makeNumChoices(ans, 1), explain: `${dan} × ${b} ＝ ${ans}`, allowMemo: true };
-      });
+      return Array.from({ length: 9 }, (_, i) => kukuQ(dan, i + 1, `${dan}のだん（じゅんばん）`));
     }
-    return Array.from({ length: 5 }, () => {
-      const a = pick(dans), b = randInt(1, 9), ans = a * b;
-      return { key: `kuku_${a}x${b}`, subject: 'kuku', type: 'choice', sub: `九九のとりで（${dans.join('・')}のだん）`, prompt: `${a} × ${b} ＝ ？`, answer: String(ans), choices: makeNumChoices(ans, 1), explain: `${a} × ${b} ＝ ${ans}`, allowMemo: true };
-    });
+    return Array.from({ length: n }, () => kukuQ(pick(dans), randInt(1, 9), `くくの とりで（${dans.join('・')}のだん）`));
   }
 
   function buildClockSVG(h, m) {
@@ -1474,7 +2009,9 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     return `<svg width="166" height="166" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#0284c7" stroke-width="6"/>${marks}${nums}<line x1="100" y1="100" x2="100" y2="52" stroke="#1e293b" stroke-width="6.5" stroke-linecap="round" transform="rotate(${hAng} 100 100)"/><line x1="100" y1="100" x2="100" y2="30" stroke="#ef4444" stroke-width="4" stroke-linecap="round" transform="rotate(${mAng} 100 100)"/><circle cx="100" cy="100" r="6" fill="#0284c7"/></svg>`;
   }
 
-  function formatTime(h, m) { const hh = ((h - 1) % 12 + 12) % 12 + 1; return m === 0 ? `${hh}時ちょうど` : `${hh}時${m}分`; }
+  // 「ふん」か「ぷん」か（1・3・4・6・8・0 でおわる数は ぷん：いっぷん・さんぷん・よんぷん・ろっぷん・はっぷん・じゅっぷん）
+  function funYomi(m) { return [0, 1, 3, 4, 6, 8].includes(m % 10) ? 'ぷん' : 'ふん'; }
+  function formatTime(h, m) { const hh = ((h - 1) % 12 + 12) % 12 + 1; return m === 0 ? `${hh}じ ちょうど` : `${hh}じ${m}${funYomi(m)}`; }
 
   function generateClockQuestion(level) {
     const h = randInt(1, 12);
@@ -1487,85 +2024,189 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     const set = new Set([ansStr]), deltas = level === 'easy' ? [15, -15, 30, 60, -60] : level === 'normal' ? [5, -5, 10, 60, -60] : [1, -1, 5, -5, 10, 60];
     let g = 0;
     while (set.size < 4 && g++ < 50) { const nt = ((norm + pick(deltas)) % 720 + 720) % 720; set.add(formatTime(Math.floor(nt / 60) || 12, nt % 60)); }
-    const prompt = shift === 0 ? 'いま 何時何分かな？' : `この時計の「${Math.abs(shift)}分${shift > 0 ? 'あと' : 'まえ'}」は？`;
-    return { key: `clock_${level}_${h}_${m}_${shift}`, subject: 'clock', type: 'choice', sub: '時のしんでん', prompt, clockData: { h, m }, answer: ansStr, choices: shuffle([...set]), explain: `こたえは「${ansStr}」！`, allowMemo: true };
+    const prompt = shift === 0 ? 'いま なんじ なんぷん かな？' : `この とけいの「${Math.abs(shift)}${funYomi(Math.abs(shift))} ${shift > 0 ? 'あと' : 'まえ'}」は？`;
+    return { key: `clock_${level}_${h}_${m}_${shift}`, subject: 'clock', type: 'choice', voice: 'clock', sub: 'ときの しんでん', prompt, clockData: { h, m }, answer: ansStr, choices: shuffle([...set]), explain: `こたえは「${ansStr}」！`, allowMemo: true };
   }
 
-  function generateKanjiReadQuestions(grade) {
-    return shuffle(KANJI_BANK[grade] || KANJI_BANK[1]).slice(0, 5).map(k => ({
-      key: `kread_${grade}_${k.char}`, subject: 'kanji_read', type: 'choice', sub: `${grade}年生の古代文字（よみ）`,
-      promptHtml: k.word.replace(k.char, `<u>${k.char}</u>`), prompt: `「${k.char}」のよみかたは？`,
-      answer: k.read, choices: shuffle([k.read, ...k.d]), explain: `「${k.char}」＝「${k.read}」（${k.hint}）`, allowMemo: false
-    }));
+  function kanjiVoiceMap(choices) {
+    const all = Object.values(KANJI_BANK).flat(), m = {};
+    choices.forEach(c => { m[c] = [c, ...all.filter(k => k.read === c).map(k => k.char)]; });
+    return m;
   }
-
-  function generateKanjiWriteQuestions(grade) {
-    return shuffle(KANJI_BANK[grade] || KANJI_BANK[1]).slice(0, 5).map(k => ({
-      key: `kwrite_${grade}_${k.char}`, subject: 'kanji_write', type: 'kanji_write', sub: `${grade}年生のふで書き修行`,
+  function makeKanjiRead(k) {
+    const choices = shuffle([k.read, ...kanjiDistractors(k)]);
+    return {
+      key: `kread_${k.grade}_${k.char}`, mkey: 'k_' + k.char, subject: 'kanji_read', type: 'choice', sub: `${k.grade}ねんせいの かんじ（よみ）`,
+      promptHtml: k.word.replace(k.char, `<u>${k.char}</u>`), prompt: `「${k.char}」の よみかたは？`,
+      answer: k.read, choices, voiceMap: kanjiVoiceMap(choices), explain: `「${k.char}」＝「${k.read}」（${k.hint}）`, allowMemo: false
+    };
+  }
+  function makeKanjiWrite(k) {
+    return {
+      key: `kwrite_${k.grade}_${k.char}`, mkey: 'k_' + k.char, subject: 'kanji_write', type: 'kanji_write', sub: `${k.grade}ねんせいの かきとり しゅぎょう`,
       prompt: k.word.replace(k.char, `［${k.read}］`), hint: k.hint, char: k.char, read: k.read, strokes: k.strokes,
-      answer: k.char, explain: `「${k.char}」（${k.strokes}画）`, allowMemo: false
-    }));
+      answer: k.char, explain: `「${k.char}」（${k.strokes}かく）`, allowMemo: false
+    };
   }
+  function generateKanjiReadQuestions(grade) { return shuffle(KANJI_BANK[grade] || KANJI_BANK[1]).slice(0, 5).map(makeKanjiRead); }
+  function generateKanjiWriteQuestions(grade) { return shuffle(KANJI_BANK[grade] || KANJI_BANK[1]).slice(0, 5).map(makeKanjiWrite); }
 
-  function generateEnglishQuestions(grade) {
-    const maxLv = grade <= 2 ? 1 : grade <= 4 ? 2 : 3;
-    const pool = ENGLISH_BANK.filter(w => w.lv <= maxLv);
-    return shuffle(pool).slice(0, 5).map(w => {
-      const listenMode = Math.random() < 0.45;
-      const dist = shuffle(pool.filter(x => x.en !== w.en)).slice(0, 3);
-      if (listenMode) {
-        return { key: `eng_sp_${w.en}`, subject: 'english', type: 'choice', sub: '🔊 じゅもんを聞いてえらぼう', prompt: `「${w.ja}」はどれ？`, speakText: w.en, answer: w.en, choices: shuffle([w.en, ...dist.map(x => x.en)]), explain: `${w.en} ＝ ${w.ja}`, allowMemo: false };
-      }
-      return { key: `eng_ja_${w.en}`, subject: 'english', type: 'choice', sub: '🔊 このえいたんごの意味は？', prompt: w.en, speakText: w.en, answer: w.ja, choices: shuffle([w.ja, ...dist.map(x => x.ja)]), explain: `${w.en} ＝ ${w.ja}`, allowMemo: false };
-    });
+  const englishPool = (grade) => { const maxLv = grade <= 2 ? 1 : grade <= 4 ? 2 : 3; return ENGLISH_BANK.filter(w => w.lv <= maxLv); };
+  function makeEnglish(w, pool) {
+    const dist = shuffle(pool.filter(x => x.en !== w.en && x.ja !== w.ja)).slice(0, 3);
+    if (Math.random() < 0.45) {
+      return { key: `eng_sp_${w.en}`, mkey: 'e_' + w.en, subject: 'english', type: 'choice', voice: 'en', sub: '🔊 きいて えらぼう', prompt: `「${w.ja}」は どれ？`, speakText: w.en, answer: w.en, choices: shuffle([w.en, ...dist.map(x => x.en)]), explain: `${w.en} ＝ ${w.ja}`, allowMemo: false };
+    }
+    const voiceMap = {};
+    [w, ...dist].forEach(x => { voiceMap[x.ja] = [x.ja, ...x.alt]; });
+    return { key: `eng_ja_${w.en}`, mkey: 'e_' + w.en, subject: 'english', type: 'choice', sub: '🔊 この えいたんごの いみは？', prompt: w.en, speakText: w.en, answer: w.ja, choices: shuffle([w.ja, ...dist.map(x => x.ja)]), voiceMap, explain: `${w.en} ＝ ${w.ja}`, allowMemo: false };
+  }
+  function generateEnglishQuestions(grade) { const pool = englishPool(grade); return shuffle(pool).slice(0, 5).map(w => makeEnglish(w, pool)); }
+
+  // ---------------- ぼうけんマップ（エリアごとに 10ステージ、5と10は ボス） ----------------
+  const STAGE_COUNT = 10;
+  const isBossStage = (i) => i === 4 || i === 9;
+  const groupIndex = (i) => (i < 4 ? i : i - 1);
+  function splitGroups(list, n = 8) { const size = Math.ceil(list.length / n); return Array.from({ length: n }, (_, i) => list.slice(i * size, i * size + size)); }
+  const KUKU_PLAN = [[1, 2], [3], [4], [5], [1, 2, 3, 4, 5], [6], [7], [8], [9], [1, 2, 3, 4, 5, 6, 7, 8, 9]];
+  const CLOCK_PLAN = ['easy', 'easy', 'easy', 'normal', 'mix', 'normal', 'normal', 'hard', 'hard', 'hard'];
+  function stageQuestions(subject, i, p) {
+    const boss = isBossStage(i), n = subject === 'kanji_write' ? (boss ? 6 : 4) : (boss ? 8 : 5);
+    if (subject === 'math') return Array.from({ length: n }, () => generateMathQuestion(p.grade));
+    if (subject === 'kuku') return generateKukuQuestions(KUKU_PLAN[i], 'random', n);
+    if (subject === 'clock') return Array.from({ length: n }, () => generateClockQuestion(CLOCK_PLAN[i] === 'mix' ? pick(['easy', 'normal']) : CLOCK_PLAN[i]));
+    if (subject === 'kanji_read' || subject === 'kanji_write') {
+      const groups = splitGroups(KANJI_BANK[p.grade] || KANJI_BANK[1]);
+      const pool = boss ? (i === 4 ? groups.slice(0, 4).flat() : groups.flat()) : groups[groupIndex(i)];
+      return shuffle(pool).slice(0, n).map(subject === 'kanji_read' ? makeKanjiRead : makeKanjiWrite);
+    }
+    const all = englishPool(p.grade), groups = splitGroups(all);
+    const pool = boss ? (i === 4 ? groups.slice(0, 4).flat() : all) : groups[groupIndex(i)];
+    return shuffle(pool).slice(0, n).map(w => makeEnglish(w, all));
+  }
+  function stageLabel(subject, i, p) {
+    if (isBossStage(i)) return 'ボス';
+    if (subject === 'kuku') return KUKU_PLAN[i].join('・') + 'のだん';
+    if (subject === 'clock') return { easy: 'ちょうど・15ふん', normal: '5ふん きざみ', hard: '1ぷん きざみ' }[CLOCK_PLAN[i]];
+    if (subject === 'kanji_read' || subject === 'kanji_write') return splitGroups(KANJI_BANK[p.grade] || KANJI_BANK[1])[groupIndex(i)].slice(0, 3).map(k => k.char).join('');
+    if (subject === 'english') return (splitGroups(englishPool(p.grade))[groupIndex(i)][0] || {}).en || '';
+    return `${p.grade}ねんせい`;
   }
 
   // ---------------- クエストバトル制御 ----------------
   let session = null, memoPad = null, kanjiPad = null;
   let kanjiGuideOn = true, kanjiThick = false;
   let kukuConfig = { dans: [2, 3, 4], order: 'random' }, lastSessionParams = null;
+  let taTimer = null;
+  const TA_SECONDS = 60;
+  const taQuestion = (kind, p) => (kind === 'kuku' ? kukuQ(randInt(1, 9), randInt(1, 9), '⏱️ くく タイムアタック') : Object.assign(generateMathQuestion(p.grade), { sub: '⏱️ けいさん タイムアタック' }));
 
   function startSession(params) {
-    lastSessionParams = params;
     const p = curProfile();
     let questions = [], isRevenge = false;
     if (params.mode === 'revenge') {
-      if (!p.revengeQueue.length) return showToast('リベンジする強敵はまだいないよ！');
-      isRevenge = true; questions = shuffle(p.revengeQueue).slice(0, 5);
-    } else if (params.mode === 'math') {
-      for (let i = 0; i < 5; i++) questions.push(generateMathQuestion(p.grade));
-    } else if (params.mode === 'kuku') questions = generateKukuQuestions(params.dans, params.order);
-    else if (params.mode === 'clock') for (let i = 0; i < 5; i++) questions.push(generateClockQuestion(params.level));
+      if (!p.revengeQueue.length) return showToast('リベンジする あいては まだ いないよ！');
+      isRevenge = true; questions = shuffle(p.revengeQueue).slice(0, 5).map(q => Object.assign({}, q));
+    } else if (params.mode === 'timeattack') questions = [taQuestion(params.kind, p)];
+    else if (params.stage != null) questions = stageQuestions(params.mode, params.stage, p);
+    else if (params.mode === 'math') { for (let i = 0; i < 5; i++) questions.push(generateMathQuestion(p.grade)); }
+    else if (params.mode === 'kuku') questions = generateKukuQuestions(params.dans, params.order);
+    else if (params.mode === 'clock') { for (let i = 0; i < 5; i++) questions.push(generateClockQuestion(params.level)); }
     else if (params.mode === 'kanji_read') questions = generateKanjiReadQuestions(p.grade);
     else if (params.mode === 'kanji_write') questions = generateKanjiWriteQuestions(p.grade);
     else if (params.mode === 'english') questions = generateEnglishQuestions(p.grade);
-
-    session = { isRevenge, mode: params.mode, questions, index: 0, correct: 0, combo: 0, maxCombo: 0, earnedCoins: 0, locked: false };
+    if (!questions.length) return showToast('もんだいが みつからないよ');
+    lastSessionParams = params;
+    clearInterval(taTimer);
+    Voice.stop();
+    session = {
+      isRevenge, mode: params.mode, stage: params.stage, questions, index: 0, correct: 0, combo: 0, maxCombo: 0, earnedCoins: 0, locked: false,
+      ta: params.mode === 'timeattack' ? { kind: params.kind, end: Date.now() + TA_SECONDS * 1000 } : null,
+      gauge: 0, tripleNext: false, eraser: false, guard: 0, breath: false, ups: [], missed: new Set()
+    };
     switchView('quiz');
+    if (session.ta) startTaTimer();
     renderQuizQuestion();
+  }
+
+  function startTaTimer() {
+    const upd = () => {
+      if (!session || !session.ta || session.finished) { clearInterval(taTimer); return; }
+      const left = Math.max(0, Math.ceil((session.ta.end - Date.now()) / 1000));
+      $('#quiz-progress-text').textContent = `⏱️ ${left}びょう`;
+      $('#quiz-progress-bar').style.width = `${(left / TA_SECONDS) * 100}%`;
+      if (left <= 0) { clearInterval(taTimer); session.locked = true; finishSession(); }
+    };
+    upd();
+    taTimer = setInterval(upd, 250);
+  }
+  function stopSession() { clearInterval(taTimer); Voice.stop(); if (session) session.finished = session.finished || !!session.ta; }
+
+  function renderSkillBar() {
+    const bar = $('#skill-bar');
+    if (!session || session.ta) { bar.classList.add('hidden'); return; }
+    const p = curProfile(), sk = SKILLS[p.avatar] || SKILLS.penta, ready = session.gauge >= GAUGE_MAX;
+    bar.classList.remove('hidden');
+    bar.innerHTML = `<button id="btn-skill" class="skill-btn ${ready ? 'ready' : ''}" ${ready && !session.locked ? '' : 'disabled'}>
+        <span class="sk-name">⚡ ${sk.name}</span><span class="sk-gauge">${'●'.repeat(session.gauge)}${'○'.repeat(GAUGE_MAX - session.gauge)}</span></button>
+      <div class="sk-desc">${ready ? sk.desc : `せいかい ${GAUGE_MAX}かいで ひっさつわざ！`}</div>`;
+    $('#btn-skill').onclick = useSkill;
+  }
+  function firstHint(q) {
+    const a = String(q.answer);
+    if (q.subject === 'clock') return a.split('じ')[0] + 'じ';
+    return Array.from(a)[0];
+  }
+  function useSkill() {
+    if (!session || session.locked || session.gauge < GAUGE_MAX) return;
+    const p = curProfile(), q = session.questions[session.index], id = p.avatar;
+    if (id === 'penta') { session.tripleNext = true; notify('✏️ つぎの せいかいで ゴールド 3ばい！'); }
+    else if (id === 'kirari') {
+      if (q.type === 'kanji_write') KanjiUI.play();
+      else shuffle($$('#quiz-choices-area .choice-btn').filter(b => b.textContent !== q.answer && !b.disabled)).slice(0, 2).forEach(b => { b.disabled = true; b.classList.add('gone'); });
+      notify('✨ ひらめきマジック！');
+    } else if (id === 'keshimaru') { session.eraser = true; notify('🧽 つぎに まちがえても やりなおせるよ！'); }
+    else if (id === 'kabuto') { session.guard = 3; notify('🛡️ 3もんの あいだ れんげきが きれない！'); }
+    else if (id === 'mike') {
+      if (q.type === 'kanji_write') KanjiUI.hintNext();
+      else $('#quiz-question-area').insertAdjacentHTML('beforeend', `<div class="hint-bubble">🐾 ヒント：こたえは「${esc(firstHint(q))}」から はじまるよ</div>`);
+    } else if (id === 'dorago') { session.breath = true; notify('🐉 この クエストの ゴールドが 1.5ばい！'); }
+    session.gauge = 0;
+    SFX.fanfare();
+    const heroEl = $('#battle-hero-svg');
+    heroEl.classList.add('attack'); setTimeout(() => heroEl.classList.remove('attack'), 360);
+    renderSkillBar();
   }
 
   function renderQuizQuestion() {
     const p = curProfile(), q = session.questions[session.index], total = session.questions.length;
     const meta = SUBJECT_META[q.subject];
+    const stageBoss = session.stage != null && isBossStage(session.stage);
 
     const badge = $('#quiz-subject-badge');
-    badge.textContent = session.isRevenge ? '👑 おうごんボス(2倍)' : `${meta.icon} ${meta.name}`;
-    badge.className = `badge ${session.isRevenge ? 'revenge' : ''}`;
-    $('#quiz-progress-text').textContent = `${session.index + 1} / ${total}`;
-    $('#quiz-progress-bar').style.width = `${((session.index + 1) / total) * 100}%`;
+    badge.textContent = session.isRevenge ? '👑 おうごんボス(2ばい)' : session.ta ? '⏱️ タイムアタック' : session.stage != null ? `${meta.icon} ステージ${session.stage + 1}${stageBoss ? ' ボス' : ''}` : `${meta.icon} ${meta.name}`;
+    badge.className = `badge ${session.isRevenge || stageBoss ? 'revenge' : ''}`;
+    if (session.ta) { $('#quiz-progress-text').textContent = `⏱️ ${Math.max(0, Math.ceil((session.ta.end - Date.now()) / 1000))}びょう`; }
+    else {
+      $('#quiz-progress-text').textContent = `${session.index + 1} / ${total}`;
+      $('#quiz-progress-bar').style.width = `${((session.index + 1) / total) * 100}%`;
+    }
 
     const comboEl = $('#quiz-combo-badge');
     if (session.combo >= 2) { comboEl.textContent = `🔥 ${session.combo}れんげき`; comboEl.classList.remove('hidden'); }
     else comboEl.classList.add('hidden');
 
     $('#battle-stage').classList.toggle('is-boss', session.isRevenge);
-    $('#battle-hero-svg').innerHTML = renderHeroSVG(p.avatar, 70);
+    $('#battle-stage').classList.toggle('is-stage-boss', stageBoss);
+    $('#battle-hero-svg').innerHTML = renderHeroSVG(p.avatar, 80);
     $('#battle-monster-svg').innerHTML = renderMonsterSVG(q.subject, session.isRevenge);
-    $('#battle-monster-name').textContent = session.isRevenge ? 'キンピカトロフィー大王' : meta.monster;
-    const remainRatio = Math.max(8, Math.round(((total - session.index) / total) * 100));
-    $('#battle-hp-fill').style.width = `${remainRatio}%`;
-    $('#battle-log').textContent = session.isRevenge ? '強敵が立ちはだかる！G2倍チャンス！' : `${meta.monster} がとびだしてきた！`;
+    $('#battle-monster-name').textContent = session.isRevenge ? 'キンピカトロフィーだいおう' : `${stageBoss ? 'ボス ' : ''}${meta.monster}`;
+    if (session.ta) $('#battle-hp-fill').style.width = '100%';
+    else {
+      const remainRatio = Math.max(8, Math.round(((total - session.index) / total) * 100));
+      $('#battle-hp-fill').style.width = `${remainRatio}%`;
+    }
+    $('#battle-log').textContent = session.isRevenge ? 'つよい てきが たちはだかる！Gが 2ばいの チャンス！' : session.ta ? `${session.correct}もん せいかい！` : `${meta.monster} が とびだしてきた！`;
     $('#quiz-card').classList.toggle('is-revenge', session.isRevenge);
 
     const qArea = $('#quiz-question-area');
@@ -1574,10 +2215,10 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     if (q.promptHtml) html += `<div class="q-prompt-main">${q.promptHtml}</div><div style="text-align:center;font-size:13px;font-weight:800;color:var(--muted);">${q.prompt}</div>`;
     else html += `<div class="q-prompt-main">${q.prompt}</div>`;
     if (q.hint && q.type === 'kanji_write') {
-      html = `<div style="text-align:center;">${html}<div style="font-size:12px;font-weight:700;color:#b45309;background:#fef3c7;display:inline-block;padding:3px 10px;border-radius:999px;">💡 ヒント：${q.hint}（${q.strokes}画）</div></div>`;
+      html = `<div style="text-align:center;">${html}<div style="font-size:12px;font-weight:700;color:#b45309;background:#fef3c7;display:inline-block;padding:3px 10px;border-radius:999px;">💡 ヒント：${q.hint}（${q.strokes || '?'}かく）</div></div>`;
     }
     if (q.speakText) {
-      html += `<div class="audio-row"><button class="audio-btn" id="btn-speak-normal">🔊 はつおんをきく</button><button class="audio-btn slow" id="btn-speak-slow">🐢 ゆっくり</button></div>`;
+      html += `<div class="audio-row"><button class="audio-btn" id="btn-speak-normal">🔊 はつおんを きく</button><button class="audio-btn slow" id="btn-speak-slow">🐢 ゆっくり</button></div>`;
     }
     qArea.innerHTML = html;
 
@@ -1591,24 +2232,31 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     fb.className = 'feedback-box'; fb.innerHTML = ''; session.locked = false;
 
     const choicesArea = $('#quiz-choices-area'), kanjiArea = $('#quiz-kanji-write-area'), memoWrap = $('#quiz-memo-wrapper');
+    const voiceRow = $('#voice-row');
+    voiceRow.classList.toggle('hidden', !(q.type === 'choice' && state.settings.voice && Voice.supported));
+    $('#btn-voice').classList.remove('listening');
+    $('#btn-voice').textContent = '🎤 こえで こたえる';
     if (q.type === 'kanji_write') {
       choicesArea.classList.add('hidden'); memoWrap.classList.add('hidden'); kanjiArea.classList.remove('hidden');
-      $('#kanji-guide-char').textContent = q.char;
-      $('#kanji-guide-char').classList.toggle('hidden', !kanjiGuideOn);
-      $('#btn-kanji-guide').textContent = kanjiGuideOn ? '👀 お手本:ON' : '👀 お手本:OFF';
+      $('#btn-kanji-guide').textContent = kanjiGuideOn ? '👀 おてほん:ON' : '👀 おてほん:OFF';
       $('#btn-kanji-guide').classList.toggle('active', kanjiGuideOn);
-      $('#kanji-compare-box').classList.add('hidden');
-      $('#btn-kanji-check').classList.remove('hidden');
-      requestAnimationFrame(() => { kanjiPad.resize(); kanjiPad.clear(); });
+      requestAnimationFrame(() => { kanjiPad.resize(); kanjiPad.clear(); KanjiUI.setup(q); });
     } else {
       kanjiArea.classList.add('hidden'); choicesArea.classList.remove('hidden'); choicesArea.innerHTML = '';
       q.choices.forEach(ch => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn'; btn.textContent = ch;
         btn.onclick = () => {
-          if (session.locked) return;
-          session.locked = true;
+          if (session.locked || btn.disabled) return;
           const isOk = ch === q.answer;
+          if (!isOk && session.eraser) {   // ケシマルの わざ：1かい やりなおせる
+            session.eraser = false;
+            btn.disabled = true; btn.classList.add('wrong');
+            SFX.ng(); notify('🧽 ケシマルが まちがいを けしてくれた！ もういちど！');
+            return;
+          }
+          session.locked = true;
+          Voice.stop();
           $$('#quiz-choices-area .choice-btn').forEach(b => {
             b.disabled = true;
             if (b.textContent === q.answer) b.classList.add('correct');
@@ -1618,77 +2266,286 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
         };
         choicesArea.appendChild(btn);
       });
-      if (q.allowMemo) {
+      if (q.allowMemo && !session.ta) {
         memoWrap.classList.remove('hidden');
         if (!$('#memo-pad-area').classList.contains('hidden')) requestAnimationFrame(() => { memoPad.resize(); memoPad.clear(); });
         else memoPad.clear();
       } else {
         memoWrap.classList.add('hidden'); $('#memo-pad-area').classList.add('hidden');
-        $('#btn-toggle-memo').textContent = '✏️ けいさんメモをひらく';
+        $('#btn-toggle-memo').textContent = '✏️ けいさんメモを ひらく';
       }
     }
+    renderSkillBar();
   }
 
-  function finalizeQuestionResult(isOk, q) {
-    const p = curProfile();
+  function startVoiceAnswer() {
+    if (!session || session.locked) return;
+    const q = session.questions[session.index], btn = $('#btn-voice');
+    if (Voice.busy) { Voice.stop(); return; }
+    btn.classList.add('listening'); btn.textContent = '👂 きいてるよ…（もういちど おすと とめる）';
+    Voice.listen(q.voice === 'en' ? 'en-US' : 'ja-JP', (alts) => {
+      if (!session || session.locked || session.questions[session.index] !== q) return;
+      const r = voiceResolve(q, alts);
+      if (r.choice) {
+        missionProgress('voice3');
+        const b = $$('#quiz-choices-area .choice-btn').find(x => x.textContent === r.choice && !x.disabled);
+        if (b) { showToast(`🎤「${r.heard}」`); b.click(); }
+      } else showToast(`🎤「${r.heard}」？ もういちど いってね`);
+    }, (err) => {
+      btn.classList.remove('listening'); btn.textContent = '🎤 こえで こたえる';
+      if (err === 'not-allowed' || err === 'service-not-allowed' || err === 'audio-capture') showToast('マイクが つかえないよ（アプリばんで ためしてね）');
+      else if (err === 'no-speech') showToast('きこえなかったよ。もういちど！');
+      else if (err === 'network') showToast('つうしんが できなくて きけなかったよ');
+    });
+  }
+
+  // こたえを きろく（1かいめの こたえだけ：せいせき・マスター・けいけんち・リベンジ）
+  function countAnswer(p, q, isOk) {
     const subStat = p.subjectStats[q.subject] || (p.subjectStats[q.subject] = { ok: 0, total: 0 });
     subStat.total++;
-
     const t = todayStr();
     p.dailyLog[t] = (p.dailyLog[t] || 0) + 1;
-    if (p.lastStudyDate !== t) { p.streak = (p.lastStudyDate === todayStr(-1)) ? p.streak + 1 : 1; p.lastStudyDate = t; }
+    if (p.lastStudyDate !== t) { p.streak = (p.lastStudyDate === todayStr(-1)) ? p.streak + 1 : 1; p.lastStudyDate = t; streakReward(p); }
+    if (recordMastery(p, q.mkey, isOk)) { notify('🏅 あたらしく マスター！'); missionProgress('master1'); checkMasterRewards(p); }
+    if (isOk) {
+      subStat.ok++;
+      p.revengeQueue = p.revengeQueue.filter(item => item.key !== q.key);
+      session.ups.push(...gainExp(p, 1));
+    } else if (!p.revengeQueue.some(item => item.key === q.key)) {
+      const keep = Object.assign({}, q); delete keep._tried;
+      p.revengeQueue.unshift(keep); if (p.revengeQueue.length > 20) p.revengeQueue.pop();
+    }
+  }
+  function breakCombo() {
+    if (session.guard > 0) { notify('🛡️ まもりの かまえで れんげき キープ！'); return; }
+    session.combo = 0;
+  }
+
+  function finalizeQuestionResult(isOk, q, opts = {}) {
+    const p = curProfile(), after = !!opts.after;
+    session.locked = true;
+    if (!after) { countAnswer(p, q, isOk); session.answered = (session.answered || 0) + 1; }
 
     let gain = 0;
     const heroEl = $('#battle-hero-svg'), monEl = $('#battle-monster-svg');
     if (isOk) {
-      SFX.ok(); subStat.ok++; p.exp = (p.exp || 0) + 1;
-      session.correct++; session.combo++; session.maxCombo = Math.max(session.maxCombo, session.combo);
-      gain = (session.isRevenge ? 20 : 10) + (session.combo >= 3 ? 5 : 0);
+      SFX.ok();
+      if (!after) {
+        session.correct++; session.combo++; session.maxCombo = Math.max(session.maxCombo, session.combo);
+        session.gauge = Math.min(GAUGE_MAX, session.gauge + 1);
+        missionProgress('correct10');
+        if (session.combo === 5) missionProgress('combo5');
+        if (q.type === 'kanji_write') missionProgress('write3');
+        if (session.isRevenge) missionProgress('revenge');
+      }
+      gain = session.ta ? 3 : after ? 5 : (session.isRevenge ? 20 : 10) + (session.combo >= 3 ? 5 : 0);
+      if (session.tripleNext && !after) { gain *= 3; session.tripleNext = false; notify('✏️ えんぴつスラッシュ！ ゴールド 3ばい！'); }
       session.earnedCoins += gain; p.coins += gain;
-      p.revengeQueue = p.revengeQueue.filter(item => item.key !== q.key);
-
       heroEl.classList.add('attack'); monEl.classList.add('hit');
       setTimeout(() => { heroEl.classList.remove('attack'); monEl.classList.remove('hit'); }, 360);
-      const nextRatio = Math.max(0, Math.round(((session.questions.length - (session.index + 1)) / session.questions.length) * 100));
-      $('#battle-hp-fill').style.width = `${nextRatio}%`;
+      if (!session.ta) {
+        const nextRatio = Math.max(0, Math.round(((session.questions.length - (session.index + 1)) / session.questions.length) * 100));
+        $('#battle-hp-fill').style.width = `${nextRatio}%`;
+      }
       $('#battle-log').textContent = session.combo >= 3 ? `💥 ひらめきクリティカル！ +${gain}G！` : `⚔️ こうげきヒット！ +${gain}G！`;
     } else {
-      SFX.ng(); session.combo = 0;
-      if (!p.revengeQueue.some(item => item.key === q.key)) {
-        p.revengeQueue.unshift(q); if (p.revengeQueue.length > 20) p.revengeQueue.pop();
-      }
+      SFX.ng();
+      if (!after) breakCombo();
       heroEl.classList.add('hit');
       setTimeout(() => heroEl.classList.remove('hit'), 360);
-      $('#battle-log').textContent = '🛡️ ガードされた！おうごんボスに記録！';
+      $('#battle-log').textContent = '🛡️ ガードされた！おうごんボスに きろく！';
     }
-    saveState(); updateHeader();
+    if (session.guard > 0) session.guard--;
+    saveState(); updateHeader(); renderSkillBar();
+
+    if (session.ta) {   // タイムアタック：すぐ つぎへ
+      setTimeout(() => {
+        if (!session || session.finished || !session.ta) return;
+        session.questions.push(taQuestion(session.ta.kind, curProfile()));
+        session.index++;
+        renderQuizQuestion();
+      }, isOk ? 250 : 650);
+      return;
+    }
 
     const fb = $('#quiz-feedback');
     fb.className = `feedback-box show ${isOk ? 'ok' : 'ng'}`;
     const isLast = session.index + 1 >= session.questions.length;
+    const head = isOk ? (after ? `👍 なおせたね！ +🪙${gain}G` : `⚔️ たおした！ +🪙${gain}G`) : (after ? '📝 つぎは かけるよ！ リベンジボスに とうろくしたよ' : '❌ おしい！リベンジボスに とうろくしたよ');
     fb.innerHTML = `
-      <div style="font-size:17px;">${isOk ? `⚔️ 討伐せいこう！ +🪙${gain}G` : '❌ おしい！リベンジボスに登録したよ'}</div>
+      <div style="font-size:17px;">${head}</div>
       <div style="font-size:12px;margin:4px 0 10px;">${q.explain || ''}</div>
-      <button id="btn-next-q" class="btn ${isOk ? 'btn-success' : 'btn-primary'}">${isLast ? 'クリア報酬をもらう 🎉' : 'つぎの敵へ ▶'}</button>`;
+      <button id="btn-next-q" class="btn ${isOk ? 'btn-success' : 'btn-primary'}">${isLast ? 'ごほうびを もらう 🎉' : 'つぎの てきへ ▶'}</button>`;
     $('#btn-next-q').onclick = () => { if (isLast) finishSession(); else { session.index++; renderQuizQuestion(); } };
   }
 
   function finishSession() {
-    const p = curProfile(), total = session.questions.length, isPerfect = session.correct === total;
-    if (session.finished) { openModal('modal-result'); return; } // 2回おしてもボーナスは1回だけ
-    session.finished = true;
-    let bonus = 0;
-    if (isPerfect) { bonus = session.isRevenge ? 30 : 20; session.earnedCoins += bonus; p.coins += bonus; saveState(); updateHeader(); }
+    if (!session) return;
+    if (session.finished && session.resultShown) { openModal('modal-result'); return; }   // 2回おしてもボーナスは1回だけ
+    session.finished = true; session.resultShown = true;
+    clearInterval(taTimer); Voice.stop();
+    const p = curProfile(), extra = [];
+    const isPerfect = !session.ta && session.correct === session.questions.length;
+    let bonus = 0, stars = null;
+    if (isPerfect) { bonus += session.isRevenge ? 30 : 20; extra.push(`かんぜんしょうり ボーナス +${session.isRevenge ? 30 : 20}G`); missionProgress('perfect'); }
+    if (session.stage != null) {
+      const ratio = session.correct / session.questions.length;
+      stars = ratio >= 1 ? 3 : ratio >= 0.8 ? 2 : ratio >= 0.6 ? 1 : 0;
+      const arr = p.stages[session.mode] || (p.stages[session.mode] = []);
+      const prev = arr[session.stage] || 0;
+      if (stars > prev) arr[session.stage] = stars;
+      if (stars >= 1 && !prev) { const g = isBossStage(session.stage) ? 50 : 20; bonus += g; extra.push(`はじめて クリア +${g}G`); }
+      if (stars === 3 && prev < 3) { bonus += 30; extra.push('はじめての ★3 +30G'); missionProgress('star3'); }
+      if (stars === 0) extra.push('6わり せいかい（★1）で つぎの ステージに すすめるよ！');
+    }
+    if (session.ta) {
+      const key = 'ta_' + session.ta.kind + (session.ta.kind === 'math' ? p.grade : '');
+      if (session.correct > (p.best[key] || 0)) { if (p.best[key]) { bonus += 30; extra.push('🏆 じこベスト こうしん！ +30G'); } p.best[key] = session.correct; }
+      extra.push(`じこベスト：${p.best[key] || 0}もん`);
+      missionProgress('time');
+    }
+    if (session.breath) { const b = Math.floor((session.earnedCoins + bonus) * 0.5); bonus += b; extra.push(`🐉 ドラゴンブレス +${b}G`); }
+    const ms = todayMissions(p);
+    if (!['revenge', 'timeattack'].includes(session.mode) && !ms.areas.includes(session.mode)) { ms.areas.push(session.mode); missionProgress('areas2', 0, ms.areas.length); }
+    p.coins += bonus; session.earnedCoins += bonus;
+    extra.push(...session.ups);
+    saveState(); updateHeader();
     SFX.fanfare();
-    if (isPerfect || session.correct >= Math.ceil(total * 0.8)) fireConfetti();
+    if (isPerfect || session.correct >= Math.ceil(session.questions.length * 0.8) || stars === 3) fireConfetti();
     $('#res-char').innerHTML = renderHeroSVG(p.avatar, 96);
-    $('#res-title').textContent = isPerfect ? '🏆 かんぜん勝利！すごい！' : '🎉 クエストクリア！';
-    $('#res-detail').textContent = `${total}体中 ${session.correct}体とうばつ！（さいだい${session.maxCombo}れんげき${bonus ? ` / 完全勝利ボーナス +${bonus}G` : ''}）`;
+    $('#res-title').textContent = session.ta ? `⏱️ ${session.correct}もん せいかい！` : isPerfect ? '🏆 かんぜん しょうり！すごい！' : stars === 0 ? '💪 おしい！もういちど！' : '🎉 クエストクリア！';
+    $('#res-stars').innerHTML = stars == null ? '' : `<span class="res-stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3 - stars)}</span></span>`;
+    $('#res-detail').textContent = session.ta ? `${session.answered || 0}もん ちゅう ${session.correct}もん せいかい（さいだい ${session.maxCombo}れんげき）` : `${session.questions.length}たい ちゅう ${session.correct}たい たおした！（さいだい ${session.maxCombo}れんげき）`;
+    $('#res-extra').innerHTML = extra.map(t => `<div>${esc(t)}</div>`).join('');
     $('#res-coins').textContent = session.earnedCoins;
+    const nextBtn = $('#btn-res-next');
+    const canNext = session.stage != null && session.stage < STAGE_COUNT - 1 && (p.stages[session.mode] || [])[session.stage] >= 1;
+    nextBtn.classList.toggle('hidden', !canNext);
     openModal('modal-result');
   }
 
-  // ---------------- どうぐ屋（ショップ） ----------------
+  // ---------------- ステージの えらびかた ----------------
+  let freePractice = () => {};
+  function openStageMap(subject) {
+    const p = curProfile(), meta = SUBJECT_META[subject], arr = p.stages[subject] || [];
+    const got = arr.reduce((s, v) => s + (v || 0), 0);
+    $('#stage-title').textContent = `${meta.icon} ${meta.name}`;
+    $('#stage-head').innerHTML = `<div class="sh-mon">${renderMonsterSVG(subject, false, 64)}</div>
+      <div><div class="sh-stars">★ ${got} / ${STAGE_COUNT * 3}</div><div class="sh-sub">★1で つぎの ステージへ。👑は ボス（もんだいが おおい）</div></div>`;
+    $('#stage-grid').innerHTML = Array.from({ length: STAGE_COUNT }, (_, i) => {
+      const open = i === 0 || (arr[i - 1] || 0) >= 1, st = arr[i] || 0, boss = isBossStage(i);
+      return `<button class="stage-node ${boss ? 'boss' : ''} ${open ? '' : 'locked'} ${st ? 'cleared' : ''}" data-stage="${i}" ${open ? '' : 'disabled'}>
+        <span class="sn-num">${boss ? '👑' : i + 1}</span><span class="sn-label">${esc(stageLabel(subject, i, p))}</span>
+        <span class="sn-stars">${open ? '★'.repeat(st) + '<span class="off">' + '★'.repeat(3 - st) + '</span>' : '🔒'}</span></button>`;
+    }).join('');
+    $$('#stage-grid [data-stage]').forEach(b => b.onclick = () => { SFX.tap(); closeModal('modal-stage'); startSession({ mode: subject, stage: +b.dataset.stage }); });
+    $('#btn-stage-free').onclick = () => { closeModal('modal-stage'); freePractice(subject); };
+    openModal('modal-stage');
+  }
+
+  // ---------------- かきとりの画面（かきじゅんの おてほん・ヒント・はんてい） ----------------
+  const KanjiUI = {
+    q: null, svg: null, hintOn: false, _t: null,
+    async setup(q) {
+      this.q = q; this.svg = null; this.hintOn = false;
+      const box = $('#kanji-stroke-guide');
+      box.innerHTML = ''; box.classList.add('hidden');
+      $('#kanji-guide-char').textContent = q.char;
+      $('#kanji-judge-box').classList.add('hidden');
+      $('#kanji-compare-box').classList.add('hidden');
+      $('#btn-kanji-check').classList.remove('hidden');
+      this.applyGuide();
+      await Strokes.load();
+      if (this.q !== q) return;
+      const paths = Strokes.get(q.char);
+      if (!paths) return;   // データが よめないときは 前の やりかた（字の おてほんと じぶんで はんてい）
+      box.innerHTML = `<svg viewBox="0 0 109 109" class="ks-svg">${paths.map((d, i) => `<path class="ks" data-i="${i}" d="${d}"/>`).join('')}<g class="ks-nums"></g><circle class="ks-start" r="3.4" cx="-10" cy="-10"/></svg>`;
+      this.svg = box.querySelector('svg');
+      const g = this.svg.querySelector('.ks-nums');
+      this.svg.querySelectorAll('path.ks').forEach((pe, i) => {
+        const pt = pe.getPointAtLength(0);
+        g.insertAdjacentHTML('beforeend', `<text x="${(pt.x - 5).toFixed(1)}" y="${(pt.y - 1).toFixed(1)}">${i + 1}</text>`);
+      });
+      if (!q.strokes) q.strokes = paths.length;
+      this.applyGuide();
+    },
+    applyGuide() {
+      const has = !!this.svg;
+      $('#kanji-guide-char').classList.toggle('hidden', !kanjiGuideOn || has);
+      $('#kanji-stroke-guide').classList.toggle('hidden', !has || (!kanjiGuideOn && !this.hintOn));
+      this.update(kanjiPad ? kanjiPad.getStrokeCount() : 0);
+    },
+    update(cnt) {
+      if (!this.svg) return;
+      this.svg.classList.toggle('only-next', !kanjiGuideOn);
+      this.svg.querySelectorAll('path.ks').forEach((pe, i) => { pe.classList.toggle('done', i < cnt); pe.classList.toggle('next', i === cnt); });
+      const nextP = this.svg.querySelector(`path.ks[data-i="${cnt}"]`), dot = this.svg.querySelector('.ks-start');
+      if (nextP) { const pt = nextP.getPointAtLength(0); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); }
+      else dot.setAttribute('cx', -10);
+    },
+    play() {
+      if (!this.svg) return showToast('かきじゅんの データが よめなかったよ');
+      const box = $('#kanji-stroke-guide');
+      box.classList.remove('hidden');
+      this.svg.classList.remove('only-next');
+      this.svg.querySelectorAll('.ks-anim').forEach(e => e.remove());
+      const ps = [...this.svg.querySelectorAll('path.ks')];
+      ps.forEach((pe, i) => {
+        const L = pe.getTotalLength(), a = pe.cloneNode();
+        a.setAttribute('class', 'ks-anim'); a.removeAttribute('data-i');
+        a.style.strokeDasharray = L; a.style.strokeDashoffset = L;
+        this.svg.appendChild(a);
+        a.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 550, delay: i * 650, fill: 'forwards', easing: 'ease-in-out' });
+      });
+      clearTimeout(this._t);
+      this._t = setTimeout(() => { if (this.svg) this.svg.querySelectorAll('.ks-anim').forEach(e => e.remove()); this.applyGuide(); }, ps.length * 650 + 1500);
+    },
+    hintNext() { this.hintOn = true; this.applyGuide(); },
+    check() {
+      const q = this.q;
+      if (!session || session.locked) return;
+      if (kanjiPad.getStrokeCount() === 0) return showToast('まずは かんじを かいてみよう！');
+      if (!this.svg) return this.selfCheck();
+      const res = judgeKanji(this.svg, kanjiPad.strokes);
+      $('#btn-kanji-check').classList.add('hidden');
+      const box = $('#kanji-judge-box');
+      box.classList.remove('hidden');
+      $('#kanji-judge-img').src = kanjiPad.toDataURL();
+      const actions = $('#kanji-judge-actions');
+      if (res.ok) {
+        box.className = 'kanji-judge ok';
+        $('#kanji-judge-msg').textContent = '⭕ かきじゅんも かたちも ばっちり！';
+        actions.innerHTML = '<button class="btn btn-success" id="btn-kj-ok">こうげき！ ⚔️</button>';
+        SFX.ok();
+        $('#btn-kj-ok').onclick = () => { if (session.locked) return; box.classList.add('hidden'); finalizeQuestionResult(true, q, { after: session.missed.has(session.index) }); };
+        return;
+      }
+      if (!session.missed.has(session.index)) {
+        if (session.eraser) { session.eraser = false; notify('🧽 ケシマルが まちがいを けしてくれた！ もういちど！'); }
+        else { session.missed.add(session.index); countAnswer(curProfile(), q, false); breakCombo(); saveState(); updateHeader(); }
+      }
+      SFX.ng();
+      box.className = 'kanji-judge ng';
+      $('#kanji-judge-msg').textContent = `❌ ${res.msg}`;
+      actions.innerHTML = `<button class="btn btn-ghost btn-sm" id="btn-kj-play">▶ かきじゅんを みる</button>
+        <button class="btn btn-primary btn-sm" id="btn-kj-retry">✏️ もういちど かく</button>
+        <button class="btn btn-ghost btn-sm" id="btn-kj-next">つぎへ すすむ</button>`;
+      $('#btn-kj-play').onclick = () => this.play();
+      $('#btn-kj-retry').onclick = () => { box.classList.add('hidden'); $('#btn-kanji-check').classList.remove('hidden'); kanjiPad.clear(); this.applyGuide(); };
+      $('#btn-kj-next').onclick = () => { if (session.locked) return; box.classList.add('hidden'); finalizeQuestionResult(false, q, { after: session.missed.has(session.index) }); };
+      this.play();
+    },
+    selfCheck() {   // かきじゅんデータが ないとき：おてほんと くらべて じぶんで はんてい
+      const q = this.q;
+      $('#kanji-user-preview').src = kanjiPad.toDataURL();
+      $('#kanji-model-char').textContent = q.char;
+      $('#compare-strokes').textContent = kanjiPad.getStrokeCount();
+      $('#compare-model-strokes').textContent = q.strokes || '?';
+      $('#btn-kanji-check').classList.add('hidden'); $('#kanji-compare-box').classList.remove('hidden'); SFX.tap();
+    }
+  };
+
+  // ---------------- どうぐや（ショップ） ----------------
   let shopTab = 'tickets';
   function renderShop() {
     $$('#shop-subtabs .subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.sub === shopTab));
@@ -1696,7 +2553,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
     if (shopTab === 'tickets') {
       if (!state.shopTickets.length) {
-        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">まだ引換券がありません。「🔒 おとな」から追加できます。</div>`;
+        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">まだ ひきかえけんが ないよ。おうちの ひとに「🔒 おとな」から ふやして もらおう</div>`;
         return;
       }
       box.innerHTML = `<div class="item-list">` + state.shopTickets.map(t => `
@@ -1718,20 +2575,36 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
           p.coins -= item.price;
           p.tickets.unshift({ uid: uid(), ticketId: item.id, icon: item.icon, name: item.name, desc: item.desc, boughtAt: new Date().toLocaleDateString('ja-JP') });
           SFX.coin(); saveState(); updateHeader(); renderShop();
-          showToast(`「${item.name}」を手に入れた！もちものを見てね`);
+          showToast(`「${item.name}」を てにいれた！もちものを みてね`);
         };
       });
     } else if (shopTab === 'gacha') {
       const ownedCount = Object.keys(p.stickers).length;
+      const missing = STICKERS.filter(st => !p.stickers[st.id]);
       box.innerHTML = `
         <div class="gacha-machine">
-          <div style="font-weight:900;font-size:18px;color:#92400e;">✨ でんせつの宝箱ガチャ ✨</div>
-          <div style="font-size:12px;color:#78350f;margin-top:4px;">全${STICKERS.length}種（N/R/SR/UR）かぶったら 20G もどるよ！</div>
-          <div id="gacha-orb" class="capsule-orb">🧰</div>
-          <div style="font-size:12px;font-weight:800;margin-bottom:12px;">見つけたお宝：${ownedCount} / ${STICKERS.length}</div>
-          <button id="btn-pull-gacha" class="btn btn-accent" ${p.coins < 100 ? 'disabled' : ''}>🪙 100G で宝箱をあける！</button>
+          <div style="font-weight:900;font-size:18px;color:#92400e;">✨ でんせつの たからばこガチャ ✨</div>
+          <div style="font-size:12px;color:#78350f;margin-top:4px;">ぜんぶで ${STICKERS.length}しゅるい（N/R/SR/UR）。かぶったら 🧩かけらに なるよ！</div>
+          <div id="gacha-orb" class="capsule-orb">${artImg('item_chest.webp', 110, 'たからばこ', 'chest', '🧰')}</div>
+          <div style="font-size:12px;font-weight:800;margin-bottom:12px;">みつけた おたから：${ownedCount} / ${STICKERS.length}</div>
+          ${p.gachaTickets ? `<button id="btn-pull-ticket" class="btn btn-success" style="margin-bottom:8px;">🎟 ガチャけんで あける！（のこり ${p.gachaTickets}まい）</button>` : ''}
+          <button id="btn-pull-gacha" class="btn btn-accent" ${p.coins < 100 ? 'disabled' : ''}>🪙 100Gで たからばこを あける！</button>
+        </div>
+        <div class="card" style="margin-top:12px;">
+          <div class="section-title"><span>🧩 かけら こうかんじょ</span><span style="font-size:13px;color:var(--primary);">🧩 ${p.kakera}こ</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;">まだ もっていない おたからと こうかん できるよ（N 5こ・R 10こ・SR 20こ・UR 40こ）</div>
+          <div class="sticker-grid">${missing.map(st => `<button class="sticker-cell kakera-cell" data-kakera="${st.id}" ${p.kakera < KAKERA_COST[st.rarity] ? 'disabled' : ''}>
+              <span class="st-rarity rarity-${st.rarity}">${st.rarity}</span><span class="st-emoji">${itemArt(st, 40)}</span><span class="st-name">🧩${KAKERA_COST[st.rarity]}</span></button>`).join('') || '<div style="grid-column:1/-1;text-align:center;font-weight:900;">ぜんぶ そろったよ！ すごい！</div>'}</div>
         </div>`;
-      $('#btn-pull-gacha').onclick = pullGacha;
+      $('#btn-pull-gacha').onclick = () => pullGacha(false);
+      if ($('#btn-pull-ticket')) $('#btn-pull-ticket').onclick = () => pullGacha(true);
+      $$('[data-kakera]').forEach(b => b.onclick = () => {
+        const st = STICKERS.find(x => x.id === b.dataset.kakera), cost = KAKERA_COST[st.rarity];
+        if (p.kakera < cost || p.stickers[st.id]) return;
+        p.kakera -= cost; p.stickers[st.id] = 1;
+        saveState(); SFX.fanfare(); renderShop();
+        showPrize(st, `🧩 かけら ${cost}こで こうかん！ おたから ずかんに とうろくしたよ！`, '#059669');
+      });
     } else {
       box.innerHTML = `
         <div class="card">
@@ -1742,20 +2615,20 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
               <div>${renderHeroSVG(ch.id, 58)}</div>
               <div style="font-size:11px;font-weight:900;">${ch.name}</div>
               <div style="font-size:10px;font-weight:800;color:${owned ? '#10b981' : '#b45309'};">
-                ${p.avatar === ch.id ? 'しゅつじん中' : owned ? 'なかま' : `🪙 ${ch.price}G`}
+                ${p.avatar === ch.id ? 'しゅつじんちゅう' : owned ? 'なかま' : `🪙 ${ch.price}G`}
               </div>
             </div>`;
           }).join('')}</div>
         </div>
         <div class="card">
-          <h4 class="section-title">🗺️ ぼうけんの世界（テーマ）</h4>
+          <h4 class="section-title">🗺️ ぼうけんの せかい（テーマ）</h4>
           <div class="customize-grid">${THEMES.map(th => {
             const owned = p.ownedThemes.includes(th.id);
             return `<div class="custom-tile ${p.theme === th.id ? 'equipped' : ''}" data-buy-theme="${th.id}">
-              <div style="font-size:28px;">${th.icon}</div>
+              ${themeArt(th, 84, 35)}
               <div style="font-size:11px;font-weight:900;">${th.name}</div>
               <div style="font-size:10px;font-weight:800;color:${owned ? '#10b981' : '#b45309'};">
-                ${p.theme === th.id ? 'セット中' : owned ? '解放すみ' : `🪙 ${th.price}G`}
+                ${p.theme === th.id ? 'セットちゅう' : owned ? 'かいほうずみ' : `🪙 ${th.price}G`}
               </div>
             </div>`;
           }).join('')}</div>
@@ -1763,7 +2636,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       $$('[data-buy-avatar]').forEach(el => {
         el.onclick = () => {
           const ch = HERO_CHARS.find(x => x.id === el.dataset.buyAvatar);
-          if (p.ownedAvatars.includes(ch.id)) { p.avatar = ch.id; SFX.tap(); saveState(); updateHeader(); renderShop(); showToast(`${ch.name} に交代したよ！`); }
+          if (p.ownedAvatars.includes(ch.id)) { p.avatar = ch.id; SFX.tap(); saveState(); updateHeader(); renderShop(); showToast(`${ch.name} に こうたい したよ！`); }
           else if (p.coins >= ch.price) { p.coins -= ch.price; p.ownedAvatars.push(ch.id); p.avatar = ch.id; SFX.fanfare(); saveState(); updateHeader(); renderShop(); showToast(`${ch.name} がなかまになった！`); }
           else showToast('ゴールドがたりないよ！');
         };
@@ -1772,37 +2645,41 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
         el.onclick = () => {
           const th = THEMES.find(x => x.id === el.dataset.buyTheme);
           if (p.ownedThemes.includes(th.id)) { p.theme = th.id; SFX.tap(); saveState(); applyTheme(); renderShop(); showToast(`「${th.name}」にきりかえたよ！`); }
-          else if (p.coins >= th.price) { p.coins -= th.price; p.ownedThemes.push(th.id); p.theme = th.id; SFX.coin(); saveState(); updateHeader(); applyTheme(); renderShop(); showToast(`「${th.name}」を解放した！`); }
+          else if (p.coins >= th.price) { p.coins -= th.price; p.ownedThemes.push(th.id); p.theme = th.id; SFX.coin(); saveState(); updateHeader(); applyTheme(); renderShop(); showToast(`「${th.name}」を かいほうした！`); }
           else showToast('ゴールドがたりないよ！');
         };
       });
     }
   }
 
-  function pullGacha() {
+  const KAKERA_GAIN = { N: 1, R: 2, SR: 4, UR: 8 };
+  const KAKERA_COST = { N: 5, R: 10, SR: 20, UR: 40 };
+  function showPrize(st, msg, color) {
+    $('#gacha-stage').innerHTML = `
+      <span class="badge" style="background:${st.rarity === 'UR' ? '#eab308' : st.rarity === 'SR' ? '#c026d3' : st.rarity === 'R' ? '#2563eb' : '#64748b'};font-size:15px;">${st.rarity} おたから ゲット！</span>
+      <div style="margin:12px auto;width:130px;">${itemArt(st, 130)}</div>
+      <h2 style="margin:4px 0;">${st.name}</h2>
+      <div style="font-size:13px;font-weight:800;color:${color};">${msg}</div>`;
+    openModal('modal-gacha');
+  }
+  function pullGacha(useTicket) {
     const p = curProfile();
-    if (p.coins < 100) return;
-    p.coins -= 100;
-    const orb = $('#gacha-orb'); $('#btn-pull-gacha').disabled = true; orb.classList.add('shake'); SFX.tap();
+    if (useTicket) { if (!p.gachaTickets) return; p.gachaTickets--; }
+    else { if (p.coins < 100) return; p.coins -= 100; }
+    const orb = $('#gacha-orb');
+    $$('#btn-pull-gacha, #btn-pull-ticket').forEach(b => { b.disabled = true; });
+    orb.classList.add('shake'); SFX.tap();
     const r = Math.random();
     const rarity = r < 0.08 ? 'UR' : r < 0.25 ? 'SR' : r < 0.55 ? 'R' : 'N';
-    const picked = pick(STICKERS.filter(s => s.rarity === rarity));
+    const picked = pick(STICKERS.filter(x => x.rarity === rarity));
     const isDup = !!p.stickers[picked.id];
     p.stickers[picked.id] = (p.stickers[picked.id] || 0) + 1;
-    if (isDup) p.coins += 20;
+    if (isDup) p.kakera = (p.kakera || 0) + KAKERA_GAIN[rarity];
     saveState();
-
     setTimeout(() => {
       orb.classList.remove('shake'); updateHeader(); renderShop();
       if (rarity === 'UR' || rarity === 'SR') { SFX.fanfare(); fireConfetti(); } else SFX.coin();
-      $('#gacha-stage').innerHTML = `
-        <span class="badge" style="background:${rarity === 'UR' ? '#eab308' : rarity === 'SR' ? '#c026d3' : rarity === 'R' ? '#2563eb' : '#64748b'};font-size:15px;">${rarity} お宝ゲット！</span>
-        <div style="font-size:82px;margin:12px 0;">${picked.emoji}</div>
-        <h2 style="margin:4px 0;">${picked.name}</h2>
-        <div style="font-size:13px;font-weight:800;color:${isDup ? '#b45309' : '#059669'};">
-          ${isDup ? 'もっていたお宝！ 🪙20G もどってきたよ' : '✨ NEW！お宝図鑑にとうろくしたよ！'}
-        </div>`;
-      openModal('modal-gacha');
+      showPrize(picked, isDup ? `もっていた おたから！ 🧩かけら +${KAKERA_GAIN[rarity]}` : '✨ NEW！おたから ずかんに とうろくしたよ！', isDup ? '#b45309' : '#059669');
     }, 650);
   }
 
@@ -1813,24 +2690,24 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     const box = $('#bag-content'), p = curProfile();
     if (bagTab === 'tickets') {
       if (!p.tickets.length) {
-        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">まだチケットがないよ。クエストでGをためてどうぐ屋でこうかんしよう！</div>`;
+        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">まだチケットがないよ。クエストでGをためてどうぐやでこうかんしよう！</div>`;
         return;
       }
       box.innerHTML = `<div class="item-list">` + p.tickets.map(t => `
         <div class="ticket-card">
-          <div class="ticket-left"><div class="ticket-icon">${esc(t.icon)}</div><div><div class="ticket-title">${esc(t.name)}</div><div class="ticket-desc">こうかん日：${esc(t.boughtAt)}</div></div></div>
+          <div class="ticket-left"><div class="ticket-icon">${esc(t.icon)}</div><div><div class="ticket-title">${esc(t.name)}</div><div class="ticket-desc">こうかんび：${esc(t.boughtAt)}</div></div></div>
           <button class="btn btn-success btn-sm" data-use-ticket="${t.uid}">つかう！</button>
         </div>`).join('') + `</div>`;
       $$('[data-use-ticket]').forEach(btn => btn.onclick = () => openTicketUseModal(btn.dataset.useTicket));
     } else if (bagTab === 'stickers') {
       const count = Object.keys(p.stickers).length;
-      box.innerHTML = `<div class="card"><div class="section-title"><span>✨ お宝シール図鑑</span><span style="font-size:12px;color:var(--primary);">${count} / ${STICKERS.length}</span></div>
+      box.innerHTML = `<div class="card"><div class="section-title"><span>✨ おたから ずかん</span><span style="font-size:12px;color:var(--primary);">${count} / ${STICKERS.length}</span></div>
         <div class="sticker-grid">${STICKERS.map(s => {
           const cnt = p.stickers[s.id] || 0;
           const holo = cnt && (s.rarity === 'SR' || s.rarity === 'UR') ? `holo-${s.rarity}` : '';
           return `<div class="sticker-cell ${cnt ? holo : 'locked'}" data-sticker="${cnt ? s.id : ''}">
             <span class="st-rarity rarity-${s.rarity}">${s.rarity}</span>
-            <span class="st-emoji">${cnt ? s.emoji : '❓'}</span>
+            <span class="st-emoji">${cnt ? itemArt(s, 46) : '❓'}</span>
             <span class="st-name">${cnt ? s.name : '？？？'}</span>
           </div>`;
         }).join('')}</div></div>`;
@@ -1838,22 +2715,22 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
         if (!el.dataset.sticker) return;
         el.onclick = () => {
           const s = STICKERS.find(x => x.id === el.dataset.sticker);
-          $('#sticker-preview-body').innerHTML = `<span class="badge">${s.rarity}</span><div style="font-size:84px;margin:10px 0;">${s.emoji}</div><h2 style="margin:4px 0;">${s.name}</h2><div style="font-size:13px;color:var(--muted);">もっている数：${p.stickers[s.id]}個</div>`;
+          $('#sticker-preview-body').innerHTML = `<span class="badge">${s.rarity}</span><div style="margin:10px auto;width:130px;">${itemArt(s, 130)}</div><h2 style="margin:4px 0;">${s.name}</h2><div style="font-size:13px;color:var(--muted);">もっている かず：${p.stickers[s.id]}こ</div>`;
           openModal('modal-sticker');
         };
       });
     } else {
       box.innerHTML = `
-        <div class="card"><h4 class="section-title">⚔️ なかま（しゅつじん切替）</h4>
+        <div class="card"><h4 class="section-title">⚔️ なかま（しゅつじん きりかえ）</h4>
           <div class="customize-grid">${HERO_CHARS.filter(c => p.ownedAvatars.includes(c.id)).map(ch => `
             <div class="custom-tile ${p.avatar === ch.id ? 'equipped' : ''}" data-eq-avatar="${ch.id}">
               <div>${renderHeroSVG(ch.id, 54)}</div><div style="font-size:11px;font-weight:800;">${ch.name}</div>
             </div>`).join('')}</div>
         </div>
-        <div class="card"><h4 class="section-title">🗺️ 解放した世界</h4>
+        <div class="card"><h4 class="section-title">🗺️ かいほうした せかい</h4>
           <div class="customize-grid">${THEMES.filter(t => p.ownedThemes.includes(t.id)).map(th => `
             <div class="custom-tile ${p.theme === th.id ? 'equipped' : ''}" data-eq-theme="${th.id}">
-              <div style="font-size:28px;">${th.icon}</div><div style="font-size:11px;font-weight:800;">${th.name}</div>
+              ${themeArt(th, 84, 35)}<div style="font-size:11px;font-weight:800;">${th.name}</div>
             </div>`).join('')}</div>
         </div>`;
       $$('[data-eq-avatar]').forEach(el => el.onclick = () => { p.avatar = el.dataset.eqAvatar; SFX.tap(); saveState(); updateHeader(); renderBag(); });
@@ -1865,7 +2742,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     const p = curProfile(), t = p.tickets.find(x => x.uid === ticketUid);
     if (!t) return;
     $('#ticket-stamp').classList.remove('stamped');
-    $('#ticket-use-body').innerHTML = `<div style="font-size:56px;">${esc(t.icon)}</div><h2 style="margin:6px 0;">${esc(t.name)}</h2><div style="font-size:13px;color:var(--muted);background:#fef3c7;padding:8px;border-radius:10px;">👆 この画面を <strong>おうちの人に見せて</strong> スタンプをもらってね！</div>`;
+    $('#ticket-use-body').innerHTML = `<div style="font-size:56px;">${esc(t.icon)}</div><h2 style="margin:6px 0;">${esc(t.name)}</h2><div style="font-size:13px;color:var(--muted);background:#fef3c7;padding:8px;border-radius:10px;">👆 この がめんを <strong>おうちの ひとに みせて</strong> スタンプを もらってね！</div>`;
     $('#ticket-use-actions').innerHTML = `<button id="btn-confirm-use-ticket" class="btn btn-danger">おとな確認：つかうことをみとめる</button>`;
     $('#btn-confirm-use-ticket').onclick = () => {
       p.tickets = p.tickets.filter(x => x.uid !== ticketUid);
@@ -1879,27 +2756,90 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     openModal('modal-ticket-use');
   }
 
-  // ---------------- きろく ----------------
+  // ---------------- きろく（ふりかえり・マスターひょう・きょうだいランキング） ----------------
+  let statsTab = 'log', masterTab = 'kuku', masterGrade = 0;
   function renderStats() {
-    const p = curProfile(), days = []; let maxVal = 5;
+    $$('#stats-subtabs .subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.sub === statsTab));
+    const box = $('#stats-content'), p = curProfile();
+    if (statsTab === 'master') return renderMaster(box, p);
+    if (statsTab === 'rank') return renderRanking(box);
+    const days = []; let maxVal = 5;
     for (let i = 6; i >= 0; i--) {
       const val = p.dailyLog[todayStr(-i)] || 0; if (val > maxVal) maxVal = val;
       const d = new Date(); d.setDate(d.getDate() - i);
       days.push({ label: `${d.getMonth() + 1}/${d.getDate()}`, val });
     }
-    $('#stats-chart').innerHTML = days.map(d => `<div class="bar-col"><span class="bar-val">${d.val || ''}</span><div class="bar-fill" style="height:${Math.max(4, Math.round((d.val / maxVal) * 86))}px"></div><span class="bar-day">${d.label}</span></div>`).join('');
     let sumOk = 0, sumTotal = 0;
-    Object.values(p.subjectStats).forEach(s => { sumOk += s.ok; sumTotal += s.total; });
+    Object.values(p.subjectStats).forEach(st => { sumOk += st.ok; sumTotal += st.total; });
     const { lv } = calcHeroLevel(p);
-    $('#stats-summary').innerHTML = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-      <div class="mini-stat"><div class="num">Lv.${lv}</div><div class="lbl">勇者レベル</div></div>
-      <div class="mini-stat"><div class="num">${sumTotal}体</div><div class="lbl">バトル数</div></div>
-      <div class="mini-stat"><div class="num">${sumTotal ? Math.round(sumOk / sumTotal * 100) : 0}%</div><div class="lbl">しょうり率</div></div>
-    </div>`;
-    $('#stats-subjects').innerHTML = Object.entries(SUBJECT_META).map(([k, meta]) => {
-      const s = p.subjectStats[k] || { ok: 0, total: 0 }, pct = s.total ? Math.round((s.ok / s.total) * 100) : 0;
-      return `<div class="acc-row"><div class="acc-head"><span>${meta.icon} ${meta.name}</span><span>${s.ok}/${s.total} (${pct}%)</span></div><div class="acc-track"><div class="acc-bar" style="width:${pct}%"></div></div></div>`;
-    }).join('');
+    const stars = Object.values(p.stages).reduce((a, arr) => a + (arr || []).reduce((x, v) => x + (v || 0), 0), 0);
+    const masters = Object.values(p.mastery).filter(m => m.c >= MASTER_NEED).length;
+    box.innerHTML = `
+      <div class="card"><h3 class="section-title">📊 さいきん 7にちかんの こたえた かず</h3>
+        <div class="bar-chart">${days.map(d => `<div class="bar-col"><span class="bar-val">${d.val || ''}</span><div class="bar-fill" style="height:${Math.max(4, Math.round((d.val / maxVal) * 86))}px"></div><span class="bar-day">${d.label}</span></div>`).join('')}</div></div>
+      <div class="card"><h3 class="section-title">🏆 ぼうけんの きろく</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div class="mini-stat"><div class="num">Lv.${lv}</div><div class="lbl">ゆうしゃ レベル</div></div>
+          <div class="mini-stat"><div class="num">${sumTotal}</div><div class="lbl">こたえた かず</div></div>
+          <div class="mini-stat"><div class="num">${sumTotal ? Math.round(sumOk / sumTotal * 100) : 0}%</div><div class="lbl">しょうりりつ</div></div>
+          <div class="mini-stat"><div class="num">★${stars}</div><div class="lbl">ステージの ほし</div></div>
+          <div class="mini-stat"><div class="num">${masters}</div><div class="lbl">マスターした かず</div></div>
+          <div class="mini-stat"><div class="num">${Math.max(p.best.ta_kuku || 0, 0)}</div><div class="lbl">くくTA ベスト</div></div>
+        </div></div>
+      <div class="card"><h3 class="section-title">🎯 エリアべつの しょうりりつ</h3>
+        ${Object.entries(SUBJECT_META).map(([k, meta]) => {
+          const st = p.subjectStats[k] || { ok: 0, total: 0 }, pct = st.total ? Math.round((st.ok / st.total) * 100) : 0;
+          return `<div class="acc-row"><div class="acc-head"><span>${meta.icon} ${meta.name}</span><span>${st.ok}/${st.total} (${pct}%)</span></div><div class="acc-track"><div class="acc-bar" style="width:${pct}%"></div></div></div>`;
+        }).join('')}</div>`;
+  }
+  function masterCell(p, key, label, cls = '') {
+    const c = Math.min(MASTER_NEED, (p.mastery[key] || {}).c || 0);
+    return `<div class="m-cell m${c} ${cls}">${esc(label)}${c < MASTER_NEED ? `<span class="m-dots">${'●'.repeat(c)}${'○'.repeat(MASTER_NEED - c)}</span>` : '<span class="m-dots" style="color:#92400e;">★</span>'}</div>`;
+  }
+  function renderMaster(box, p) {
+    const g = masterGrade || p.grade;
+    let body = '', keys = [], reward = '';
+    if (masterTab === 'kuku') {
+      let cells = '<div></div>' + Array.from({ length: 9 }, (_, i) => `<div class="m-rowhead">×${i + 1}</div>`).join('');
+      for (let a = 1; a <= 9; a++) {
+        cells += `<div class="m-rowhead">${a}のだん</div>`;
+        for (let b = 1; b <= 9; b++) { keys.push(`q_${a}_${b}`); cells += masterCell(p, `q_${a}_${b}`, a * b); }
+      }
+      body = `<div class="m-grid" style="grid-template-columns:42px repeat(9,1fr);">${cells}</div>`;
+      reward = 'だんを ぜんぶ マスターすると +100G！';
+    } else if (masterTab === 'kanji') {
+      const list = KANJI_BANK[g] || [];
+      keys = list.map(k => 'k_' + k.char);
+      body = `<div class="mtabs">${[1, 2, 3, 4, 5, 6].map(n => `<button class="mtab ${n === g ? 'active' : ''}" data-mgrade="${n}">${n}ねん</button>`).join('')}</div>
+        <div class="m-grid" style="grid-template-columns:repeat(8,1fr);">${list.map(k => masterCell(p, 'k_' + k.char, k.char, 'kj')).join('')}</div>`;
+      reward = 'この がくねんを ぜんぶ マスターすると +300G と ガチャけん！（よみ でも かき でも かぞえるよ）';
+    } else {
+      const lv = g <= 2 ? 1 : g <= 4 ? 2 : 3;
+      body = [1, 2, 3].map(l => { const ws = ENGLISH_BANK.filter(w => w.lv === l); if (l === lv) keys = ws.map(w => 'e_' + w.en); return `<div style="font-size:12px;font-weight:900;margin:8px 0 4px;">レベル${l}</div><div class="m-grid" style="grid-template-columns:repeat(4,1fr);">${ws.map(w => masterCell(p, 'e_' + w.en, w.en, 'en')).join('')}</div>`; }).join('');
+      reward = 'レベルを ぜんぶ マスターすると +200G と ガチャけん！';
+    }
+    const done = keys.filter(k => isMastered(p, k)).length;
+    box.innerHTML = `<div class="card">
+      <div class="mtabs">${[['kuku', '✖️ くく'], ['kanji', '📜 かんじ'], ['eng', '🔤 えいご']].map(([id, t]) => `<button class="mtab ${masterTab === id ? 'active' : ''}" data-mtab="${id}">${t}</button>`).join('')}</div>
+      <div class="m-sum">🏅 マスター ${done} / ${keys.length}</div>
+      ${body}
+      <div class="m-reward">●が 3つ たまると マスター（べつの ひに 3かい せいかい）。まちがえると 1つ へるよ。<br>${reward}</div></div>`;
+    $$('[data-mtab]').forEach(b => b.onclick = () => { masterTab = b.dataset.mtab; renderStats(); });
+    $$('[data-mgrade]').forEach(b => b.onclick = () => { masterGrade = +b.dataset.mgrade; renderStats(); });
+  }
+  function renderRanking(box) {
+    const sum7 = (pr) => Array.from({ length: 7 }, (_, i) => pr.dailyLog[todayStr(-i)] || 0).reduce((a, b) => a + b, 0);
+    const rows = state.profiles.map(pr => ({ pr, n: sum7(pr), lv: calcHeroLevel(pr).lv,
+      st: Object.values(pr.stages || {}).reduce((a, arr) => a + (arr || []).reduce((x, v) => x + (v || 0), 0), 0),
+      m: Object.values(pr.mastery || {}).filter(x => x.c >= MASTER_NEED).length })).sort((a, b) => b.n - a.n);
+    const medal = ['🥇', '🥈', '🥉'];
+    box.innerHTML = `<div class="card"><h3 class="section-title">👑 きょうだい ランキング</h3>
+      <div style="font-size:11px;color:var(--muted);font-weight:800;margin-bottom:8px;">さいきん 7にちで こたえた かず</div>
+      ${rows.map((r, i) => `<div class="rank-row ${r.pr.id === state.activeProfileId ? 'me' : ''}">
+        <div class="rank-medal">${medal[i] || i + 1}</div><div class="rank-face">${renderHeroFace(r.pr.avatar, 40)}</div>
+        <div style="flex:1;"><div class="rank-name">${esc(r.pr.name)}</div><div class="rank-sub">Lv.${r.lv} ・ ★${r.st} ・ マスター ${r.m}</div></div>
+        <div class="rank-num">${r.n}</div></div>`).join('')}
+      ${rows.length < 2 ? '<div style="font-size:12px;color:var(--muted);text-align:center;">きょうだいを ふやすと くらべられるよ（「🔒 おとな」から）</div>' : ''}</div>`;
   }
 
   // ---------------- プロフィール＆おとな設定 ----------------
@@ -1908,14 +2848,14 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
       const active = p.id === state.activeProfileId, { lv } = calcHeroLevel(p);
       return `<button class="ticket-card" style="width:100%;cursor:pointer;border-style:solid;border-color:${active ? 'var(--primary)' : 'var(--border)'};background:${active ? '#eff6ff' : '#fff'};" data-select-profile="${p.id}">
         <div class="ticket-left">
-          <div class="ticket-icon" style="background:#dbeafe;">${renderHeroSVG(p.avatar, 44)}</div>
-          <div style="text-align:left;"><div class="ticket-title">${esc(p.name)} (Lv.${lv}) ${active ? '✅' : ''}</div><div class="ticket-desc">小学${p.grade}年生 ・ 🪙 ${p.coins}G</div></div>
+          <div class="ticket-icon" style="background:#dbeafe;">${renderHeroFace(p.avatar, 46)}</div>
+          <div style="text-align:left;"><div class="ticket-title">${esc(p.name)} (Lv.${lv}) ${active ? '✅' : ''}</div><div class="ticket-desc">${p.grade}ねんせい ・ 🪙 ${p.coins}G</div></div>
         </div>
-        <span style="font-size:12px;font-weight:800;color:var(--primary);">${active ? '冒険中' : '交代'}</span>
+        <span style="font-size:12px;font-weight:800;color:var(--primary);">${active ? 'ぼうけんちゅう' : 'こうたい'}</span>
       </button>`;
     }).join('');
     $$('[data-select-profile]').forEach(btn => {
-      btn.onclick = () => { state.activeProfileId = btn.dataset.selectProfile; saveState(); SFX.tap(); closeModal('modal-profile'); refreshAll(); showToast(`勇者「${curProfile().name}」に交代したよ！`); };
+      btn.onclick = () => { state.activeProfileId = btn.dataset.selectProfile; saveState(); SFX.tap(); closeModal('modal-profile'); refreshAll(); showToast(`ゆうしゃ「${curProfile().name}」に こうたい したよ！`); };
     });
   }
 
@@ -1961,10 +2901,14 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     } else if (parentTab === 'history') {
       box.innerHTML = state.usedHistory.length ? `<div class="item-list">${state.usedHistory.slice(0, 30).map(h => `<div style="padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:13px;"><strong>${esc(h.icon)} ${esc(h.name)}</strong><br><span style="font-size:11px;color:var(--muted);">${esc(h.profileName)} ・ ${esc(h.usedAt)}</span></div>`).join('')}</div>` : `<p style="text-align:center;color:var(--muted);font-size:13px;">まだ使用されたチケットはありません。</p>`;
     } else {
-      box.innerHTML = `<div class="form-row"><label>英単語の自動発音</label><button id="btn-toggle-autospeak" class="btn btn-ghost btn-sm">${state.settings.autoSpeakEn ? '🔊 自動発音: ON' : '🔇 自動発音: OFF'}</button></div>
+      box.innerHTML = `<div class="form-row"><label>声で答える（マイク）</label><button id="btn-toggle-voice" class="btn btn-ghost btn-sm">${state.settings.voice ? '🎤 マイク: ON' : '🔇 マイク: OFF'}</button>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;">問題に「🎤 こえで こたえる」ボタンが出ます。声はブラウザの音声認識（Google・Apple など）で文字に変えられます。押したときだけ聞きます。${Voice.supported ? '' : '<br>※この端末・ブラウザでは使えません（Chrome・Safari・Edge の新しい版で使えます）。'}</div></div>
+        <div class="form-row"><label>英単語の自動発音</label><button id="btn-toggle-autospeak" class="btn btn-ghost btn-sm">${state.settings.autoSpeakEn ? '🔊 自動発音: ON' : '🔇 自動発音: OFF'}</button></div>
         <div class="form-row"><label>パスコード変更（4桁）</label><div style="display:flex;gap:6px;"><input id="sys-pass" class="input" maxlength="4" inputmode="numeric" value="${esc(state.settings.passcode)}"><button id="btn-sys-pass" class="btn btn-primary btn-sm">変更</button></div></div>
-        <div class="form-row"><label>バックアップ（JSON）</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button id="btn-export-json" class="btn btn-ghost btn-sm">📤 書き出し</button><button id="btn-import-json" class="btn btn-ghost btn-sm">📥 復元する</button></div></div>`;
+        <div class="form-row"><label>バックアップ（JSON）</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button id="btn-export-json" class="btn btn-ghost btn-sm">📤 書き出し</button><button id="btn-import-json" class="btn btn-ghost btn-sm">📥 復元する</button></div></div>
+        <div class="form-row"><label>クレジット</label><div style="font-size:11px;color:var(--muted);line-height:1.6;">書き順のデータ：<a href="https://kanjivg.tagaini.net/" target="_blank" rel="noopener">KanjiVG</a>（© Ulrich Apel、CC BY-SA 3.0）。書き順データ（strokes.json）は同じライセンスで公開しています。</div></div>`;
       $('#btn-toggle-autospeak').onclick = () => { state.settings.autoSpeakEn = !state.settings.autoSpeakEn; saveState(); renderParentPanel(); };
+      $('#btn-toggle-voice').onclick = () => { state.settings.voice = !state.settings.voice; saveState(); renderParentPanel(); };
       $('#btn-sys-pass').onclick = () => { const v = $('#sys-pass').value.trim(); if (!/^\d{4}$/.test(v)) return showToast('数字4桁で入力してください'); state.settings.passcode = v; saveState(); showToast('パスコードを変更しました'); };
       $('#btn-export-json').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })); a.download = `benkue_backup_${todayStr()}.json`; a.click(); };
       $('#btn-import-json').onclick = () => {
@@ -1977,6 +2921,7 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
 
   // ---------------- 画面更新 ----------------
   function switchView(name) {
+    if (name !== 'quiz') stopSession();
     $$('.view').forEach(v => v.classList.remove('active'));
     $(`#view-${name}`).classList.add('active');
     $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
@@ -1985,12 +2930,17 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     if (name === 'bag') renderBag();
     if (name === 'stats') renderStats();
   }
-  function applyTheme() { document.body.className = (THEMES.find(t => t.id === curProfile().theme) || THEMES[0]).cls; }
+  function applyTheme() {
+    const th = THEMES.find(t => t.id === curProfile().theme) || THEMES[0];
+    document.body.className = th.cls;
+    // バトル画面とホームの看板のうしろに、その世界の絵を出す
+    document.documentElement.style.setProperty('--theme-bg', `url("${ART}bg_${th.id}.webp")`);
+  }
   function updateHeader() {
     const p = curProfile();
-    $('#hdr-avatar').innerHTML = renderHeroSVG(p.avatar, 34);
+    $('#hdr-avatar').innerHTML = renderHeroFace(p.avatar, 34);
     $('#hdr-name').textContent = p.name;
-    $('#hdr-grade').textContent = `小${p.grade} 勇者 ▾`;
+    $('#hdr-grade').textContent = `${p.grade}ねんせい ▾`;
     $('#hdr-coin').textContent = p.coins;
     $('#btn-sound-toggle').textContent = state.settings.sound ? '🔊' : '🔇';
   }
@@ -1998,25 +2948,38 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     const p = curProfile(), { lv, rank } = calcHeroLevel(p), revCnt = p.revengeQueue.length, todayCnt = p.dailyLog[todayStr()] || 0;
     $('#home-hero-lv').textContent = lv;
     $('#home-hero-rank').textContent = rank;
+    const lvInfo = calcHeroLevel(p);
+    $('#home-lv-fill').style.width = `${Math.round((lvInfo.cur / lvInfo.need) * 100)}%`;
+    $('#home-lv-next').textContent = `つぎの レベルまで あと ${lvInfo.need - lvInfo.cur}もん`;
+    const ms = todayMissions(p), streakNow = (p.lastStudyDate === todayStr() || p.lastStudyDate === todayStr(-1)) ? p.streak : 0;
+    const goal = nextStreakGoal(streakNow);
+    $('#home-missions').innerHTML = `<div class="section-title" style="margin-bottom:4px;"><span>📅 きょうの ミッション</span><span style="font-size:11px;color:var(--muted);">1つ +${MISSION_GOLD}G</span></div>
+      ${ms.list.map(m => { const def = MISSIONS.find(x => x.id === m.id) || { text: m.id, goal: 1 }; return `<div class="mission-row ${m.done ? 'done' : ''}"><span class="m-check">${m.done ? '✓' : ''}</span><span class="m-text">${def.text}</span><span class="m-num">${Math.min(m.n, def.goal)}/${def.goal}</span></div>`; }).join('')}
+      <div class="mission-foot"><span>${ms.bonus ? '🎉 ぜんぶ クリア！' : '🎟 ぜんぶ クリアで ガチャけん！'}</span><span>🔥 ${goal}にち れんぞくで ごほうび（あと ${goal - streakNow}にち）</span>${p.gachaTickets ? `<span>🎟 ガチャけん ${p.gachaTickets}まい</span>` : ''}</div>`;
+    const bestK = p.best.ta_kuku || 0, bestM = p.best['ta_math' + p.grade] || 0;
+    $('#ta-card-best').textContent = (bestK || bestM) ? `じこベスト：くく ${bestK}もん・けいさん ${bestM}もん` : '60びょうで なんもん とける？';
     // きのう・きょうに冒険していなければ、れんぞく日数は0にもどる
     $('#home-streak').textContent = (p.lastStudyDate === todayStr() || p.lastStudyDate === todayStr(-1)) ? p.streak : 0;
     $('#home-today-count').textContent = todayCnt;
     $('#home-grade-select').value = String(p.grade);
-    $('#revenge-count-badge').textContent = `${revCnt}体`;
+    $('#revenge-count-badge').textContent = `${revCnt}たい`;
     $('#btn-revenge-card').classList.toggle('empty', revCnt === 0);
 
     $('#home-guide-char').innerHTML = renderHeroSVG('keshimaru', 52);
     let msg = '';
-    if (revCnt > 0) msg = `ケシマル「<strong>おうごんボスが${revCnt}体</strong>いるよ！たおせばGが2倍もらえる大チャンスだ！」`;
-    else if (todayCnt === 0) msg = `ケシマル「やあ、勇者<strong>${esc(p.name)}</strong>！きょう最初のクエストに出発してGをかせごう！」`;
-    else if (p.coins >= 150) msg = `ケシマル「<strong>${p.coins}G</strong>もたまったね！どうぐ屋でお宝引換券や宝箱ガチャをチェックしよう！」`;
-    else msg = `ケシマル「きょう${todayCnt}体とうばつ！この調子でレベルアップをめざそう！」`;
+    if (revCnt > 0) msg = `ケシマル「<strong>おうごんボスが ${revCnt}たい</strong> いるよ！たおせば Gが 2ばい もらえる だいチャンスだ！」`;
+    else if (todayCnt === 0) msg = `ケシマル「やあ、ゆうしゃ<strong>${esc(p.name)}</strong>！きょう さいしょの クエストに しゅっぱつして Gを かせごう！」`;
+    else if (p.coins >= 150) msg = `ケシマル「<strong>${p.coins}G</strong>も たまったね！どうぐやで ひきかえけんや たからばこガチャを チェックしよう！」`;
+    else msg = `ケシマル「きょう ${todayCnt}たい たおしたね！この ちょうしで レベルアップを めざそう！」`;
     $('#home-guide-msg').innerHTML = msg;
   }
   function refreshAll() { applyTheme(); updateHeader(); renderHome(); }
   const openModal = (id) => $(`#${id}`).classList.add('open');
   const closeModal = (id) => $(`#${id}`).classList.remove('open');
 
+  function initSubjectIcons() {
+    $$('.subject-card').forEach(btn => { btn.querySelector('.s-icon').innerHTML = renderMonsterSVG(btn.dataset.subject, false, 52); });
+  }
   function initSplash() {
     const sp = $('#splash-screen');
     $('#splash-chars').innerHTML = renderHeroSVG('penta', 92) + renderHeroSVG('keshimaru', 76) + renderHeroSVG('kirari', 88);
@@ -2033,19 +2996,25 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     $$('.modal-backdrop').forEach(bg => bg.addEventListener('click', (e) => { if (e.target === bg && bg.id !== 'modal-result') bg.classList.remove('open'); }));
 
     $('#btn-profile-switch').onclick = () => { renderProfileModal(); openModal('modal-profile'); };
-    $('#btn-sound-toggle').onclick = () => { state.settings.sound = !state.settings.sound; saveState(); updateHeader(); showToast(state.settings.sound ? 'こうか音 ON' : 'こうか音 OFF'); };
-    $('#home-grade-select').onchange = (e) => { curProfile().grade = parseInt(e.target.value, 10); saveState(); updateHeader(); showToast(`小学${curProfile().grade}年生に設定したよ！`); };
+    $('#btn-sound-toggle').onclick = () => { state.settings.sound = !state.settings.sound; saveState(); updateHeader(); showToast(state.settings.sound ? 'こうかおん ON' : 'こうかおん OFF'); };
+    $('#home-grade-select').onchange = (e) => { curProfile().grade = parseInt(e.target.value, 10); saveState(); updateHeader(); showToast(`${curProfile().grade}ねんせいに したよ！`); };
     $('#btn-revenge-card').onclick = () => startSession({ mode: 'revenge' });
 
-    $$('.subject-card').forEach(btn => {
-      btn.onclick = () => {
-        SFX.tap();
-        const s = btn.dataset.subject;
-        if (s === 'kuku') { renderKukuModal(); openModal('modal-kuku'); }
-        else if (s === 'clock') openModal('modal-clock');
-        else startSession({ mode: s });
-      };
-    });
+    $$('.subject-card').forEach(btn => { btn.onclick = () => { SFX.tap(); openStageMap(btn.dataset.subject); }; });
+    freePractice = (sub) => {
+      if (sub === 'kuku') { renderKukuModal(); openModal('modal-kuku'); }
+      else if (sub === 'clock') openModal('modal-clock');
+      else startSession({ mode: sub });
+    };
+    $('#btn-ta-card').onclick = () => {
+      const p = curProfile();
+      $('#ta-list').innerHTML = [['kuku', '✖️ くく（1〜9のだん）', p.best.ta_kuku || 0], ['math', `🧮 けいさん（${p.grade}ねんせい）`, p.best['ta_math' + p.grade] || 0]]
+        .map(([k, t, b]) => `<button class="btn btn-primary" data-ta="${k}">${t}<span style="font-size:11px;opacity:0.85;margin-left:6px;">ベスト ${b}もん</span></button>`).join('');
+      $$('[data-ta]').forEach(b => b.onclick = () => { closeModal('modal-ta'); startSession({ mode: 'timeattack', kind: b.dataset.ta }); });
+      openModal('modal-ta');
+    };
+    $$('#stats-subtabs .subtab-btn').forEach(b => b.onclick = () => { statsTab = b.dataset.sub; renderStats(); });
+    $('#btn-voice').onclick = startVoiceAnswer;
 
     function renderKukuModal() {
       const grid = $('#kuku-dan-grid'); grid.innerHTML = '';
@@ -2066,17 +3035,18 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     $('#kuku-preset-hard').onclick = () => { kukuConfig = { dans: [6,7,8,9], order: 'random' }; renderKukuModal(); };
     $('#kuku-preset-clear').onclick = () => { kukuConfig.dans = []; renderKukuModal(); };
     $$('[data-kuku-order]').forEach(b => b.onclick = () => { kukuConfig.order = b.dataset.kukuOrder; if (kukuConfig.order === 'asc' && kukuConfig.dans.length !== 1) kukuConfig.dans = [kukuConfig.dans[0] || 2]; renderKukuModal(); });
-    $('#btn-kuku-start').onclick = () => { if (!kukuConfig.dans.length) return showToast('1つ以上の段をえらんでね！'); closeModal('modal-kuku'); startSession({ mode: 'kuku', dans: [...kukuConfig.dans].sort((a,b)=>a-b), order: kukuConfig.order }); };
+    $('#btn-kuku-start').onclick = () => { if (!kukuConfig.dans.length) return showToast('1つ いじょう だんを えらんでね！'); closeModal('modal-kuku'); startSession({ mode: 'kuku', dans: [...kukuConfig.dans].sort((a,b)=>a-b), order: kukuConfig.order }); };
 
     $$('[data-clock-level]').forEach(b => b.onclick = () => { closeModal('modal-clock'); startSession({ mode: 'clock', level: b.dataset.clockLevel }); });
-    $('#btn-quiz-exit').onclick = () => switchView('home');
+    $('#btn-quiz-exit').onclick = () => { stopSession(); switchView('home'); };
     $('#btn-res-home').onclick = () => { closeModal('modal-result'); switchView('home'); };
     $('#btn-res-retry').onclick = () => { closeModal('modal-result'); if (lastSessionParams) startSession(lastSessionParams); };
+    $('#btn-res-next').onclick = () => { closeModal('modal-result'); if (lastSessionParams && lastSessionParams.stage != null) startSession({ mode: lastSessionParams.mode, stage: lastSessionParams.stage + 1 }); };
     $$('#shop-subtabs .subtab-btn').forEach(b => b.onclick = () => { shopTab = b.dataset.sub; renderShop(); });
     $$('#bag-subtabs .subtab-btn').forEach(b => b.onclick = () => { bagTab = b.dataset.sub; renderBag(); });
 
     memoPad = new DrawingPad($('#memo-canvas'));
-    kanjiPad = new DrawingPad($('#kanji-canvas'), (cnt) => { $('#kanji-stroke-count').textContent = `${cnt}画`; });
+    kanjiPad = new DrawingPad($('#kanji-canvas'), (cnt) => { $('#kanji-stroke-count').textContent = `${cnt}かく`; KanjiUI.update(cnt); });
     kanjiPad.setWidth(7);
 
     $('#btn-toggle-memo').onclick = () => {
@@ -2094,19 +3064,12 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     $('#btn-memo-undo').onclick = () => memoPad.undo();
     $('#btn-memo-clear').onclick = () => memoPad.clear();
 
-    $('#btn-kanji-guide').onclick = () => { kanjiGuideOn = !kanjiGuideOn; $('#kanji-guide-char').classList.toggle('hidden', !kanjiGuideOn); $('#btn-kanji-guide').textContent = kanjiGuideOn ? '👀 お手本:ON' : '👀 お手本:OFF'; $('#btn-kanji-guide').classList.toggle('active', kanjiGuideOn); };
-    $('#btn-kanji-thick').onclick = () => { kanjiThick = !kanjiThick; kanjiPad.setWidth(kanjiThick ? 12 : 7); $('#btn-kanji-thick').textContent = kanjiThick ? '太さ:ふとい' : '太さ:ふつう'; };
+    $('#btn-kanji-guide').onclick = () => { kanjiGuideOn = !kanjiGuideOn; $('#btn-kanji-guide').textContent = kanjiGuideOn ? '👀 おてほん:ON' : '👀 おてほん:OFF'; $('#btn-kanji-guide').classList.toggle('active', kanjiGuideOn); KanjiUI.applyGuide(); };
+    $('#btn-kanji-play').onclick = () => KanjiUI.play();
+    $('#btn-kanji-thick').onclick = () => { kanjiThick = !kanjiThick; kanjiPad.setWidth(kanjiThick ? 12 : 7); $('#btn-kanji-thick').textContent = kanjiThick ? 'ふとさ:ふとい' : 'ふとさ:ふつう'; };
     $('#btn-kanji-undo').onclick = () => kanjiPad.undo();
     $('#btn-kanji-clear').onclick = () => kanjiPad.clear();
-    $('#btn-kanji-check').onclick = () => {
-      if (kanjiPad.getStrokeCount() === 0) return showToast('まずは漢字を書いてみよう！');
-      const q = session.questions[session.index];
-      $('#kanji-user-preview').src = kanjiPad.toDataURL();
-      $('#kanji-model-char').textContent = q.char;
-      $('#compare-strokes').textContent = kanjiPad.getStrokeCount();
-      $('#compare-model-strokes').textContent = q.strokes;
-      $('#btn-kanji-check').classList.add('hidden'); $('#kanji-compare-box').classList.remove('hidden'); SFX.tap();
-    };
+    $('#btn-kanji-check').onclick = () => KanjiUI.check();
     $('#btn-kanji-ok').onclick = () => { if (session.locked) return; session.locked = true; $('#kanji-compare-box').classList.add('hidden'); finalizeQuestionResult(true, session.questions[session.index]); };
     $('#btn-kanji-ng').onclick = () => { if (session.locked) return; session.locked = true; $('#kanji-compare-box').classList.add('hidden'); finalizeQuestionResult(false, session.questions[session.index]); };
 
@@ -2129,7 +3092,10 @@ canvas.draw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; to
     });
   }
 
+  // 確認用（住所に ?bqtest があるときだけ）
+  if (/[?&]bqtest/.test(location.search)) window.__BQ = { parseJaNum, parseJaTime, voiceResolve, judgeKanji, Strokes, KanjiUI, startSession, curProfile, saveState, getSession: () => session, kanjiPad: () => kanjiPad, finalizeQuestionResult, finishSession, calcHeroLevel, todayMissions, KANJI_BANK, ENGLISH_BANK };
   initSplash();
+  initSubjectIcons();
   initEvents();
   refreshAll();
 })();
