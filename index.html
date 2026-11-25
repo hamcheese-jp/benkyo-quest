@@ -3094,7 +3094,8 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
   }
 
   // 確認用（住所に ?bqtest があるときだけ）
-  if (/[?&]bqtest/.test(location.search)) window.__BQ = { parseJaNum, parseJaTime, voiceResolve, judgeKanji, Strokes, KanjiUI, startSession, curProfile, saveState, getSession: () => session, kanjiPad: () => kanjiPad, finalizeQuestionResult, finishSession, calcHeroLevel, todayMissions, KANJI_BANK, ENGLISH_BANK };
+  if (/[?&]bqtest/.test(location.search)) window.__BQ = { parseJaNum, parseJaTime, voiceResolve, judgeKanji, Strokes, KanjiUI, startSession, curProfile, saveState, getSession: () => session, kanjiPad: () => kanjiPad, finalizeQuestionResult, finishSession, calcHeroLevel, todayMissions, KANJI_BANK, ENGLISH_BANK,
+    renderQuizQuestion, openStageMap, switchView, refreshAll, renderStats, showPrize, openModal, closeModal, STICKERS, setStatsTab: (t) => { statsTab = t; } };
   initSplash();
   initSubjectIcons();
   initEvents();
