@@ -1,0 +1,17 @@
+{
+  "name": "ベンキョウクエスト（勉クエ）",
+  "short_name": "勉クエ",
+  "description": "さんすう・九九・とけい・漢字・えいごで、べんきょうモンスターをたおしてお宝ゲット！",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e3a8a",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
