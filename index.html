@@ -1408,7 +1408,8 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
   const uid = () => Math.random().toString(36).slice(2, 9);
   // ---------------- Blender で作った絵（art/*.webp） ----------------
   // アプリ版は同じ場所の art/、GAS版は公開しているアプリ版から読む。読めないときは前の手描きの絵を出す
-  const BASE = window.BENKUE_BASE || 'https://hamcheese-jp.github.io/benkyo-quest/';
+  // GAS は「//」をコメントとして けずるので、スクリプトの中の住所は「\/\/」と書く
+  const BASE = window.BENKUE_BASE || 'https:\/\/hamcheese-jp.github.io\/benkyo-quest\/';
   const ART = window.BENKUE_ART || BASE + 'art/';
   const ART_FALLBACK = {};
   window.BQFallback = (img) => { img.onerror = null; const fb = ART_FALLBACK[img.dataset.fb]; if (fb) img.outerHTML = fb; };
@@ -2906,7 +2907,7 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
         <div class="form-row"><label>英単語の自動発音</label><button id="btn-toggle-autospeak" class="btn btn-ghost btn-sm">${state.settings.autoSpeakEn ? '🔊 自動発音: ON' : '🔇 自動発音: OFF'}</button></div>
         <div class="form-row"><label>パスコード変更（4桁）</label><div style="display:flex;gap:6px;"><input id="sys-pass" class="input" maxlength="4" inputmode="numeric" value="${esc(state.settings.passcode)}"><button id="btn-sys-pass" class="btn btn-primary btn-sm">変更</button></div></div>
         <div class="form-row"><label>バックアップ（JSON）</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button id="btn-export-json" class="btn btn-ghost btn-sm">📤 書き出し</button><button id="btn-import-json" class="btn btn-ghost btn-sm">📥 復元する</button></div></div>
-        <div class="form-row"><label>クレジット</label><div style="font-size:11px;color:var(--muted);line-height:1.6;">書き順のデータ：<a href="https://kanjivg.tagaini.net/" target="_blank" rel="noopener">KanjiVG</a>（© Ulrich Apel、CC BY-SA 3.0）。書き順データ（strokes.json）は同じライセンスで公開しています。</div></div>`;
+        <div class="form-row"><label>クレジット</label><div style="font-size:11px;color:var(--muted);line-height:1.6;">書き順のデータ：<a href="https:\/\/kanjivg.tagaini.net\/" target="_blank" rel="noopener">KanjiVG</a>（© Ulrich Apel、CC BY-SA 3.0）。書き順データ（strokes.json）は同じライセンスで公開しています。</div></div>`;
       $('#btn-toggle-autospeak').onclick = () => { state.settings.autoSpeakEn = !state.settings.autoSpeakEn; saveState(); renderParentPanel(); };
       $('#btn-toggle-voice').onclick = () => { state.settings.voice = !state.settings.voice; saveState(); renderParentPanel(); };
       $('#btn-sys-pass').onclick = () => { const v = $('#sys-pass').value.trim(); if (!/^\d{4}$/.test(v)) return showToast('数字4桁で入力してください'); state.settings.passcode = v; saveState(); showToast('パスコードを変更しました'); };
