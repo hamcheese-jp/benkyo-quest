@@ -532,6 +532,78 @@ img.art.theme-thumb { width: 84px; height: 35px; object-fit: cover; border-radiu
 .gc-arrow { font-size: 26px; font-weight: 900; }
 .foot-links { display: flex; justify-content: center; gap: 16px; margin: 12px 0 4px; font-size: 11px; font-weight: 800; }
 .foot-links a { color: var(--muted); text-decoration: none; }
+
+/* バトル画面は スクロール なしで 1画面に おさめる（上の ヘッダーと 下の メニューは かくす） */
+html.in-quiz .app-header, html.in-quiz .bottom-nav { display: none; }
+html.in-quiz .app-shell { padding-bottom: 0; }
+html.in-quiz, html.in-quiz body { overflow: hidden; height: 100%; }
+#view-quiz.active { display: flex; flex-direction: column; height: 100dvh; padding: calc(6px + env(safe-area-inset-top)) 10px calc(8px + env(safe-area-inset-bottom)); overflow: hidden; }
+#view-quiz .quiz-top { margin-bottom: 5px; flex-shrink: 0; }
+#view-quiz .progress-track { margin-bottom: 6px; flex-shrink: 0; }
+#view-quiz .battle-stage { flex-shrink: 0; padding: 4px 10px; margin-bottom: 6px; }
+#view-quiz .battle-actor { width: auto; }
+#view-quiz .battle-actor-svg { width: clamp(50px, 10dvh, 80px); height: clamp(50px, 10dvh, 80px); }
+#view-quiz .battle-actor-svg img, #view-quiz .battle-actor-svg svg { width: 100%; height: 100%; }
+#view-quiz .skill-bar { margin: 0 0 6px; flex-shrink: 0; }
+#view-quiz .quiz-card { flex: 1; min-height: 0; margin: 0; padding: 8px 12px 6px; display: flex; flex-direction: column; overflow-y: auto; }
+#quiz-question-area { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; }
+#view-quiz .choices-grid { flex-shrink: 0; }
+#view-quiz .q-prompt-main { margin: 2px 0 4px; font-size: clamp(20px, 3.6dvh, 27px); }
+#view-quiz .audio-row { margin: 4px 0; }
+#view-quiz .voice-row { margin-top: 6px; flex-shrink: 0; }
+#view-quiz .q-pic { font-size: clamp(52px, 10dvh, 84px); }
+#view-quiz .q-prompt-main .kana-big { font-size: clamp(50px, 10dvh, 72px); }
+#view-quiz .count-grid { font-size: clamp(28px, 5.6dvh, 42px); }
+#view-quiz .choice-btn { min-height: clamp(50px, 8.5dvh, 64px); padding: 8px; }
+#view-quiz .choice-btn.rich { min-height: clamp(60px, 11dvh, 104px); padding: 6px; }
+#view-quiz .choices-grid.cols-3 { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#view-quiz .choice-btn .count-grid.small { font-size: clamp(15px, 3.2dvh, 24px); gap: 2px; }
+#view-quiz .voice-btn { padding: 6px 16px; font-size: 13px; }
+#view-quiz .skill-btn { padding: 4px 9px; }
+#view-quiz .choice-btn .kana-big { font-size: clamp(38px, 7dvh, 52px); }
+#view-quiz .choice-btn .pic { font-size: clamp(40px, 7.5dvh, 56px); }
+#view-quiz .clock-wrap { margin: 2px 0 4px; }
+#view-quiz .clock-wrap svg { width: clamp(110px, 18dvh, 190px) !important; height: clamp(110px, 18dvh, 190px) !important; }
+#view-quiz .add-row .count-grid.small { font-size: clamp(17px, 3.3dvh, 26px); }
+/* かきとり：わくの 大きさは あいている ところに あわせる（JS が --kpad を きめる） */
+#view-quiz .canvas-stage.kanji-bg { width: var(--kpad, 256px); height: var(--kpad, 256px); margin: 6px auto; container-type: size; }
+#view-quiz .kanji-guide-overlay { font-size: 74cqw; }
+#view-quiz #btn-kanji-check { flex-shrink: 0; padding: 10px 16px; }
+#view-quiz .quiz-card.is-write #quiz-question-area { flex: 0 0 auto; }
+#view-quiz .quiz-card.is-write .q-prompt-sub { margin-bottom: 0; }
+#view-quiz .quiz-card.is-write .q-prompt-main { font-size: 22px; margin: 0 0 2px; }
+#view-quiz .quiz-card.is-write .q-pic { font-size: clamp(30px, 6dvh, 48px); display: inline-block; vertical-align: middle; }
+#view-quiz .quiz-card.is-write .kana-word { font-size: clamp(24px, 4.5dvh, 34px); display: inline-block; vertical-align: middle; margin-left: 6px; }
+#view-quiz .quiz-card.is-write .audio-row { margin: 2px 0 0; }
+#view-quiz .quiz-card.is-write .audio-btn { padding: 4px 12px; font-size: 12px; }
+.w-head { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.w-pic { text-align: center; }
+.w-pic .q-pic, .w-pic .kana-word { display: block !important; margin: 0 !important; }
+.w-side { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.w-prompt { font-size: 18px; font-weight: 900; }
+.w-hint { font-size: 11.5px; font-weight: 700; color: #b45309; background: #fef3c7; padding: 2px 8px; border-radius: 999px; }
+.w-row { display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+#view-quiz .quiz-card.is-write .tool-mini-btn { padding: 3px 6px; font-size: 10.5px; }
+#view-quiz .quiz-card.is-write .pad-toolbar { gap: 4px; }
+#view-quiz .pad-toolbar { margin-top: 4px !important; padding: 4px 6px; }
+/* こたえた あとの おしらせは 下から 出す（スクロール しなくても 見える） */
+#view-quiz .feedback-box, #view-quiz .kanji-judge {
+  position: fixed; left: 0; right: 0; bottom: calc(10px + env(safe-area-inset-bottom)); margin: 0 auto; z-index: 60;
+  width: calc(100% - 20px); max-width: 500px; box-shadow: 0 10px 30px rgba(15,23,42,0.35); animation: sheetUp 0.22s ease;
+}
+#view-quiz .kanji-judge.hidden { display: none; }
+@keyframes sheetUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+.fb-ans { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; margin: -4px 0 8px; }
+.fb-ans span { display: inline-grid; place-items: center; min-width: 54px; min-height: 44px; padding: 2px 10px; background: #fff; border: 2px solid #10b981; border-radius: 12px; font-size: 22px; color: #065f46; }
+.fb-ans .pic { font-size: 34px; } .fb-ans .kana-big { font-size: 34px; } .fb-ans .count-grid.small { font-size: 18px; }
+.feedback-box .auto-bar { height: 5px; border-radius: 999px; background: rgba(16,185,129,0.25); overflow: hidden; margin-top: 8px; }
+.feedback-box .auto-bar i { display: block; height: 100%; width: 100%; background: #10b981; transform-origin: left; animation: autoBar var(--auto, 1.4s) linear forwards; }
+@keyframes autoBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.subject-card.c-chie { border-bottom-color: #d97706; }
+.shadow-pic { filter: brightness(0); opacity: 0.78; }
+.seq-pics { font-size: min(40px, 8.4vw, 6dvh); text-align: center; letter-spacing: 0; line-height: 1.3; white-space: nowrap; }
+.seq-pics .kana-blank { font-size: 0.8em; }
+.subject-card.c-kotoba { border-bottom-color: #ec4899; }
 </style>
 </head>
 <body>
@@ -1106,6 +1178,27 @@ window.BQ_DATA.kana = {
   // かぞえる ときの え
   things: ['🍎', '🍓', '🍌', '🐟', '🐤', '⭐', '🚗', '🎈', '🍩', '🌸', '🐞', '🍙']
 };
+// ようじ むけ「ちえの もり」「ことばの いずみ」：なかまごとの え [絵文字, ことば, 声の ほかの書き方]
+window.BQ_DATA.pre = {
+  cats: {
+    'くだもの': [['🍎', 'りんご', 'リンゴ'], ['🍌', 'バナナ', 'ばなな'], ['🍇', 'ぶどう', 'ブドウ'], ['🍓', 'いちご', 'イチゴ'], ['🍊', 'みかん', 'ミカン|オレンジ'],
+      ['🍑', 'もも', 'モモ|ピーチ'], ['🍉', 'すいか', 'スイカ'], ['🍒', 'さくらんぼ', 'サクランボ|チェリー'], ['🍍', 'パイナップル', 'ぱいなっぷる|パイン'], ['🍈', 'メロン', 'めろん']],
+    'やさい': [['🥕', 'にんじん', 'ニンジン'], ['🍅', 'トマト', 'とまと'], ['🥒', 'きゅうり', 'キュウリ'], ['🌽', 'とうもろこし', 'トウモロコシ|コーン'],
+      ['🥦', 'ブロッコリー', 'ぶろっこりー'], ['🍆', 'なす', 'ナス|なすび'], ['🧅', 'たまねぎ', 'タマネギ'], ['🥔', 'じゃがいも', 'ジャガイモ|いも']],
+    'どうぶつ': [['🐶', 'いぬ', 'イヌ|わんちゃん'], ['🐱', 'ねこ', 'ネコ|にゃんこ'], ['🐘', 'ぞう', 'ゾウ'], ['🦁', 'ライオン', 'らいおん'], ['🐼', 'パンダ', 'ぱんだ'],
+      ['🐰', 'うさぎ', 'ウサギ'], ['🐒', 'さる', 'サル|おさる'], ['🦒', 'キリン', 'きりん'], ['🐻', 'くま', 'クマ'], ['🐷', 'ぶた', 'ブタ'], ['🐮', 'うし', 'ウシ'], ['🐸', 'かえる', 'カエル']],
+    'のりもの': [['🚗', 'くるま', 'クルマ|じどうしゃ'], ['🚌', 'バス', 'ばす'], ['🚃', 'でんしゃ', 'デンシャ'], ['✈️', 'ひこうき', 'ヒコウキ'], ['🚢', 'ふね', 'フネ'],
+      ['🚲', 'じてんしゃ', 'ジテンシャ'], ['🚒', 'しょうぼうしゃ', 'ショウボウシャ'], ['🚑', 'きゅうきゅうしゃ', 'キュウキュウシャ'], ['🚀', 'ロケット', 'ろけっと'], ['🚓', 'パトカー', 'ぱとかー']],
+    'うみの いきもの': [['🐟', 'さかな', 'サカナ|おさかな'], ['🐙', 'たこ', 'タコ'], ['🦀', 'かに', 'カニ'], ['🐬', 'いるか', 'イルカ'], ['🐳', 'くじら', 'クジラ'], ['🦑', 'いか', 'イカ']],
+    'たべもの': [['🍙', 'おにぎり', 'オニギリ|おむすび'], ['🍞', 'パン', 'ぱん'], ['🍰', 'ケーキ', 'けーき'], ['🍩', 'ドーナツ', 'どーなつ'], ['🍦', 'アイス', 'あいす'],
+      ['🍕', 'ピザ', 'ぴざ'], ['🍔', 'ハンバーガー', 'はんばーがー'], ['🍮', 'プリン', 'ぷりん']],
+    'みに つける もの': [['👕', 'シャツ', 'しゃつ'], ['👖', 'ズボン', 'ずぼん'], ['👟', 'くつ', 'クツ'], ['🧢', 'ぼうし', 'ボウシ'], ['🧤', 'てぶくろ', 'テブクロ'], ['🧦', 'くつした', 'クツシタ'], ['👓', 'めがね', 'メガネ']]
+  },
+  // なきごえ [絵文字, どうぶつ, なきごえ]
+  sounds: [['🐶', 'いぬ', 'わんわん'], ['🐱', 'ねこ', 'にゃーにゃー'], ['🐮', 'うし', 'もーもー'], ['🐷', 'ぶた', 'ぶーぶー'], ['🐸', 'かえる', 'けろけろ'],
+    ['🐔', 'にわとり', 'こけこっこー'], ['🐤', 'ひよこ', 'ぴよぴよ'], ['🐑', 'ひつじ', 'めーめー'], ['🦁', 'ライオン', 'がおー'], ['🐭', 'ねずみ', 'ちゅーちゅー'],
+    ['🦆', 'あひる', 'があがあ'], ['🐴', 'うま', 'ひひーん']]
+};
 /* STROKE_COUNT_BEGIN */
 window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"下":3,"火":4,"花":7,"貝":7,"学":8,"気":6,"九":2,"休":6,"玉":5,"金":8,"空":8,"月":4,"犬":4,"見":7,"五":4,"口":3,"校":10,"左":5,"三":3,"山":3,"子":3,"四":5,"糸":6,"字":6,"耳":6,"七":2,"車":7,"手":4,"十":2,"出":5,"女":3,"小":3,"上":3,"森":12,"人":2,"水":4,"正":5,"生":5,"青":8,"夕":3,"石":5,"赤":7,"千":3,"川":3,"先":6,"早":6,"草":9,"足":7,"村":7,"大":3,"男":7,"竹":6,"中":4,"虫":6,"町":7,"天":4,"田":5,"土":3,"二":2,"日":4,"入":2,"年":6,"白":5,"八":2,"百":6,"文":4,"木":4,"本":5,"名":6,"目":5,"立":5,"力":2,"林":8,"六":4,"春":9,"夏":10,"秋":9,"冬":5,"星":9,"海":9,"風":9,"雲":12,"魚":11,"鳥":11,"友":4,"絵":12,"歌":14,"家":10,"国":8,"読":14,"書":10,"話":13,"聞":14,"食":9,"買":12,"歩":8,"走":7,"朝":12,"昼":9,"夜":8,"父":4,"母":5,"兄":5,"姉":8,"弟":7,"妹":8,"牛":4,"馬":10,"電":13,"道":12,"船":11,"雪":11,"晴":12,"米":6,"駅":14,"橋":16,"薬":16,"銀":14,"祭":11,"暑":12,"寒":12,"深":11,"速":10,"登":12,"泳":8,"遊":12,"島":10,"湖":12,"笛":11,"鼻":14,"歯":12,"箱":15,"羊":6,"豆":7,"葉":12,"緑":14,"坂":7,"皿":5,"氷":5,"旅":10,"飲":12,"始":8,"終":11,"持":9,"拾":9,"投":7,"打":5,"住":7,"球":11,"鉄":13,"写":5,"部":11,"宿":11,"勉":10,"鏡":19,"牧":8,"芽":8,"勇":9,"静":14,"飛":9,"祝":9,"満":12,"望":11,"選":15,"泣":8,"笑":10,"冷":7,"焼":12,"塩":13,"梅":10,"松":8,"菜":11,"巣":11,"旗":14,"鹿":11,"熊":14,"願":19,"好":6,"初":7,"季":8,"節":13,"協":8,"競":20,"灯":6,"輪":15,"浴":10,"折":7,"働":13,"続":13,"残":10,"試":13,"便":9,"札":5,"卒":8,"桜":10,"護":20,"夢":13,"豊":13,"技":7,"測":12,"燃":16,"築":16,"衛":16,"賞":15,"飼":13,"枝":8,"銅":14,"喜":12,"救":11,"迷":9,"貯":12,"険":11,"境":14,"慣":14,"移":11,"増":14,"減":12,"示":5,"似":7,"布":5,"粉":10,"綿":14,"墓":13,"河":8,"演":14,"絶":12,"職":18,"武":8,"犯":5,"破":10,"再":6,"暴":15,"酸":14,"複":14,"源":13,"敬":12,"泉":9,"宙":8,"宝":8,"窓":11,"朗":10,"鋼":16,"樹":16,"誠":13,"卵":7,"乳":8,"机":6,"忘":7,"届":8,"背":9,"骨":10,"胸":10,"腹":13,"脳":11,"誕":15,"若":8,"捨":11,"洗":9,"探":11,"映":9,"暖":13,"閉":11,"晩":12,"秘":10,"郵":11,"幼":5,"片":4,"砂":9,"座":10,"系":7,"針":10,"棒":12,"蚕":10,"簡":18,"あ":3,"い":2,"う":2,"え":2,"お":3,"か":3,"き":4,"く":1,"け":3,"こ":2,"さ":3,"し":1,"す":2,"せ":3,"そ":1,"た":4,"ち":2,"つ":1,"て":1,"と":2,"な":4,"に":3,"ぬ":2,"ね":2,"の":1,"は":3,"ひ":1,"ふ":4,"へ":1,"ほ":4,"ま":3,"み":2,"む":3,"め":2,"も":3,"や":3,"ゆ":2,"よ":2,"ら":2,"り":2,"る":1,"れ":2,"ろ":1,"わ":2,"を":3,"ん":1,"ア":2,"イ":2,"ウ":3,"エ":3,"オ":3,"カ":2,"キ":3,"ク":2,"ケ":3,"コ":2,"サ":3,"シ":3,"ス":2,"セ":2,"ソ":2,"タ":3,"チ":3,"ツ":3,"テ":3,"ト":2,"ナ":2,"ニ":2,"ヌ":2,"ネ":4,"ノ":1,"ハ":2,"ヒ":2,"フ":1,"ヘ":1,"ホ":4,"マ":2,"ミ":3,"ム":2,"メ":2,"モ":3,"ヤ":2,"ユ":2,"ヨ":3,"ラ":2,"リ":2,"ル":2,"レ":1,"ロ":3,"ワ":2,"ヲ":3,"ン":2};
 /* STROKE_COUNT_END */
@@ -1415,7 +1508,9 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     hira: { name: 'ひらがなの もり', icon: 'あ', monster: 'モジモチ' },
     kata: { name: 'カタカナの まち', icon: 'ア', monster: 'カクカクロボ' },
     kazu: { name: 'かずの はたけ', icon: '🔢', monster: 'かぞえムシ' },
-    iro: { name: 'いろと かたちの にじ', icon: '🌈', monster: 'パレットガメ' }
+    iro: { name: 'いろと かたちの にじ', icon: '🌈', monster: 'パレットガメ' },
+    chie: { name: 'ちえの もり', icon: '🧩', monster: 'ハテナッツ' },
+    kotoba: { name: 'ことばの いずみ', icon: '💬', monster: 'コトリン' }
   };
 
   // ---------------- ユーティリティ ----------------
@@ -1569,7 +1664,7 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
         this.canvas.setPointerCapture(e.pointerId);
         this.drawing = true;
         this.current = { color: this.isEraser ? '#fff' : this.color, width: this.isEraser ? 18 : this.lineWidth, eraser: this.isEraser, pts: [this._pos(e)] };
-        this.strokes.push(this.current); this.redraw(); this.onChange(this.strokes.length);
+        this.strokes.push(this.current); this.redraw(); this.onChange(this.getStrokeCount());
       });
       this.canvas.addEventListener('pointermove', (e) => {
         if (!this.drawing || !this.current) return;
@@ -1578,7 +1673,11 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
         if (Math.hypot(p.x - last.x, p.y - last.y) < 1.5) return;
         this.current.pts.push(p); this.redraw();
       });
-      const end = () => { this.drawing = false; this.current = null; };
+      const end = () => {
+        const cur = this.current;
+        this.drawing = false; this.current = null;
+        if (cur && this.onEnd && this.onEnd(cur, this.strokes.filter(x => x !== cur && !x.dup))) { cur.dup = true; this.onChange(this.getStrokeCount()); }
+      };
       this.canvas.addEventListener('pointerup', end);
       this.canvas.addEventListener('pointercancel', end);
     }
@@ -1600,12 +1699,12 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
         ctx.restore();
       }
     }
-    undo() { this.strokes.pop(); this.redraw(); this.onChange(this.strokes.length); }
+    undo() { this.strokes.pop(); this.redraw(); this.onChange(this.getStrokeCount()); }
     clear() { this.strokes = []; this.redraw(); this.onChange(0); }
     setColor(c) { this.color = c; this.isEraser = false; }
     setEraser(on) { this.isEraser = on; }
     setWidth(w) { this.lineWidth = w; }
-    getStrokeCount() { return this.strokes.length; }
+    getStrokeCount() { return this.strokes.filter(x => !x.dup).length; }   // なぞりなおし（dup）は かぞえない
     toDataURL() { return this.canvas.toDataURL('image/png'); }
   }
 
@@ -1936,13 +2035,38 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     const s = Math.max(x1 - x0, y1 - y0) || 1, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
     return strokes.map(st => st.map(p => ({ x: (p.x - cx) / s, y: (p.y - cy) / s })));
   }
+  // なぞりなおし：あたらしい 1かくが、もう かいた 線の 上を なぞった だけなら true（1かくに かぞえない）
+  //   字の 大きさの 7%（すくなくとも 6px）より 線に ちかい 点が 9わり いじょう、いちばん はなれた 点も その 2ばい いない
+  function isRetrace(stroke, prev) {
+    if (!prev.length) return false;
+    const all = prev.flatMap(x => x.pts).concat(stroke.pts);
+    const xs = all.map(q => q.x), ys = all.map(q => q.y);
+    const size = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys), 1);
+    const tol = Math.max(6, size * 0.07);
+    const segDist = (pt, a, b) => {
+      const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy;
+      const t = L ? Math.max(0, Math.min(1, ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / L)) : 0;
+      return Math.hypot(pt.x - a.x - t * dx, pt.y - a.y - t * dy);
+    };
+    const near = (pt) => {
+      let d = Infinity;
+      for (const x of prev) {
+        const ps = x.pts;
+        if (ps.length === 1) d = Math.min(d, Math.hypot(pt.x - ps[0].x, pt.y - ps[0].y));
+        for (let i = 1; i < ps.length; i++) d = Math.min(d, segDist(pt, ps[i - 1], ps[i]));
+      }
+      return d;
+    };
+    const ds = resample(stroke.pts, 16).map(near);
+    return ds.filter(d => d <= tol).length >= ds.length * 0.9 && Math.max(...ds) <= tol * 2;
+  }
   // 1かくずつ「ばしょ・むき・じゅんばん」を おてほんと くらべる
   function judgeKanji(svg, userStrokes, th = 0.2) {
     const model = [...svg.querySelectorAll('path.ks')].map(pe => {
       const L = pe.getTotalLength();
       return Array.from({ length: 8 }, (_, i) => { const pt = pe.getPointAtLength(L * i / 7); return { x: pt.x, y: pt.y }; });
     });
-    const user = userStrokes.map(s => resample(s.pts, 8));
+    const user = userStrokes.filter(s => !s.dup).map(s => resample(s.pts, 8));
     if (user.length !== model.length) return { ok: false, msg: `かくすうが ちがうよ（おてほんは ${model.length}かく、いまは ${user.length}かく）` };
     const nm = normalizeSet(model), nu = normalizeSet(user);
     const dist = (a, b) => a.reduce((s, p, i) => s + Math.hypot(p.x - b[i].x, p.y - b[i].y), 0) / a.length;
@@ -2114,7 +2238,7 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     hira: KANA.hiraWords.map(([e, w, alt]) => ({ e, w, alt: alt ? alt.split('|') : [] })),
     kata: KANA.kataWords.map(([e, w, alt]) => ({ e, w, alt: alt ? alt.split('|') : [] }))
   };
-  const PRE_SUBJECTS = ['hira', 'kata', 'kazu', 'iro'];
+  const PRE_SUBJECTS = ['hira', 'kata', 'kazu', 'iro', 'chie', 'kotoba'];
   const isKanaSubject = (s) => s === 'hira' || s === 'kata';
   const gradeLabel = (g) => (+g === 0 ? 'ようじ' : `${g}ねんせい`);
   const scriptName = (sc) => (sc === 'hira' ? 'ひらがな' : 'カタカナ');
@@ -2207,11 +2331,26 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
       const a = randInt(2, max), b = randInt(1, a - 1);
       return numQ(`kazu_s_${a}_${b}`, 'のこりは いくつ？', groupHtml(a, e, false, b), `${a} − ${b} は？`, `${a}こ あって、 ${b}こ たべたら、 のこりは いくつ？`, a - b);
     }
+    if (kind === 'numeral') {   // すうじを みて、その かずの え を えらぶ
+      const n = randInt(1, max), set = [n];
+      while (set.length < 3) { const x = Math.max(1, n + pick([-2, -1, 1, 2, 3])); if (!set.includes(x)) set.push(x); }
+      const choices = shuffle(set.map(String));
+      return Object.assign({}, base, { key: `kazu_u_${n}`, voice: 'none', sub: 'すうじと かず', promptHtml: `<span class="num-big" style="font-size:64px;">${n}</span>`,
+        prompt: `${n}こ あるのは どれ？`, say: `${n}こ あるのは どれかな？`, answer: String(n), choices,
+        choiceHtml: Object.fromEntries(choices.map(c => [c, groupHtml(+c, e, true)])), explain: `${n}こ だね！` });
+    }
+    if (kind === 'bignum') {   // どっちの すうじが おおきい？
+      let a = randInt(1, max), b = randInt(1, max);
+      while (a === b) b = randInt(1, max);
+      const choices = [String(a), String(b)];
+      return Object.assign({}, base, { key: `kazu_b_${a}_${b}`, sub: 'おおきい かず', prompt: 'おおきい かずは どっち？', say: 'おおきい かずは どっち？',
+        answer: String(Math.max(a, b)), choices, choiceHtml: Object.fromEntries(choices.map(c => [c, bigNum(c)])), explain: `${Math.max(a, b)}の ほうが おおきいね！` });
+    }
     const n = randInt(1, max);
     return numQ(`kazu_c_${n}`, 'かずを かぞえよう', groupHtml(n, e), 'いくつ あるかな？', 'いくつ あるかな？', n);
   }
-  const KAZU_PLAN = [[['count'], 3], [['count'], 5], [['more'], 5], [['count'], 10], [['count', 'more'], 10],
-    [['next'], 10], [['add'], 5], [['sub'], 5], [['add'], 10], [['count', 'more', 'next', 'add', 'sub'], 10]];
+  const KAZU_PLAN = [[['count'], 3], [['count', 'numeral'], 5], [['more', 'bignum'], 5], [['count', 'numeral'], 10], [['count', 'more', 'numeral', 'bignum'], 10],
+    [['next'], 10], [['add'], 5], [['sub'], 5], [['add'], 10], [['count', 'more', 'next', 'add', 'sub', 'numeral', 'bignum'], 10]];
 
   // ---- いろと かたち ----
   const COLORS = [['red', 'あか', '#ef4444', '赤|レッド'], ['blue', 'あお', '#3b82f6', '青|ブルー'], ['yellow', 'きいろ', '#facc15', '黄色|イエロー'],
@@ -2268,17 +2407,101 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
   const IRO_PLAN = [[['color'], 1], [['color'], 2], [['shape'], 1], [['shape'], 2], [['color', 'shape'], 2],
     [['same'], 2], [['both'], 1], [['both'], 2], [['color', 'shape', 'same'], 2], [['color', 'shape', 'same', 'both'], 2]];
 
+  // ---- ちえの もり・ことばの いずみ ----
+  const PRE = BQD.pre || { cats: {}, sounds: [] };
+  const CATS = Object.entries(PRE.cats).map(([name, list]) => ({ name, items: list.map(([e, w, alt]) => ({ e, w, alt: alt ? alt.split('|') : [], cat: name })) }));
+  const ALL_ITEMS = CATS.flatMap(c => c.items);
+  const pic = (x, size) => `<span class="pic"${size ? ` style="font-size:${size}px"` : ''}>${x.e}</span>`;
+  const others = (x, n, pool = ALL_ITEMS) => shuffle(pool.filter(y => y.e !== x.e && y.w !== x.w)).slice(0, n);
+  const picVoice = (list) => Object.fromEntries(list.map(x => [x.w, [x.w, ...x.alt]]));
+  const picQ = (o) => Object.assign({ type: 'choice', allowMemo: false }, o);
+  function makeChie(kind, level = 1) {
+    const base = { subject: 'chie' };
+    if (kind === 'big' || kind === 'small') {
+      const x = pick(ALL_ITEMS), sizes = level === 1 ? [26, 44, 64] : [24, 36, 48, 62], ids = sizes.map((_, i) => 's' + i), big = kind === 'big';
+      return picQ(Object.assign(base, { key: `chie_${kind}_${x.w}`, voice: 'none', sub: big ? 'おおきさ くらべ' : 'ちいさい のは どれ', prompt: big ? 'いちばん おおきいのは どれ？' : 'いちばん ちいさいのは どれ？',
+        say: big ? 'いちばん おおきいのは どれかな？' : 'いちばん ちいさいのは どれかな？', answer: big ? ids[ids.length - 1] : ids[0], choices: shuffle(ids.slice()),
+        choiceHtml: Object.fromEntries(ids.map((id, i) => [id, pic(x, sizes[i])])), explain: big ? 'いちばん おおきいね！' : 'いちばん ちいさいね！' }));
+    }
+    if (kind === 'odd') {   // なかまはずれ
+      const [ca, cb] = shuffle(CATS.slice()), three = shuffle(ca.items.slice()).slice(0, 3), odd = pick(cb.items), list = shuffle([...three, odd]);
+      return picQ(Object.assign(base, { key: `chie_odd_${odd.w}`, sub: 'なかまはずれ', prompt: 'なかまはずれは どれ？', say: 'なかまはずれは どれかな？',
+        answer: odd.w, choices: list.map(x => x.w), choiceHtml: Object.fromEntries(list.map(x => [x.w, pic(x)])), voiceMap: picVoice(list),
+        explain: `${odd.w}だけ「${ca.name}」じゃないね！` }));
+    }
+    if (kind === 'pattern') {   // つぎは なに？（AB・AAB・ABC）
+      const [a, b, c, d] = shuffle(ALL_ITEMS.slice()).slice(0, 4), pat = level === 1 ? [a, b] : pick([[a, b], [a, a, b], [a, b, c]]);
+      const seq = Array.from({ length: pat.length === 2 ? 5 : 6 }, (_, i) => pat[i % pat.length]), ans = pat[seq.length % pat.length];
+      const list = shuffle([a, b, c, d]);
+      return picQ(Object.assign(base, { key: `chie_pat_${seq.map(x => x.w).join('')}`, sub: 'つぎは なに？', prompt: 'つぎに くるのは どれ？', say: 'じゅんばんに ならんでいるよ。 つぎに くるのは どれかな？',
+        promptHtml: `<div class="seq-pics">${seq.map(x => x.e).join('')}<span class="kana-blank">？</span></div>`,
+        answer: ans.w, choices: list.map(x => x.w), choiceHtml: Object.fromEntries(list.map(x => [x.w, pic(x)])), voiceMap: picVoice(list), explain: `つぎは ${ans.w}！` }));
+    }
+    const x = pick(ALL_ITEMS);
+    const same = CATS.find(c => c.name === x.cat).items;
+    const list = shuffle([x, ...others(x, 3, kind === 'shadow' && level > 1 && same.length >= 4 ? same : ALL_ITEMS)]);
+    if (kind === 'shadow') {   // かげ あて
+      return picQ(Object.assign(base, { key: `chie_sh_${x.w}`, sub: 'かげ あて', prompt: 'この かげは どれ？', say: 'この かげは どれかな？',
+        promptHtml: `<div class="q-pic shadow-pic">${x.e}</div>`, answer: x.w, choices: list.map(y => y.w),
+        choiceHtml: Object.fromEntries(list.map(y => [y.w, pic(y)])), voiceMap: picVoice(list), explain: `${x.w}の かげ だったね！` }));
+    }
+    // same：おなじ えは どれ？
+    return picQ(Object.assign(base, { key: `chie_same_${x.w}`, sub: 'おなじ え さがし', prompt: 'おなじ えは どれ？', say: 'おなじ えは どれかな？',
+      promptHtml: `<div class="q-pic">${x.e}</div>`, answer: x.w, choices: list.map(y => y.w),
+      choiceHtml: Object.fromEntries(list.map(y => [y.w, pic(y)])), voiceMap: picVoice(list), explain: `${x.w}！ おなじだね！` }));
+  }
+  const CHIE_PLAN = [[['same'], 1], [['big'], 1], [['shadow'], 1], [['odd'], 1], [['same', 'big', 'shadow', 'odd'], 1],
+    [['pattern'], 1], [['big', 'small'], 2], [['shadow'], 2], [['odd', 'pattern'], 2], [['big', 'small', 'shadow', 'odd', 'pattern'], 2]];
+
+  function makeKotoba(kind) {
+    const base = { subject: 'kotoba' };
+    if (kind === 'naki') {   // なきごえ
+      const S = PRE.sounds.map(([e, w, v]) => ({ e, w, v, alt: [] })), x = pick(S), list = shuffle([x, ...shuffle(S.filter(y => y !== x)).slice(0, 3)]);
+      return picQ(Object.assign(base, { key: `ktb_naki_${x.w}`, sub: 'なきごえ クイズ', prompt: `「${x.v}」と なくのは どれ？`, say: `${x.v}！ と なくのは どれかな？`,
+        answer: x.w, choices: list.map(y => y.w), choiceHtml: Object.fromEntries(list.map(y => [y.w, pic(y)])), voiceMap: picVoice(list), explain: `${x.w}は「${x.v}」と なくよ！` }));
+    }
+    if (kind === 'nakama') {   // ○○は どれ？
+      const [ca, ...rest] = shuffle(CATS.slice()), x = pick(ca.items), list = shuffle([x, ...rest.slice(0, 3).map(c => pick(c.items))]);
+      return picQ(Object.assign(base, { key: `ktb_nk_${x.w}`, sub: 'なかまを さがそう', prompt: `「${ca.name}」は どれ？`, say: `${ca.name} は どれかな？`,
+        answer: x.w, choices: list.map(y => y.w), choiceHtml: Object.fromEntries(list.map(y => [y.w, pic(y)])), voiceMap: picVoice(list), explain: `${x.w}は「${ca.name}」だね！` }));
+    }
+    const x = pick(ALL_ITEMS), list = shuffle([x, ...others(x, 3)]);
+    if (kind === 'name') {   // えを みて ことばを えらぶ
+      return picQ(Object.assign(base, { key: `ktb_nm_${x.w}`, sub: 'これは なに？', prompt: 'これは なに？', say: 'これは なにかな？',
+        promptHtml: `<div class="q-pic">${x.e}</div>`, answer: x.w, choices: list.map(y => y.w), voiceMap: picVoice(list), explain: `「${x.w}」だよ！` }));
+    }
+    // listen：ことばを きいて えを えらぶ ／ read：ことばを よんで えを えらぶ（ことばは よみあげない）
+    const listen = kind === 'listen';
+    return picQ(Object.assign(base, { key: `ktb_${listen ? 'l' : 'r'}_${x.w}`, sub: listen ? 'ことばを きいて えらぼう' : 'ことばを よんで えらぼう',
+      promptHtml: listen ? '<div class="q-pic">👂</div>' : `<div class="kana-word">${esc(x.w)}</div>`, prompt: listen ? `「${x.w}」は どれ？` : 'この ことばの えは どれ？',
+      say: listen ? `${x.w}。 ${x.w} は どれかな？` : 'この ことばの えは どれかな？', answer: x.w, choices: list.map(y => y.w),
+      choiceHtml: Object.fromEntries(list.map(y => [y.w, pic(y)])), voiceMap: picVoice(list), explain: `「${x.w}」は これ！` }));
+  }
+  const KOTOBA_PLAN = [['listen'], ['name'], ['naki'], ['nakama'], ['listen', 'name', 'naki', 'nakama'],
+    ['listen', 'naki'], ['read'], ['nakama', 'naki'], ['read', 'name'], ['listen', 'name', 'naki', 'nakama', 'read']];
+
+  // おなじ もんだいが 2かい でないように つくる
+  function uniqueQs(n, gen) {
+    const out = [], keys = new Set();
+    for (let t = 0; out.length < n && t < n * 30; t++) { const q = gen(); if (!keys.has(q.key)) { keys.add(q.key); out.push(q); } }
+    while (out.length < n) out.push(gen());
+    return out;
+  }
   function preStageQuestions(subject, i) {
     if (isKanaSubject(subject)) return kanaStageQuestions(subject, i);
     const n = isBossStage(i) ? 8 : 5;
-    if (subject === 'kazu') { const [kinds, max] = KAZU_PLAN[i]; return Array.from({ length: n }, () => makeKazu(pick(kinds), max)); }
+    if (subject === 'kazu') { const [kinds, max] = KAZU_PLAN[i]; return uniqueQs(n, () => makeKazu(pick(kinds), max)); }
+    if (subject === 'chie') { const [kinds, lv] = CHIE_PLAN[i]; return uniqueQs(n, () => makeChie(pick(kinds), lv)); }
+    if (subject === 'kotoba') return uniqueQs(n, () => makeKotoba(pick(KOTOBA_PLAN[i])));
     const [kinds, lv] = IRO_PLAN[i];
-    return Array.from({ length: n }, () => makeIro(pick(kinds), lv));
+    return uniqueQs(n, () => makeIro(pick(kinds), lv));
   }
   function preStageLabel(subject, i) {
     if (isBossStage(i)) return 'ボス';
     if (isKanaSubject(subject)) return KANA_STAGE_ROWS[i].map(r => KANA_ROWS[subject][r][0]).join('・') + 'ぎょう';
-    if (subject === 'kazu') return ['1〜3', '1〜5', 'どっちが おおい', '1〜10', '', 'つぎの かず', 'たしざん', 'ひきざん', 'たしざん 10まで'][i];
+    if (subject === 'kazu') return ['1〜3', 'すうじと かず', 'どっちが おおい', '1〜10', '', 'つぎの かず', 'たしざん', 'ひきざん', 'たしざん 10まで'][i];
+    if (subject === 'chie') return ['おなじ え', 'おおきさ', 'かげ あて', 'なかまはずれ', '', 'つぎは なに', 'おおきさ 2', 'かげ あて 2', 'なかまはずれ 2'][i];
+    if (subject === 'kotoba') return ['きいて えらぶ', 'これは なに', 'なきごえ', 'なかま', '', 'きく・なきごえ', 'よんで えらぶ', 'なかま 2', 'よむ・なまえ'][i];
     return ['いろ', 'いろ 2', 'かたち', 'かたち 2', '', 'おなじ かたち', 'いろと かたち', 'いろと かたち 2', 'まぜこぜ'][i];
   }
   // じゆうに れんしゅう
@@ -2287,7 +2510,9 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
       const all = KANA_ROWS[subject].join('');
       return Array.from({ length: 5 }, () => (kind === 'write' ? makeKanaWrite(subject, all) : makeKanaRead(subject, all)));
     }
-    if (subject === 'kazu') return Array.from({ length: 5 }, () => makeKazu(pick(['count', 'more', 'next', 'add', 'sub']), 10));
+    if (subject === 'kazu') return Array.from({ length: 5 }, () => makeKazu(pick(['count', 'more', 'next', 'add', 'sub', 'numeral', 'bignum']), 10));
+    if (subject === 'chie') return Array.from({ length: 5 }, () => makeChie(pick(['same', 'big', 'small', 'shadow', 'odd', 'pattern']), 2));
+    if (subject === 'kotoba') return Array.from({ length: 5 }, () => makeKotoba(pick(['listen', 'name', 'naki', 'nakama', 'read'])));
     return Array.from({ length: 5 }, () => makeIro(pick(['color', 'shape', 'same', 'both']), 2));
   }
 
@@ -2302,10 +2527,12 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     hira: { cls: 'c-hira', tag: 'よむ・かく', sub: 'おとと えで ひらがなを おぼえよう' },
     kata: { cls: 'c-kata', tag: 'よむ・かく', sub: 'カタカナの ことばも ばっちり' },
     kazu: { cls: 'c-kazu', tag: 'ようじ', sub: 'かぞえる・くらべる・たしざん' },
-    iro: { cls: 'c-iro', tag: 'ようじ', sub: 'いろと かたちを みつけよう' }
+    iro: { cls: 'c-iro', tag: 'ようじ', sub: 'いろと かたちを みつけよう' },
+    chie: { cls: 'c-chie', tag: 'ようじ', sub: 'かげ あて・なかまはずれ・つぎは なに？' },
+    kotoba: { cls: 'c-kotoba', tag: 'ようじ', sub: 'ことば・なきごえ・なかまの なまえ' }
   };
   function areasFor(g) {
-    if (+g === 0) return ['hira', 'kata', 'kazu', 'iro'];
+    if (+g === 0) return ['hira', 'kata', 'kazu', 'iro', 'chie', 'kotoba'];
     const school = ['math', 'kuku', 'clock', 'kanji_read', 'kanji_write', 'english', 'hira', 'kata'];
     return +g === 1 ? school.concat(['kazu']) : school;
   }
@@ -2470,6 +2697,7 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     }
     $('#battle-log').textContent = session.isRevenge ? 'つよい てきが たちはだかる！Gが 2ばいの チャンス！' : session.ta ? `${session.correct}もん せいかい！` : `${meta.monster} が とびだしてきた！`;
     $('#quiz-card').classList.toggle('is-revenge', session.isRevenge);
+    $('#quiz-card').classList.toggle('is-write', q.type === 'kanji_write');
 
     const qArea = $('#quiz-question-area');
     let html = `<div class="q-prompt-sub">${q.sub}</div>`;
@@ -2483,6 +2711,13 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
       html += `<div class="audio-row"><button class="audio-btn" id="btn-speak-normal">🔊 はつおんを きく</button><button class="audio-btn slow" id="btn-speak-slow">🐢 ゆっくり</button></div>`;
     }
     if (q.say) html += `<div class="audio-row"><button class="audio-btn say" id="btn-say">🔊 もんだいを きく</button></div>`;
+    if (q.type === 'kanji_write') {   // かくときは みじかく（かく わくを 大きく とる）
+      const hint = q.hint ? `<div class="w-hint">💡 ${q.hint}（${q.strokes || '?'}かく）</div>` : '';
+      const say = q.say ? '<button class="audio-btn say" id="btn-say">🔊 きく</button>' : '';
+      html = q.promptHtml
+        ? `<div class="w-head"><div class="w-pic">${q.promptHtml}</div><div class="w-side"><div class="w-prompt">${q.prompt}</div>${hint}${say}</div></div>`
+        : `<div class="q-prompt-main">${q.prompt}</div><div class="w-row">${hint}${say}</div>`;
+    }
     qArea.innerHTML = html;
     if (q.say) {
       $('#btn-say').onclick = () => Speech.speakJa(q.say);
@@ -2507,9 +2742,10 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
       choicesArea.classList.add('hidden'); memoWrap.classList.add('hidden'); kanjiArea.classList.remove('hidden');
       $('#btn-kanji-guide').textContent = kanjiGuideOn ? '👀 おてほん:ON' : '👀 おてほん:OFF';
       $('#btn-kanji-guide').classList.toggle('active', kanjiGuideOn);
-      requestAnimationFrame(() => { kanjiPad.resize(); kanjiPad.clear(); KanjiUI.setup(q); });
+      requestAnimationFrame(() => { fitKanjiPad(); kanjiPad.clear(); KanjiUI.setup(q); });
     } else {
       kanjiArea.classList.add('hidden'); choicesArea.classList.remove('hidden'); choicesArea.innerHTML = '';
+      choicesArea.classList.toggle('cols-3', q.choices.length === 3);
       q.choices.forEach(ch => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn' + (q.choiceHtml ? ' rich' : ''); btn.dataset.choice = ch;
@@ -2545,6 +2781,20 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     }
     renderSkillBar();
   }
+
+  // かきとりの わくの 大きさ：画面に のこっている たかさに あわせる（スクロール しない）
+  function fitKanjiPad() {
+    const stage = $('#kanji-stage'), card = $('#quiz-card');
+    if (!stage || !stage.offsetParent) return;
+    stage.style.setProperty('--kpad', '160px');
+    card.scrollTop = 0;
+    const btnH = $('#btn-kanji-check').offsetHeight || 46;
+    const room = window.innerHeight - stage.getBoundingClientRect().top - btnH - 24;
+    const size = Math.round(Math.max(160, Math.min(300, room, card.clientWidth - 28)));
+    stage.style.setProperty('--kpad', size + 'px');
+    kanjiPad.resize();
+  }
+  window.addEventListener('resize', () => { if (session && !session.finished && $('#view-quiz').classList.contains('active') && session.questions[session.index].type === 'kanji_write') fitKanjiPad(); });
 
   function startVoiceAnswer() {
     if (!session || session.locked) return;
@@ -2640,11 +2890,22 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     fb.className = `feedback-box show ${isOk ? 'ok' : 'ng'}`;
     const isLast = session.index + 1 >= session.questions.length;
     const head = isOk ? (after ? `👍 なおせたね！ +🪙${gain}G` : `⚔️ たおした！ +🪙${gain}G`) : (after ? '📝 つぎは かけるよ！ リベンジボスに とうろくしたよ' : '❌ おしい！リベンジボスに とうろくしたよ');
+    const AUTO = 1.4;   // せいかいの ときは この びょうすうで じどうで つぎへ（おしても すすむ）
     fb.innerHTML = `
       <div style="font-size:17px;">${head}</div>
       <div style="font-size:12px;margin:4px 0 10px;">${q.explain || ''}</div>
-      <button id="btn-next-q" class="btn ${isOk ? 'btn-success' : 'btn-primary'}">${isLast ? 'ごほうびを もらう 🎉' : 'つぎの てきへ ▶'}</button>`;
-    $('#btn-next-q').onclick = () => { if (isLast) finishSession(); else { session.index++; renderQuizQuestion(); } };
+      ${isOk ? '' : `<div class="fb-ans">こたえ <span>${q.choiceHtml && q.choiceHtml[q.answer] ? q.choiceHtml[q.answer] : esc(q.answer)}</span></div>`}
+      <button id="btn-next-q" class="btn ${isOk ? 'btn-success' : 'btn-primary'}">${isLast ? 'ごほうびを もらう 🎉' : 'つぎの てきへ ▶'}</button>
+      ${isOk ? `<div class="auto-bar" style="--auto:${AUTO}s"><i></i></div>` : ''}`;
+    const s0 = session, i0 = session.index;
+    let went = false;
+    const go = () => {
+      if (went || session !== s0 || session.index !== i0 || session.finished) return;
+      went = true; clearTimeout(s0.autoNext); fb.className = 'feedback-box';
+      if (isLast) finishSession(); else { session.index++; renderQuizQuestion(); }
+    };
+    $('#btn-next-q').onclick = go;
+    if (isOk) s0.autoNext = setTimeout(go, AUTO * 1000);
   }
 
   function finishSession() {
@@ -2783,9 +3044,9 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
       if (res.ok) {
         box.className = 'kanji-judge ok';
         $('#kanji-judge-msg').textContent = '⭕ かきじゅんも かたちも ばっちり！';
-        actions.innerHTML = '<button class="btn btn-success" id="btn-kj-ok">こうげき！ ⚔️</button>';
-        SFX.ok();
-        $('#btn-kj-ok').onclick = () => { if (session.locked) return; box.classList.add('hidden'); finalizeQuestionResult(true, q, { after: session.missed.has(session.index) }); };
+        actions.innerHTML = '';
+        box.classList.add('hidden');
+        finalizeQuestionResult(true, q, { after: session.missed.has(session.index) });
         return;
       }
       if (!session.missed.has(session.index)) {
@@ -3203,6 +3464,8 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
     if (name !== 'quiz') stopSession();
     $$('.view').forEach(v => v.classList.remove('active'));
     $(`#view-${name}`).classList.add('active');
+    document.documentElement.classList.toggle('in-quiz', name === 'quiz');
+    if (name === 'quiz') window.scrollTo(0, 0);
     $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
     if (name === 'home') renderHome();
     if (name === 'shop') renderShop();
@@ -3330,6 +3593,11 @@ window.BQ_DATA.strokeCount = {"一":1,"右":5,"雨":8,"円":4,"王":4,"音":9,"�
 
     memoPad = new DrawingPad($('#memo-canvas'));
     kanjiPad = new DrawingPad($('#kanji-canvas'), (cnt) => { $('#kanji-stroke-count').textContent = `${cnt}かく`; KanjiUI.update(cnt); });
+    kanjiPad.onEnd = (st, prev) => {
+      if (!isRetrace(st, prev)) return false;
+      showToast('✏️ なぞりなおしは 1かくに かぞえないよ');
+      return true;
+    };
     kanjiPad.setWidth(7);
 
     $('#btn-toggle-memo').onclick = () => {
